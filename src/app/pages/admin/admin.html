@@ -1,0 +1,39 @@
+<div class="admin-container">
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h2 class="text-gradient">VIBE <span class="admin-tag">ADMIN</span></h2>
+        </div>
+
+        <ul class="nav-list">
+            <!-- <li routerLink="users" routerLinkActive="active" class="nav-item">
+                <i class="bi bi-people"></i> <span>Users</span>
+            </li> -->
+
+            <li routerLink="movies" routerLinkActive="active" class="nav-item">
+                <i class="bi bi-film"></i> <span>Movies</span>
+            </li>
+
+            <li routerLink="theaters" routerLinkActive="active" class="nav-item">
+                <i class="bi bi-building-gear"></i> <span>Theaters</span>
+            </li>
+
+            <li routerLink="shows" routerLinkActive="active" class="nav-item">
+                <i class="bi bi-calendar-check"></i> <span>Shows</span>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <button class="logout-btn" routerLink="/login">
+                <i class="bi bi-box-arrow-left"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <main class="content-area">
+        <div class="glass-container">
+            <router-outlet></router-outlet>
+        </div>
+    </main>
+
+</div>

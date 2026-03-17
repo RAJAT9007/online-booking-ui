@@ -1,0 +1,439 @@
+.movie-details-page {
+    min-height: 100vh;
+    background: #0f0f0f;
+    color: white;
+}
+
+/* Loading */
+.loading-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: 16px;
+    color: #999;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid #333;
+    border-top-color: #e50914;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Hero Banner */
+.hero-banner {
+    position: relative;
+    min-height: 85vh;
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right,
+            rgba(0, 0, 0, 0.95) 40%,
+            rgba(0, 0, 0, 0.6) 100%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 32px 48px;
+}
+
+/* Poster */
+.movie-poster {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.movie-poster img {
+    width: 240px;
+    height: 360px;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+
+.rating-badge {
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #e50914;
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Movie Info */
+.movie-info {
+    flex: 1;
+    padding-top: 16px;
+}
+
+.genre-tag {
+    display: inline-block;
+    background: rgba(229, 9, 20, 0.2);
+    color: #e50914;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    border: 1px solid rgba(229, 9, 20, 0.3);
+}
+
+.movie-title {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Stars */
+.star-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 20px;
+}
+
+.star {
+    font-size: 20px;
+}
+
+.star.full {
+    color: #ffc107;
+}
+
+.star.empty {
+    color: #444;
+}
+
+.rating-text {
+    color: #999;
+    font-size: 14px;
+    margin-left: 8px;
+}
+
+/* Meta Tags */
+.meta-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tag {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ccc;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tag.status.ACTIVE {
+    background: rgba(40, 167, 69, 0.15);
+    color: #28a745;
+    border-color: rgba(40, 167, 69, 0.3);
+}
+
+.tag.status.PENDING {
+    background: rgba(255, 193, 7, 0.15);
+    color: #ffc107;
+    border-color: rgba(255, 193, 7, 0.3);
+}
+
+/* Synopsis */
+.synopsis {
+    color: #bbb;
+    line-height: 1.8;
+    font-size: 15px;
+    margin-bottom: 28px;
+    max-width: 600px;
+}
+
+/* Date Section */
+.date-section h3 {
+    font-size: 16px;
+    color: #999;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 12px;
+}
+
+.date-strip {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 28px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.date-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+    min-width: 60px;
+    transition: all 0.2s;
+}
+
+.date-card:hover {
+    background: rgba(229, 9, 20, 0.15);
+    border-color: rgba(229, 9, 20, 0.4);
+}
+
+.date-card.active {
+    background: #e50914;
+    border-color: #e50914;
+}
+
+.date-card .day {
+    font-size: 11px;
+    color: #999;
+}
+
+.date-card .num {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.date-card .month {
+    font-size: 11px;
+    color: #999;
+}
+
+.date-card.active .day,
+.date-card.active .month {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Book Button */
+.btn-book {
+    background: #e50914;
+    color: white;
+    border: none;
+    padding: 16px 40px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+}
+
+.btn-book:hover {
+    background: #c0070f;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(229, 9, 20, 0.4);
+}
+
+/* Details Section */
+.details-section {
+    background: #141414;
+    padding: 48px 0;
+}
+
+.details-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    gap: 32px;
+}
+
+/* About Card */
+.about-card {
+    flex: 2;
+    background: #1a1a1a;
+    border-radius: 16px;
+    padding: 28px;
+    border: 1px solid #2d2d2d;
+}
+
+.about-card h2 {
+    font-size: 20px;
+    margin-bottom: 16px;
+    color: white;
+}
+
+.about-card p {
+    color: #999;
+    line-height: 1.8;
+    margin-bottom: 24px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    font-size: 11px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.info-value {
+    font-size: 15px;
+    font-weight: 500;
+    color: white;
+}
+
+.status-text.ACTIVE {
+    color: #28a745;
+}
+
+.status-text.PENDING {
+    color: #ffc107;
+}
+
+/* CTA Card */
+.cta-card {
+    flex: 1;
+    background: #1a1a1a;
+    border-radius: 16px;
+    padding: 28px;
+    border: 1px solid #2d2d2d;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+.cta-card h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.cta-card p {
+    color: #999;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.selected-date-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2d2d2d;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.selected-date-display .label {
+    color: #999;
+    font-size: 13px;
+}
+
+.date-value {
+    font-weight: 600;
+    color: #e50914;
+}
+
+.btn-book-cta {
+    width: 100%;
+    background: #e50914;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background 0.2s;
+}
+
+.btn-book-cta:hover {
+    background: #c0070f;
+}
+
+.perks {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.perk {
+    font-size: 13px;
+    color: #666;
+}
+
+/* Not Found */
+.not-found {
+    text-align: center;
+    padding: 80px;
+    color: #999;
+}
+
+.not-found button {
+    background: #e50914;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-content {
+        flex-direction: column;
+        align-items: center;
+        padding: 60px 16px 32px;
+    }
+
+    .movie-title {
+        font-size: 28px;
+    }
+
+    .details-container {
+        flex-direction: column;
+        padding: 0 16px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}

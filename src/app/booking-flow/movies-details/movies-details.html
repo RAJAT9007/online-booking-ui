@@ -1,0 +1,147 @@
+<div class="movie-details-page">
+
+    @if (isLoading) {
+    <div class="loading-screen">
+        <div class="spinner"></div>
+        <p>Loading movie...</p>
+    </div>
+    }
+
+    @if (!isLoading && movie) {
+
+    <!-- Hero Banner -->
+    <div class="hero-banner" [style.backgroundImage]="'url(' + getPosterPath(movie) + ')'">
+
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+
+            <!-- Poster -->
+            <div class="movie-poster">
+                <img [src]="getPosterPath(movie)" [alt]="movie.title" />
+                <div class="rating-badge">
+                    ⭐ {{ movie.rating }}/10
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="movie-info">
+
+                <div class="genre-tag">{{ movie.genre }}</div>
+
+                <h1 class="movie-title">{{ movie.title }}</h1>
+
+                <div class="star-rating">
+                    @for (star of getStars(movie.rating); track $index) {
+                    <span class="star {{ star }}">★</span>
+                    }
+                    <span class="rating-text">{{ movie.rating }}/10</span>
+                </div>
+
+                <div class="meta-tags">
+                    <span class="tag">
+                        🕐 {{ movie.duration_minutes }} mins
+                    </span>
+                    <span class="tag">🌐 {{ movie.language }}</span>
+                    <span class="tag">🎭 {{ movie.genre }}</span>
+                    <span class="tag status {{ movie.status }}">
+                        {{ movie.status === 'ACTIVE' ? 'Now Showing' : 'Coming Soon' }}
+                    </span>
+                </div>
+
+                <p class="synopsis">{{ movie.description }}</p>
+
+                <!-- Date Selection -->
+                <div class="date-section">
+                    <h3>Select Date</h3>
+                    <div class="date-strip">
+                        @for (date of availableDates; track date) {
+                        <div class="date-card" [class.active]="selectedDate === date" (click)="selectedDate = date">
+                            <span class="day">{{ formatDate(date).day }}</span>
+                            <span class="num">{{ formatDate(date).date }}</span>
+                            <span class="month">{{ formatDate(date).month }}</span>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Book Button -->
+                <button class="btn-book" (click)="bookTickets()">
+                    🎟️ Book Tickets Now
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Movie Details Section -->
+    <div class="details-section">
+        <div class="details-container">
+
+            <!-- About -->
+            <div class="about-card">
+                <h2>About the Movie</h2>
+                <p>{{ movie.description }}</p>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Genre</span>
+                        <span class="info-value">{{ movie.genre }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Language</span>
+                        <span class="info-value">{{ movie.language }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Duration</span>
+                        <span class="info-value">
+                            {{ movie.duration_minutes }} minutes
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Rating</span>
+                        <span class="info-value">⭐ {{ movie.rating }}/10</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Status</span>
+                        <span class="info-value status-text {{ movie.status }}">
+                            {{ movie.status === 'ACTIVE' ? 'Now Showing' : 'Coming Soon' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book Now CTA -->
+            <div class="cta-card">
+                <h3>Ready to Watch?</h3>
+                <p>Book your tickets now and enjoy the experience!</p>
+
+                <div class="selected-date-display">
+                    <span class="label">Selected Date</span>
+                    <span class="date-value">{{ selectedDate }}</span>
+                </div>
+
+                <button class="btn-book-cta" (click)="bookTickets()">
+                    Book Tickets for {{ selectedDate }}
+                </button>
+
+                <div class="perks">
+                    <div class="perk">✅ Instant confirmation</div>
+                    <div class="perk">✅ Easy cancellation</div>
+                    <div class="perk">✅ Secure payment</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    }
+
+    @if (!isLoading && !movie) {
+    <div class="not-found">
+        <h2>Movie not found!</h2>
+        <button routerLink="/home">Go Back Home</button>
+    </div>
+    }
+
+</div>

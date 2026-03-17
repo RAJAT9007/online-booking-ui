@@ -1,0 +1,78 @@
+<div class="payment-page">
+
+    <!-- Header -->
+    <div class="payment-header">
+        <a routerLink="/home" class="back-btn">← Back</a>
+        <h1>Book-Your <span>VIBE</span></h1>
+    </div>
+
+    <div class="payment-container">
+
+        <!-- Left — Order Summary -->
+        <div class="order-summary">
+            <h2>Order Summary</h2>
+
+            <div class="summary-card">
+                <div class="summary-row">
+                    <span class="label">Seats Selected</span>
+                    <span class="value">{{ seatIds.length }}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label">Price per seat</span>
+                    <span class="value">₹{{ amount / seatIds.length }}</span>
+                </div>
+                <div class="divider"></div>
+                <div class="summary-row total">
+                    <span class="label">Total Amount</span>
+                    <span class="value highlight">₹{{ amount }}</span>
+                </div>
+            </div>
+
+            <!-- Seat IDs -->
+            <div class="seats-info">
+                <h4>Selected Seats</h4>
+                <div class="seat-tags">
+                    @for (seat of seatIds; track seat) {
+                    <span class="seat-tag">Seat {{ seat }}</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Right — Payment Options -->
+        <div class="payment-options">
+            <h2>Payment</h2>
+
+            <div class="secure-badge">
+                🔒 100% Secure Payment
+            </div>
+
+            <div class="razorpay-card">
+                <img src="https://razorpay.com/favicon.ico" width="24" alt="razorpay" />
+                <div>
+                    <h4>Pay with Razorpay</h4>
+                    <p>UPI, Cards, Net Banking, Wallets</p>
+                </div>
+            </div>
+
+            <div class="amount-display">
+                <span>Total Payable</span>
+                <span class="amount">₹{{ amount }}</span>
+            </div>
+
+            <button class="btn-pay" (click)="payNow()" [disabled]="isLoading">
+                @if (isLoading) {
+                <span>Processing...</span>
+                } @else {
+                <span>Pay ₹{{ amount }} Now</span>
+                }
+            </button>
+
+            <p class="terms">
+                By completing purchase you agree to our
+                <a href="#">Terms & Conditions</a>
+            </p>
+        </div>
+
+    </div>
+</div>

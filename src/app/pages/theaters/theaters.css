@@ -1,0 +1,141 @@
+/* Reuse your Admin Card styles for consistency */
+.admin-card {
+    background: rgba(20, 20, 20, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.text-gradient {
+    background: linear-gradient(45deg, #ff4e50, #f9d423);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+/* Badges for IDs */
+.id-badge {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+    color: #f9d423;
+    /* Yellow accent */
+}
+
+/* Status Badge */
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    background: #333;
+    color: #aaa;
+    text-transform: uppercase;
+}
+
+.status-badge.active {
+    background: rgba(0, 255, 127, 0.1);
+    color: #00ff7f;
+}
+
+/* Table Customization */
+.vibe-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table-row td {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #ccc;
+}
+
+.primary-text {
+    font-weight: 600;
+    color: white;
+}
+
+.address-cell {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Form Styling */
+.glass-form {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 25px;
+    margin: 20px 0;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    background: #111;
+    border: 1px solid #333;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #ff4e50;
+}
+
+/* Buttons */
+.add-btn {
+    background: linear-gradient(45deg, #ff4e50, #f9d423);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.save-btn {
+    background: #ff4e50;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    margin-right: 10px;
+}
+
+.edit-icon-btn {
+    color: #4a90e2;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.delete-icon-btn {
+    color: #ff4e50;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}

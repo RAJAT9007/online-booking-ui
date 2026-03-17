@@ -1,0 +1,183 @@
+/* Background & Container */
+.admin-card {
+    background: rgba(20, 20, 20, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Header & Filter Bar */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.subtitle {
+    color: #888;
+    font-size: 14px;
+}
+
+.action-bar {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* Search Input */
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 10px;
+    width: 250px;
+    outline: none;
+}
+
+.genre-select {
+    background: #222;
+    color: white;
+    border: 1px solid #444;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/* Buttons */
+.add-btn {
+    background: linear-gradient(45deg, #ff4e50, #f9d423);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Glass Form */
+.glass-form {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    color: #bbb;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    background: #111;
+    border: 1px solid #333;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* Table Design */
+.table-container {
+    overflow-x: auto;
+}
+
+.vibe-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.vibe-table th {
+    text-align: left;
+    padding: 15px;
+    color: #666;
+    border-bottom: 2px solid #333;
+    font-size: 14px;
+}
+
+.table-row td {
+    padding: 15px;
+    border-bottom: 1px solid #222;
+}
+
+.table-row:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.movie-name {
+    font-weight: 600;
+    color: #efefef;
+}
+
+/* Badges */
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    background: #333;
+    color: #aaa;
+}
+
+.status-badge.active {
+    background: rgba(0, 255, 127, 0.1);
+    color: #00ff7f;
+}
+
+/* Action Buttons */
+.edit-icon-btn,
+.delete-icon-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    margin: 0 5px;
+    transition: 0.2s;
+}
+
+.edit-icon-btn {
+    color: #4a90e2;
+}
+
+.delete-icon-btn {
+    color: #ff4e50;
+}
+
+.edit-icon-btn:hover {
+    transform: scale(1.2);
+}
+
+.delete-icon-btn:hover {
+    transform: scale(1.2);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 50px;
+    color: #444;
+}
+
+.empty-state i {
+    font-size: 50px;
+}

@@ -1,0 +1,343 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+
+.landing-container {
+    height: 100vh;
+    width: 100%;
+    /* Replace with a real movie-themed background image in your assets */
+    background: url('/assets/cinema-bg.jpg') no-repeat center center/cover;
+    background-color: #0a0a0a;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Dark gradient overlay for readability */
+.overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right,
+            transparent,
+            rgba(255, 78, 80, 0.05),
+            transparent);
+    transform: skewX(-25deg);
+    animation: sweep 6s infinite;
+}
+
+@keyframes sweep {
+    0% {
+        left: -100%;
+    }
+
+    50% {
+        left: 150%;
+    }
+
+    100% {
+        left: 150%;
+    }
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 8%;
+    position: relative;
+    z-index: 10;
+}
+
+.logo {
+    font-weight: 800;
+    font-size: 24px;
+    letter-spacing: 1px;
+}
+
+.span {
+    color: #ff4e50;
+    /* Vibe Red/Orange */
+    text-shadow: 0 0 15px rgba(255, 78, 80, 0.5);
+}
+
+/* Hero Section */
+.hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 8%;
+    position: relative;
+    z-index: 10;
+}
+
+.hero-subtitle {
+    color: #ff4e50;
+    font-weight: 600;
+    letter-spacing: 4px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.hero h1 {
+    font-size: 4.5rem;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    font-weight: 800;
+}
+
+.text-gradient {
+    background: linear-gradient(45deg, #ff4e50, #f9d423);
+
+    /* 1. Add the standard property (Solves the warning) */
+    background-clip: text;
+
+    /* 2. Keep the webkit version (Required for Chrome/Safari) */
+    -webkit-background-clip: text;
+
+    /* 3. Keep this for the transparency effect */
+    -webkit-text-fill-color: transparent;
+
+    /* Optional: Improves performance */
+    display: inline-block;
+}
+
+.hero p {
+    font-size: 18px;
+    color: #ccc;
+    max-width: 550px;
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+/* Buttons */
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+button {
+    padding: 14px 35px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.primary-btn {
+    background: linear-gradient(45deg, #ff4e50, #f9d423);
+    color: white;
+    box-shadow: 0 10px 20px rgba(255, 78, 80, 0.3);
+}
+
+.primary-btn.sm {
+    padding: 10px 25px;
+    font-size: 14px;
+}
+
+.primary-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 30px rgba(255, 78, 80, 0.5);
+}
+
+.secondary-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.secondary-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+}
+
+.nav-ghost-btn {
+    background: transparent;
+    color: white;
+    margin-right: 15px;
+}
+
+.nav-ghost-btn:hover {
+    color: #ff4e50;
+}
+
+/* Scroll Down Animation */
+.scroll-down {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 10;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.scroll-down p {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.mouse {
+    width: 25px;
+    height: 40px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.wheel {
+    width: 4px;
+    height: 8px;
+    background: #ff4e50;
+    border-radius: 2px;
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: scroll 1.5s infinite;
+}
+
+@keyframes scroll {
+    0% {
+        opacity: 1;
+        top: 8px;
+    }
+
+    100% {
+        opacity: 0;
+        top: 25px;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 3rem;
+    }
+
+    .hero {
+        text-align: center;
+        align-items: center;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+}
+
+.floating-elements {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    /* Behind text, but above background */
+    overflow: hidden;
+}
+
+.element {
+    position: absolute;
+    width: 150px;
+    height: 220px;
+    background-size: cover;
+    border-radius: 15px;
+    opacity: 0.3;
+    filter: blur(2px);
+    animation: float 10s infinite ease-in-out;
+}
+
+.movie-1 {
+    background-image: url('/avengers.jpg');
+    top: 15%;
+    right: 10%;
+}
+
+.movie-2 {
+    background-image: url('/thor.png');
+    bottom: 20%;
+    right: 25%;
+    animation-delay: 2s;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(5deg);
+    }
+
+    50% {
+        transform: translateY(-30px) rotate(-5deg);
+    }
+}
+
+.text-gradient {
+    display: inline-block;
+    overflow: hidden;
+    /* Ensures the content is not revealed until the animation */
+    border-right: .15em solid #ff4e50;
+    /* The typing cursor */
+    white-space: nowrap;
+    /* Keeps the content on a single line */
+    margin: 0 auto;
+    letter-spacing: .10em;
+    animation:
+        typing 3.5s steps(30, end),
+        blink-caret .5s step-end infinite;
+}
+
+/* The typing effect */
+@keyframes typing {
+    from {
+        width: 0
+    }
+
+    to {
+        width: 100%
+    }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+
+    from,
+    to {
+        border-color: transparent
+    }
+
+    50% {
+        border-color: #ff4e50
+    }
+}
+
+.primary-btn {
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 78, 80, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(255, 78, 80, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 78, 80, 0);
+    }
+}

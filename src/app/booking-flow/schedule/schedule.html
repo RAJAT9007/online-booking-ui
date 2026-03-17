@@ -1,0 +1,64 @@
+<!-- <nav class="cinema-navbar sticky-top">
+    <div class="nav-container">
+        <a class="nav-brand" routerLink="/">Book-Your<span> VIBE</span></a>
+
+        <div class="nav-menu">
+            <ul class="nav-list">
+                <li class="nav-item"><a class="nav-link active" routerLink="/home">Home</a></li>
+                <li class="nav-item"><a class="nav-link active" routerLink="/home">Movies</a></li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="cityDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Select City
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="cityDropdown">
+                        <li><a class="dropdown-item" href="#">Ahmedabad</a></li>
+                        <li><a class="dropdown-item" href="#">Gandhinagar</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Surat</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="#">Offers</a></li>
+            </ul>
+
+            <form class="nav-search">
+                <input type="search" placeholder="Search for movies...">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav> -->
+
+<div class="schedule-container">
+    <h2>Tickets for {{ movieDetails?.title || 'Movie' }}</h2>
+
+    <!-- Dynamic Theater Shows List -->
+    <div class="theater-list">
+        <div class="theater-card" *ngFor="let mapping of theatreShowsMapping">
+            <div class="theater-header">
+                <h4>{{ mapping.theatre.name }}</h4>
+                <p class="theater-address">{{ mapping.theatre.address }}</p>
+            </div>
+            
+            <div class="shows-wrapper">
+                <div class="show-item" *ngFor="let show of mapping.shows">
+                    <div class="show-info">
+                        <span class="screen-name">{{ getScreenName(mapping, show.screenId) }}</span>
+                        <span class="language-tag">{{ show.language }}</span>
+                        <span class="price-tag">₹{{ show.price }}</span>
+                    </div>
+                    <button class="time-btn" (click)="goToSeatBooking(mapping.theatre, show)">
+                        {{ formatTime(show.startTime) }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="theatreShowsMapping.length === 0" class="no-shows">
+            <p>No shows available for this movie right now.</p>
+        </div>
+    </div>
+</div>

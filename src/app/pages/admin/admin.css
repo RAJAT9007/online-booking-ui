@@ -1,0 +1,107 @@
+.admin-container {
+    display: flex;
+    height: 100vh;
+    background: #080808;
+    /* Deep black background */
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 260px;
+    background: #111;
+    /* Slightly lighter black */
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-brand {
+    margin-bottom: 50px;
+    padding-left: 10px;
+}
+
+.admin-tag {
+    color: white;
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 300;
+}
+
+/* Navigation Links */
+.nav-list {
+    list-style: none;
+    padding: 0;
+    flex-grow: 1;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 18px;
+    color: #888;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.nav-item i {
+    font-size: 20px;
+    margin-right: 15px;
+}
+
+.nav-item:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-item.active {
+    background: linear-gradient(45deg, #ff4e50, #f9d423);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 78, 80, 0.3);
+}
+
+/* Content Area Wrapper */
+.content-area {
+    flex-grow: 1;
+    padding: 30px;
+    overflow-y: auto;
+    /* Subtle glow in the corner to match landing page vibe */
+    background: radial-gradient(circle at top right, rgba(255, 78, 80, 0.05), transparent);
+}
+
+.glass-container {
+    height: 100%;
+    width: 100%;
+}
+
+/* Logout Button */
+.sidebar-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 20px;
+}
+
+.logout-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(255, 78, 80, 0.3);
+    color: #ff4e50;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 600;
+}
+
+.logout-btn:hover {
+    background: #ff4e50;
+    color: white;
+}

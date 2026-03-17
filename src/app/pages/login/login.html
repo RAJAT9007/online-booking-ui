@@ -1,0 +1,51 @@
+<div class="login-container">
+    <div class="floating-elements">
+        <div class="element movie-1"></div>
+        <div class="element movie-2"></div>
+    </div>
+
+    <div class="login-card">
+        <div class="card-header text-center">
+            <h2 class="text-gradient">Login</h2>
+            <p class="subtitle">Welcome back to the Vibe</p>
+        </div>
+
+        <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" class="form-control" placeholder="Enter your email" [(ngModel)]="loginData.email"
+                    name="email" required #email="ngModel">
+                <small class="error-text" *ngIf="email.invalid && email.touched">
+                    Please enter a valid email.
+                </small>
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" class="form-control" placeholder="••••••••" [(ngModel)]="loginData.password"
+                    name="password" required #password="ngModel">
+                <small class="error-text" *ngIf="password.invalid && password.touched">
+                    Password is required.
+                </small>
+            </div>
+
+            <div class="options">
+                <label class="remember-me">
+                    <input type="checkbox" name="remember"> Remember me
+                </label>
+                <a href="#" class="forgot-link">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="login-btn" [disabled]="loginForm.invalid">
+                Sign In
+            </button>
+
+        </form>
+
+        <p class="register-link text-center">
+            Don't have an account?
+            <a class="register-btn" routerLink="/register">Register</a>
+        </p>
+    </div>
+</div>

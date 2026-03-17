@@ -1,0 +1,122 @@
+/* register.component.css */
+
+.register-wrapper {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 1. Add your poster image here */
+    /* 2. The linear-gradient creates a dark 'tint' over the image */
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)),
+        url('/kalki.png');
+
+    background-size: cover;
+    /* Makes image fill the screen */
+    background-position: center;
+    /* Centers the poster */
+    background-attachment: fixed;
+    /* Keeps background still while card might move */
+}
+
+.register-card {
+    /* Semi-transparent blue glass effect */
+    background: rgba(10, 30, 60, 0.4);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    padding: 40px;
+    border-radius: 25px;
+    width: 100%;
+    max-width: 420px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    color: white;
+}
+
+h2 {
+    text-align: center;
+    font-weight: 800;
+    margin-bottom: 30px;
+    /* Red-Yellow Gradient for Title */
+    background: linear-gradient(45deg, #ff4e50, #f9d423);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ccc;
+    font-size: 14px;
+}
+
+/* Glassy Inputs & Selects */
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white;
+    font-size: 15px;
+    transition: 0.3s;
+    outline: none;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #ff4e50;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Styling the Dropdown Options */
+select option {
+    background-color: #1a1a1a;
+    color: white;
+}
+
+/* Vibe Gradient Button */
+.btn-register {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(45deg, #ff4e50, #f9d423);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    /* Pill shape */
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 15px;
+    transition: 0.3s;
+}
+
+.btn-register:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(255, 78, 80, 0.4);
+}
+
+.footer-text {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #bbb;
+}
+
+.footer-text a {
+    color: #ff4e50;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer-text a:hover {
+    color: #f9d423;
+}

@@ -1,0 +1,412 @@
+/* ================= MOVIE SECTION CONTAINER ================= */
+.section-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(45deg, #fff, #aaa);
+
+    /* 1. Use the standard property */
+    background-clip: text;
+
+    /* 2. Keep the webkit version for Chrome/Safari (The yellow line is okay here) */
+    -webkit-background-clip: text;
+
+    /* 3. This makes the text transparent so the background shows through */
+    -webkit-text-fill-color: transparent;
+
+    margin-bottom: 0;
+}
+
+.view-all {
+    color: #ff4e50;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: rgba(255, 78, 80, 0.1);
+    transition: 0.3s all ease;
+}
+
+.view-all:hover {
+    background: #ff4e50;
+    color: white;
+    box-shadow: 0 0 15px rgba(255, 78, 80, 0.4);
+}
+
+/* ================= MOVIE GRID ================= */
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 30px;
+    perspective: 1000px;
+    /* Adds depth for the hover effect */
+}
+
+/* ================= MOVIE CARD V2 ================= */
+.movie-card-v2 {
+    background: #1a1a1a;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    position: relative;
+}
+
+.movie-card-v2:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 78, 80, 0.2);
+    border-color: rgba(255, 78, 80, 0.3);
+}
+
+/* ================= POSTER AREA ================= */
+.poster-container {
+    position: relative;
+    height: 350px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.poster-img-v2 {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.movie-card-v2:hover .poster-img-v2 {
+    transform: scale(1.1);
+    /* Zoom effect on hover */
+}
+
+.poster-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+.movie-card-v2:hover .poster-overlay {
+    opacity: 1;
+}
+
+.btn-details {
+    background: transparent;
+    border: 2px solid #fff;
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+.btn-details:hover {
+    background: #fff;
+    color: #000;
+    transform: scale(1.1);
+}
+
+/* ================= MOVIE DETAILS AREA ================= */
+.movie-details {
+    padding: 20px;
+    background: linear-gradient(to bottom, #1a1a1a, #111);
+}
+
+.movie-title {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.movie-genre {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.movie-duration {
+    color: #ff4e50;
+    /* Accent color */
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* ================= PRIMARY VIBE BUTTON ================= */
+.btn-vibe-primary {
+    width: 100%;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #fff;
+    background: linear-gradient(45deg, #ff4e50, #f9d423);
+    cursor: pointer;
+    transition: 0.3s all ease;
+    box-shadow: 0 4px 15px rgba(255, 78, 80, 0.3);
+}
+
+.btn-vibe-primary:hover {
+    box-shadow: 0 6px 20px rgba(255, 78, 80, 0.5);
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* ================= NAVBAR ================= */
+.cinema-navbar {
+    background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
+    padding: 12px 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 999;
+}
+
+/* Ensure the main container centers everything vertically */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* This aligns Brand and Menu */
+    width: 100%;
+}
+
+.nav-brand {
+    font-size: 26px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #fff;
+    letter-spacing: 1px;
+    transition: 0.3s ease;
+}
+
+.nav-brand span {
+    background: linear-gradient(45deg, #ff4e50, #f9d423);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 15px rgba(255, 78, 80, 0.2);
+}
+
+.nav-brand:hover {
+    transform: scale(1.05);
+}
+
+/* Ensure the menu items (Links, Selects, Search) are aligned */
+.nav-menu {
+    display: flex;
+    align-items: center;
+    /* This aligns everything inside the menu */
+    gap: 20px;
+}
+
+/* Ensure the list items are also centered */
+.nav-list {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 20px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #ddd;
+    font-size: 16px;
+    transition: 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: #fff;
+}
+
+.nav-link.active {
+    color: #ff4e50;
+}
+
+/* Fix for the Search Bar and Buttons to match height */
+.nav-search,
+.genre-filter,
+.admin-btn {
+    height: 38px;
+    /* Force a consistent height */
+    display: flex;
+    align-items: center;
+}
+
+/* Remove default margin from the Admin text if it's pushing the box */
+.admin-btn h6 {
+    margin: 0;
+    line-height: 1;
+}
+
+/* ================= DROPDOWN LOGIC ================= */
+.nav-item.dropdown {
+    position: relative;
+    /* Essential for absolute positioning of the menu */
+}
+
+.dropdown-toggle {
+    color: #ddd;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px 0;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    /* Sits exactly below the navbar */
+    left: 0;
+    background: rgba(28, 28, 28, 0.95);
+    /* Semi-transparent dark */
+    backdrop-filter: blur(10px);
+    /* Glassmorphism effect */
+    min-width: 180px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    list-style: none;
+    padding: 10px 0;
+    margin-top: 10px;
+
+    /* Animation Start State */
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 1000;
+}
+
+/* Show on Hover */
+.nav-item.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Dropdown Links */
+.dropdown-menu li a {
+    color: #eee;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.dropdown-menu li a:hover {
+    background: rgba(255, 78, 80, 0.1);
+    /* Your Vibe red color */
+    color: #ff4e50;
+    padding-left: 25px;
+    /* Slight slide effect */
+}
+
+.divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 8px 0;
+}
+
+/* ================= SEARCH ================= */
+.nav-search {
+    display: flex;
+    align-items: center;
+    background: #2b2b2b;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.6);
+}
+
+.nav-search input {
+    border: none;
+    outline: none;
+    padding: 8px 15px;
+    background: transparent;
+    color: #fff;
+    width: 200px;
+}
+
+.nav-search input::placeholder {
+    color: #aaa;
+}
+
+.nav-search button {
+    border: none;
+    padding: 8px 18px;
+    background: linear-gradient(45deg, #ff4e50, #f9d423);
+    color: white;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.nav-search button:hover {
+    opacity: 0.85;
+}
+
+.genre-filter {
+    background: black;
+    color: #fff;
+    border: 1px solid rgba(27, 15, 15, 0.1);
+    padding: 8px 12px;
+    border-radius: 20px;
+    outline: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s ease;
+}
+
+.genre-filter:hover {
+    border-color: #ff4e50;
+    box-shadow: 0 0 10px rgba(255, 78, 80, 0.2);
+}
+
+.genre-filter option {
+    background: #1c1c1c;
+    color: #fff;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .movie-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+
+    .poster-container {
+        height: 250px;
+    }
+
+    .nav-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .nav-menu {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .nav-search input {
+        width: 150px;
+    }
+}

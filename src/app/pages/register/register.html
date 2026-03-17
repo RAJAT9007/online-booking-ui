@@ -1,0 +1,41 @@
+<div class="register-wrapper">
+    <div class="register-card">
+        <h2>Create Account</h2>
+        <form (ngSubmit)="register()">
+
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" [(ngModel)]="registerData.name" name="name" required placeholder="Enter your name">
+            </div>
+
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" [(ngModel)]="registerData.email" name="email" required
+                    placeholder="example@mail.com">
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" [(ngModel)]="registerData.password" name="password" required
+                    placeholder="******">
+            </div>
+
+            <div class="input-group">
+                <label>Mobile number</label>
+                <input [(ngModel)]="registerData.number" name="password" required placeholder="+91 12345-12345">
+            </div>
+
+            <div class="input-group">
+                <label>Role</label>
+                <select [(ngModel)]="registerData.role" name="role">
+                    <option value="USER">User</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-register">Register Now</button>
+
+            <p class="footer-text">Already have an account? <a routerLink="/login">Login</a></p>
+        </form>
+    </div>
+</div>

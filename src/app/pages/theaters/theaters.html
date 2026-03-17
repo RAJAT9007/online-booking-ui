@@ -1,0 +1,93 @@
+<div class="admin-card">
+    <div class="header">
+        <div class="title-group">
+            <h2 class="text-gradient">🎭 Theater Management</h2>
+            <p class="subtitle">Manage cinema locations and registration IDs</p>
+        </div>
+
+        <button class="add-btn" (click)="openAddForm()">
+            <i class="bi bi-plus-lg"></i> Add Theater
+        </button>
+    </div>
+
+    <div class="glass-form fade-in" *ngIf="showForm">
+        <form (ngSubmit)="saveTheatre()" #theatreForm="ngForm">
+            <h3 class="form-title">{{ isEdit ? 'Update Theater' : 'Register New Theater' }}</h3>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Theater Name</label>
+                    <input type="text" placeholder="e.g. PVR Cinema" [(ngModel)]="theater.name" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>City ID</label>
+                    <input type="number" placeholder="Enter City ID" [(ngModel)]="theater.cityId" name="cityId"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Register ID (Owner)</label>
+                    <input type="number" placeholder="Enter Registration ID" [(ngModel)]="theater.registerId"
+                        name="ownerId" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Operational Status</label>
+                    <select [(ngModel)]="theater.status" name="status">
+                        <option value="ACTIVE">Active</option>
+                        <option value="INACTIVE">Inactive</option>
+                        <option value="UNDER_RENOVATION">Renovation</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group full-width mt-3">
+                <label>Physical Address</label>
+                <textarea placeholder="Full street address..." [(ngModel)]="theater.address" name="address"
+                    rows="2"></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button class="save-btn" type="submit">Confirm Details</button>
+                <button class="cancel-btn" type="button" (click)="showForm=false">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table class="vibe-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Theater Name</th>
+                    <th>Address</th>
+                    <th>City ID</th>
+                    <th>Register ID</th>
+                    <th>Status</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let t of theaters; let i=index" class="table-row">
+                    <td>{{ i + 1 }}</td>
+                    <td class="primary-text">{{ t.name }}</td>
+                    <td class="address-cell">{{ t.address }}</td>
+                    <td><span class="id-badge">{{ t.cityId }}</span></td>
+                    <td><span class="id-badge">{{ t.registerId }}</span></td>
+                    <td>
+                        <span class="status-badge" [class.active]="t.status === 'ACTIVE'">
+                            {{ t.status }}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <button class="edit-icon-btn" (click)="editTheatre(t)"><i
+                                class="bi bi-pencil-square"></i></button>
+                        <button class="delete-icon-btn" (click)="deleteTheatre(t.id)"><i
+                                class="bi bi-trash3"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

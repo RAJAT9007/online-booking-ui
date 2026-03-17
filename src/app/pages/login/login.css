@@ -1,0 +1,154 @@
+/* login.component.css */
+
+.login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Cinematic Background with dark tint */
+    background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.85)),
+        url('/end-game.jpg') no-repeat center center/cover;
+    background-attachment: fixed;
+    font-family: 'Poppins', sans-serif;
+}
+
+.login-card {
+    /* Semi-transparent blue glass effect */
+    background: rgba(10, 30, 60, 0.4);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    padding: 50px 40px;
+    border-radius: 25px;
+    width: 420px;
+    min-height: 520px;
+    /* Matched to Register Card height */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Red-Yellow Gradient Title */
+.text-gradient {
+    font-size: 32px;
+    font-weight: 800;
+    text-align: center;
+    background: linear-gradient(45deg, #ff4e50, #f9d423);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #999;
+    font-size: 14px;
+    margin-bottom: 35px;
+    text-align: center;
+}
+
+/* Label Styling */
+label {
+    display: block;
+    color: #ccc;
+    font-size: 14px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+/* Glassy Input Styling */
+.form-control {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 15px !important;
+    font-size: 16px;
+    color: white !important;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    outline: none;
+}
+
+.form-control::placeholder {
+    color: #666;
+}
+
+.form-control:focus {
+    border-color: #ff4e50 !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 0 15px rgba(255, 78, 80, 0.3) !important;
+}
+
+/* Options (Remember Me & Forgot Pwd) */
+.options-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 13px;
+    color: #bbb;
+}
+
+.options-link {
+    color: #ff4e50;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.options-link:hover {
+    color: #f9d423;
+}
+
+/* Pill-Shaped Vibe Button */
+.login-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 50px;
+    /* Full pill shape */
+    background: linear-gradient(45deg, #ff4e50, #f9d423) !important;
+    color: white !important;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: 0.3s all ease;
+    margin-top: 10px;
+    box-shadow: 0 5px 20px rgba(255, 78, 80, 0.4);
+}
+
+.login-btn:hover:not(:disabled) {
+    transform: scale(1.03);
+    box-shadow: 0 10px 30px rgba(255, 78, 80, 0.6);
+}
+
+.login-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
+/* Footer Links */
+.register-link {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.register-btn {
+    color: #ff4e50;
+    text-decoration: none;
+    font-weight: 700;
+    margin-left: 5px;
+    transition: 0.3s;
+}
+
+.register-btn:hover {
+    color: #f9d423;
+}
