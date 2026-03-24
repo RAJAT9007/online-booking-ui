@@ -1,0 +1,87 @@
+<div class="dashboard-container">
+
+    <div class="dashboard-header">
+        <h2>Welcome to Owner Dashboard</h2>
+        <p class="subtitle">Monitor your theatre performance and metrics in real-time.</p>
+    </div>
+
+    <!-- Theatre Selector -->
+    <div class="dashboard-controls">
+        <select [ngModel]="selectedTheatreId" (ngModelChange)="onTheatreChange($event)" class="theatre-dropdown">
+            <option value="0">Select a Theatre to View Metrics</option>
+            <option *ngFor="let t of theatres" [value]="t.id">
+                🏢 {{ t.name }}
+            </option>
+        </select>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Crunching real-time metrics...</p>
+    </div>
+
+    <!-- Metrics Grid -->
+    <div class="metrics-grid" *ngIf="!isLoading && selectedTheatreId">
+        
+        <div class="metric-card card-revenue">
+            <div class="icon">💰</div>
+            <div class="metric-info">
+                <h3>Today Revenue</h3>
+                <h2>₹{{ todayRevenue | number:'1.0-0' }}</h2>
+            </div>
+            <div class="glow"></div>
+        </div>
+
+        <div class="metric-card card-bookings">
+            <div class="icon">🎟</div>
+            <div class="metric-info">
+                <h3>Total Bookings Today</h3>
+                <h2>{{ todayBookings }}</h2>
+            </div>
+            <div class="glow"></div>
+        </div>
+
+        <div class="metric-card card-seats">
+            <div class="icon">🪑</div>
+            <div class="metric-info">
+                <h3>Total Seats Available</h3>
+                <h2>{{ totalSeatsAvailable }}</h2>
+            </div>
+            <div class="glow"></div>
+        </div>
+
+        <div class="metric-card card-shows">
+            <div class="icon">🎬</div>
+            <div class="metric-info">
+                <h3>Active Shows Running</h3>
+                <h2>{{ activeShows }}</h2>
+            </div>
+            <div class="glow"></div>
+        </div>
+
+        <div class="metric-card card-screens">
+            <div class="icon">🏢</div>
+            <div class="metric-info">
+                <h3>Total Screens</h3>
+                <h2>{{ totalScreens }}</h2>
+            </div>
+            <div class="glow"></div>
+        </div>
+
+        <div class="metric-card card-theatres">
+            <div class="icon">🎭</div>
+            <div class="metric-info">
+                <h3>Total Theatres Managed</h3>
+                <h2>{{ totalTheatres }}</h2>
+            </div>
+            <div class="glow"></div>
+        </div>
+
+    </div>
+
+    <div *ngIf="!selectedTheatreId" class="no-selection-state">
+        <p>Please select a theatre from the dropdown above to view its live metrics.</p>
+    </div>
+
+</div>

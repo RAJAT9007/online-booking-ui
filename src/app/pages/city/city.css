@@ -1,0 +1,114 @@
+.city-container {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    padding: 30px;
+    border-radius: 16px;
+    color: white;
+}
+
+.city-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.city-form {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.city-input {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    width: 220px;
+}
+
+.add-btn {
+    background: linear-gradient(45deg, #22c55e, #4ade80);
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: black;
+    font-weight: 600;
+}
+
+.update-btn {
+    background: linear-gradient(45deg, #38bdf8, #6366f1);
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+}
+
+.city-list {
+    list-style: none;
+    padding: 0;
+}
+
+.city-item {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.action-btns button {
+    margin-left: 8px;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.edit-btn {
+    background: #facc15;
+}
+
+.delete-btn {
+    background: #ef4444;
+    color: white;
+}
+
+.city-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.city-table th,
+.city-table td {
+    padding: 12px;
+    text-align: left;
+}
+
+.city-table th {
+    background: #2c2f3f;
+    color: white;
+}
+
+.city-table tr {
+    background: #3a3f51;
+    color: white;
+    border-radius: 10px;
+}
+
+.city-table tr:not(:last-child) {
+    border-bottom: 10px solid transparent;
+}
+
+.edit-btn {
+    background: #facc15;
+    margin-right: 10px;
+}
+
+.delete-btn {
+    background: #ef4444;
+}

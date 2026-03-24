@@ -26,10 +26,16 @@
                         required>
                 </div>
 
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label>Register ID (Owner)</label>
                     <input type="number" placeholder="Enter Registration ID" [(ngModel)]="theater.registerId"
-                        name="ownerId" required>
+                        name="registerId">
+                </div> -->
+
+                <div class="form-group">
+                    <label>Owner ID</label>
+                    <input type="number" placeholder="Enter Owner ID" [(ngModel)]="theater.ownerId" name="ownerId"
+                        required>
                 </div>
 
                 <div class="form-group">
@@ -74,7 +80,7 @@
                     <td class="primary-text">{{ t.name }}</td>
                     <td class="address-cell">{{ t.address }}</td>
                     <td><span class="id-badge">{{ t.cityId }}</span></td>
-                    <td><span class="id-badge">{{ t.registerId }}</span></td>
+                    <td><span class="id-badge">{{ t.theatreId }}</span></td>
                     <td>
                         <span class="status-badge" [class.active]="t.status === 'ACTIVE'">
                             {{ t.status }}

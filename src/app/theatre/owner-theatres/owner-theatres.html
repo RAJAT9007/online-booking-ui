@@ -1,0 +1,25 @@
+<div class="card">
+
+    <h2>Create Theatre</h2>
+
+    <label>Owner Id</label>
+    <input type="number" [(ngModel)]="theatre.ownerId">
+
+    <label>Theatre Name</label>
+    <input [(ngModel)]="theatre.name">
+
+    <label>City Id</label>
+    <input type="number" [(ngModel)]="theatre.cityId">
+
+    <label>Address</label>
+    <textarea [(ngModel)]="theatre.address"></textarea>
+
+    <label>Status</label>
+    <select [(ngModel)]="theatre.status">
+        <option value="ACTIVE">Active</option>
+        <option value="INACTIVE">Inactive</option>
+    </select>
+
+    <button (click)="createTheatre()">Create</button>
+
+</div>

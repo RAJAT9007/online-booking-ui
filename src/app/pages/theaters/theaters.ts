@@ -19,8 +19,9 @@ export class TheatersComponent {
     name: '',
     address: '',
     cityId: 0,
-    registerId: '',
-    status: ''
+    ownerId: 0,
+    status: 'ACTIVE',
+    theatreId: ""
   };
 
   theaters: Theatre[] = [];
@@ -78,10 +79,10 @@ export class TheatersComponent {
       name: '',
       address: '',
       cityId: 0,
-      registerId: '',
-      status: ''
+      theatreId: '',
+      status: '',
+      ownerId: 0,
     };
-    this.isEdit = false;
 
   }
 }

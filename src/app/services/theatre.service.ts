@@ -7,6 +7,9 @@ import { Theatre } from '../models/theatre.model';
     providedIn: 'root'
 })
 export class TheatreService {
+    getTheatresByOwner() {
+        throw new Error('Method not implemented.');
+    }
 
     private apiUrl = "http://localhost:8082/api/theatre";
 
@@ -35,4 +38,5 @@ export class TheatreService {
         const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
         return this.http.delete<void>(`${this.apiUrl}/delete/${id}`, { headers });
     }
+
 }

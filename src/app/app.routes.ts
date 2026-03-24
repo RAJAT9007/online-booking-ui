@@ -14,6 +14,11 @@ import { OnlyMovies } from './pages/only-movies/only-movies';
 import { LandingComponent } from './pages/landing/landing';
 import { PaymentComponent } from './pages/payment/payment';
 import { BookingConfirmationComponent } from './pages/booking-confirmation/booking-confirmation';
+import { City } from './pages/city/city';
+import { ManageTheatre } from './theatre/manage-theatre/manage-theatre';
+import { OwnerPage } from './theatre/owner-page/owner-page';
+import { OwnerTheatreComponent } from './theatre/owner-theatres/owner-theatres';
+import { Dashboard } from './theatre/dashboard/dashboard';
 
 export const routes: Routes = [
     { path: '', component: LandingComponent },
@@ -24,19 +29,49 @@ export const routes: Routes = [
     { path: 'only-movies', component: OnlyMovies },
     { path: 'payment', component: PaymentComponent },
     { path: 'booking-confirmation/:id', component: BookingConfirmationComponent },
+    { path: 'city', component: City },
+    { path: 'theatre-owner', component: ManageTheatre },
     {
-        path: 'dashboard',
+        path: 'owner',
+        component: OwnerPage,
+        children: [
+            {
+                path: 'dashboard',
+                component: Dashboard
+            },
+            {
+                path: 'theatre',
+                component: OwnerTheatreComponent
+            },
+            {
+                path: '',
+                redirectTo: 'dashboard',
+                pathMatch: 'full'
+            }
+        ]
+    },
+    {
+        path: 'dashboard-home',
         component: HomeComponent,
         canActivate: [AuthGuard]
     },
-
+    {
+        path: 'owner',
+        component: OwnerPage,
+        children: [
+            { path: 'dashboard', component: OwnerPage }, // simple for now
+            { path: 'screens', component: ManageTheatre }
+        ]
+    },
     {
         path: 'admin',
         component: Admin,
         children: [
-            { path: 'movies', component: MoviesComponent },
+            { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+            { path: 'dashboard', loadComponent: () => import('./pages/admin/dashboard/dashboard').then(m => m.DashboardComponent) },
+            // { path: 'movies', component: MoviesComponent },
             { path: 'theaters', component: TheatersComponent },
-            { path: 'shows', component: ShowsComponent }
+            { path: 'city', component: City }
         ]
     },
     {

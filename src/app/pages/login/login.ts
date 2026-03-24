@@ -38,7 +38,16 @@ export class LoginComponent {
       next: (res: any) => {
         if (res.token) {
           localStorage.setItem("jwtToken", res.token);
-          this.router.navigate(['/home']);
+          
+          const role = this.authService.getUserRole();
+          
+          if (role === 'ADMIN') {
+            this.router.navigate(['/admin']);
+          } else if (role === 'OWNER') {
+            this.router.navigate(['/owner']);
+          } else {
+            this.router.navigate(['/home']);
+          }
         }
       }, error: (error) => {
         this.toastr.error("Invalid email or password");

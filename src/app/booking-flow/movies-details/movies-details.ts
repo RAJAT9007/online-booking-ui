@@ -26,7 +26,7 @@ export class MoviesDetails implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    this.generateDates();
+    // this.generateDates();
     this.loadMovie(Number(id));
   }
 
@@ -46,25 +46,25 @@ export class MoviesDetails implements OnInit {
     });
   }
 
-  generateDates() {
-    const dates = [];
-    for (let i = 0; i < 7; i++) {
-      const date = new Date();
-      date.setDate(date.getDate() + i);
-      dates.push(date.toISOString().split('T')[0]);
-    }
-    this.availableDates = dates;
-    this.selectedDate = dates[0];
-  }
+  // generateDates() {
+  //   const dates = [];
+  //   for (let i = 0; i < 7; i++) {
+  //     const date = new Date();
+  //     date.setDate(date.getDate() + i);
+  //     dates.push(date.toISOString().split('T')[0]);
+  //   }
+  //   this.availableDates = dates;
+  //   this.selectedDate = dates[0];
+  // }
 
-  formatDate(dateStr: string) {
-    const date = new Date(dateStr);
-    return {
-      day: date.toLocaleDateString('en', { weekday: 'short' }),
-      date: date.getDate().toString(),
-      month: date.toLocaleDateString('en', { month: 'short' })
-    };
-  }
+  // formatDate(dateStr: string) {
+  //   const date = new Date(dateStr);
+  //   return {
+  //     day: date.toLocaleDateString('en', { weekday: 'short' }),
+  //     date: date.getDate().toString(),
+  //     month: date.toLocaleDateString('en', { month: 'short' })
+  //   };
+  // }
 
   bookTickets() {
     console.log('movie.id:', this.movie.id);

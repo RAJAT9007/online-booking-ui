@@ -31,7 +31,7 @@ export class Schedule implements OnInit {
     private screenService: ScreenService,
     private showService: ShowService,
     private moviesService: MoviesService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('movieId');

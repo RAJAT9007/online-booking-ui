@@ -3,6 +3,7 @@ export interface Theatre {
     name: string;
     address: string;
     cityId: number;
-    registerId: String;
+    theatreId?: string;
     status: string;
+    ownerId: number;
 }

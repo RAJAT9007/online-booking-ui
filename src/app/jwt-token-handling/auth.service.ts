@@ -6,8 +6,20 @@ import { Observable } from 'rxjs';
     providedIn: 'root'
 })
 export class AuthService {
-    getUserRole() {
-        throw new Error('Method not implemented.');
+    getUserRole(): string | null {
+        const token = this.getToken();
+        if (token) {
+            try {
+                const payload = token.split('.')[1];
+                const decodedJson = atob(payload);
+                const decodedData = JSON.parse(decodedJson);
+                return decodedData.role || null;
+            } catch (error) {
+                console.error('Error decoding token:', error);
+                return null;
+            }
+        }
+        return null;
     }
 
     private baseUrl = 'http://localhost:8082/api/auth'; // your backend URL

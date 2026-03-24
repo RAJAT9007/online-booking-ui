@@ -1,0 +1,36 @@
+<div class="city-container">
+
+    <div class="city-title">Manage Cities</div>
+
+    <div class="city-form">
+        <input class="city-input" [(ngModel)]="city.cityName" name="cityName" placeholder="Enter City">
+
+        <input class="city-input" [(ngModel)]="city.pincode" name="pincode" placeholder="Enter Pincode">
+
+        <button *ngIf="!editingId" class="add-btn" (click)="addCity()">Add</button>
+        <button *ngIf="editingId" class="update-btn" (click)="updateCity()">Update</button>
+    </div>
+    <table class="city-table">
+
+        <thead>
+            <tr>
+                <th>City Name</th>
+                <th>Pincode</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let c of cities">
+                <td>{{c.cityName}}</td>
+                <td>{{c.pincode}}</td>
+
+                <td>
+                    <button class="edit-btn" (click)="editCity(c)">Edit</button>
+                    <button class="delete-btn" (click)="deleteCity(c.id)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>
