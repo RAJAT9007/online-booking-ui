@@ -112,36 +112,29 @@ export class Schedule implements OnInit {
   loadTheatresAndScreens() {
     this.theatreService.getTheatres().subscribe({
       next: (theatres) => {
-        // FILTER THEATRE BY SELECTED CITY
-        if (this.selectedCity) {
-          this.theatres = theatres.filter(t => t.cityId === this.selectedCity.id);
-        } else {
-          this.theatres = theatres;
+        if (theatres.length === 0) {
+          this.rawTheatreScreens = [];
+          this.updateMapping();
+          return;
         }
 
-        if (this.theatres.length === 0) {
-            this.rawTheatreScreens = [];
-            this.updateMapping();
-            return;
-        }
-
-        // Resolving asynchronous loop with forkJoin
-        const screenRequests = this.theatres.map(theatre => 
-           this.screenService.getScreensByTheatre(theatre.id).pipe(
-               catchError(error => of([])) // Return empty array if error
-           )
+        // Resolving asynchronous loop with forkJoin for ALL theatres
+        const screenRequests = theatres.map(theatre =>
+          this.screenService.getScreensByTheatre(theatre.id).pipe(
+            catchError(error => of([])) // Return empty array if error
+          )
         );
 
         forkJoin(screenRequests).subscribe((screensArray: any[]) => {
-            this.rawTheatreScreens = [];
-            this.theatres.forEach((theatre, index) => {
-                this.rawTheatreScreens.push({
-                   theatre: theatre,
-                   screens: screensArray[index]
-                });
+          this.rawTheatreScreens = [];
+          theatres.forEach((theatre, index) => {
+            this.rawTheatreScreens.push({
+              theatre: theatre,
+              screens: screensArray[index]
             });
-            // Update UI safely strictly after all network calls complete
-            this.updateMapping();
+          });
+          // Update UI safely strictly after all network calls complete
+          this.updateMapping();
         });
       },
       error: (err) => console.error('Error fetching theatres:', err),
@@ -159,14 +152,25 @@ export class Schedule implements OnInit {
         return screenIds.includes(show.screenId) && show.startTime.startsWith(this.selectedDate);
       });
 
-      if (matchingShows.length > 0) {
+      const inSelectedCity = this.selectedCity ? ts.theatre.cityId === this.selectedCity.id : true;
+      const hasShows = matchingShows.length > 0;
+
+      if (inSelectedCity || hasShows) {
         this.theatreShowsMapping.push({
           theatre: ts.theatre,
           shows: matchingShows,
           screens: ts.screens,
         });
       }
+
+      console.log("Selected Date:", this.selectedDate);
+      console.log("Selected City:", this.selectedCity);
+      console.log("Shows:", this.shows);
+      console.log("Raw Theatre Screens:", this.rawTheatreScreens);
     });
+
+    // Optional: Sort so theatres WITH shows are pushed to the top, and empty ones show below
+    this.theatreShowsMapping.sort((a, b) => b.shows.length - a.shows.length);
   }
 
   getScreenName(mapping: any, screenId: number): string {
@@ -180,7 +184,15 @@ export class Schedule implements OnInit {
   }
 
   goToSeatBooking(theatre: Theatre, show: any) {
-    this.router.navigate(['/seat-booking']);
+    this.router.navigate(['/seat-booking'], {
+      queryParams: {
+        showId: show.showId,
+        date: this.selectedDate,
+        time: show.startTime,
+        screenId: show.screenId,
+        price: show.price || 120
+      }
+    });
   }
 }
 

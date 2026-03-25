@@ -12,16 +12,17 @@ import { CommonModule } from '@angular/common';
 })
 export class SeatBooking implements OnInit {
 
-  movieId!: number;
-  date: string = '';
-  time: string = '';
-  screenId: number = 1;
-  pricePerSeat: number = 120;
+  showId!: number;
+  screenId!: number;
+  date = '';
+  time = '';
+  pricePerSeat = 120;
 
   seats: any[] = [];
+  rows: any[] = [];
   bookedSeatIds: number[] = [];
   selectedSeats: any[] = [];
-  rows: { rowName: string, seats: any[] }[] = [];
+
   isLoading = true;
 
   private apiUrl = 'http://localhost:8082';
@@ -33,103 +34,82 @@ export class SeatBooking implements OnInit {
     private cdr: ChangeDetectorRef
   ) { }
 
-  // ✅ JWT token helper
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('jwtToken');
-    if (!token) {
-      this.router.navigate(['/login']);
-    }
-    return new HttpHeaders()
-      .set('Authorization', 'Bearer ' + token);
+    return new HttpHeaders().set('Authorization', 'Bearer ' + token);
   }
 
   ngOnInit() {
-    this.movieId = Number(this.route.snapshot.paramMap.get('showId'));
+    this.showId = Number(this.route.snapshot.queryParamMap.get('showId'));
+    this.screenId = Number(this.route.snapshot.queryParamMap.get('screenId'));
     this.date = this.route.snapshot.queryParamMap.get('date') || '';
     this.time = this.route.snapshot.queryParamMap.get('time') || '';
-    const screenId = this.route.snapshot.queryParamMap.get('screenId');
     const price = this.route.snapshot.queryParamMap.get('price');
-    if (screenId) this.screenId = Number(screenId);
     if (price) this.pricePerSeat = Number(price);
 
     this.loadSeats();
+    this.loadBookedSeats();
   }
 
-  // ✅ Load seats with JWT token
   loadSeats() {
-    this.isLoading = true;
-    this.http.get<any[]>(
-      `${this.apiUrl}/api/seats/screen/${this.screenId}`,
-      { headers: this.getHeaders() }
-    ).subscribe({
-      next: (seats) => {
-        this.seats = seats;
-        this.groupSeatsByRow();
-        this.isLoading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Seats error:', err.status);
-        if (err.status === 401 || err.status === 403) {
-          this.router.navigate(['/login']);
-        }
-        this.isLoading = false;
-      }
+    this.http.get<any[]>(`${this.apiUrl}/api/seats/screen/${this.screenId}`, {
+      headers: this.getHeaders()
+    }).subscribe(seats => {
+      this.seats = seats;
+      this.groupSeats();
+      this.isLoading = false;
+      this.cdr.detectChanges();
     });
   }
 
-  groupSeatsByRow() {
-    const rowMap: { [key: string]: any[] } = {};
-    this.seats.forEach(seat => {
-      if (!rowMap[seat.rowName]) rowMap[seat.rowName] = [];
-      rowMap[seat.rowName].push(seat);
+  loadBookedSeats() {
+    this.http.get<number[]>(`${this.apiUrl}/api/bookings/booked-seats/${this.showId}`, {
+      headers: this.getHeaders()
+    }).subscribe(ids => {
+      this.bookedSeatIds = ids;
     });
-    this.rows = Object.keys(rowMap).sort().map(rowName => ({
-      rowName,
-      seats: rowMap[rowName].sort((a, b) =>
-        Number(a.seatNumber) - Number(b.seatNumber))
+  }
+
+  groupSeats() {
+    const map: any = {};
+    this.seats.forEach(seat => {
+      if (!map[seat.rowName]) map[seat.rowName] = [];
+      map[seat.rowName].push(seat);
+    });
+
+    this.rows = Object.keys(map).sort().map(row => ({
+      rowName: row,
+      seats: map[row].sort((a: any, b: any) => a.seatNumber - b.seatNumber)
     }));
   }
 
-  getSeatStatus(seat: any): string {
+  getSeatClass(seat: any) {
     if (this.bookedSeatIds.includes(seat.id)) return 'booked';
     if (this.selectedSeats.find(s => s.id === seat.id)) return 'selected';
-    if (seat.seatType === 'PREMIUM') return 'premium';
-    return 'available';
+    if (seat.seatType === 'RECLINER') return 'recliner';
+    if (seat.seatType === 'GOLD') return 'gold';
+    return 'silver';
   }
 
   toggleSeat(seat: any) {
     if (this.bookedSeatIds.includes(seat.id)) return;
+
     const index = this.selectedSeats.findIndex(s => s.id === seat.id);
-    if (index > -1) {
-      this.selectedSeats.splice(index, 1);
-    } else {
-      this.selectedSeats.push(seat);
-    }
-    this.cdr.detectChanges();
+    if (index > -1) this.selectedSeats.splice(index, 1);
+    else this.selectedSeats.push(seat);
   }
 
-  get totalAmount(): number {
-    return this.selectedSeats.length * this.pricePerSeat;
+  get totalAmount() {
+    return this.selectedSeats.reduce((sum, s) => sum + (s.price || this.pricePerSeat), 0);
   }
 
-  proceedToPayment() {
-    if (this.selectedSeats.length === 0) {
-      alert('Please select at least one seat!');
-      return;
-    }
+  proceed() {
     this.router.navigate(['/payment'], {
       queryParams: {
-        movieId: this.movieId,
+        showId: this.showId,
         seatIds: this.selectedSeats.map(s => s.id).join(','),
-        amount: this.totalAmount,
-        date: this.date,
-        time: this.time
+        amount: this.totalAmount
       }
     });
   }
-
-  // goBack() {
-  //   this.router.navigate(['/schedule', this.movieId]);
-  // }
 }

@@ -60,17 +60,21 @@
                 <p class="theater-address">{{ mapping.theatre.address }}</p>
             </div>
 
-            <div class="shows-wrapper">
+                    <div class="shows-wrapper" *ngIf="mapping.shows.length > 0">
                 <div class="show-item" *ngFor="let show of mapping.shows">
                     <div class="show-info">
                         <span class="screen-name">{{ getScreenName(mapping, show.screenId) }}</span>
                         <span class="language-tag">{{ show.language || 'Standard' }}</span>
-                        <span class="price-tag">₹{{ show.price }}</span>
+                        <span class="price-tag">₹{{ show.price || 120 }}</span>
                     </div>
                     <button class="time-btn" (click)="goToSeatBooking(mapping.theatre, show)">
                         {{ formatTime(show.startTime) }}
                     </button>
                 </div>
+            </div>
+
+            <div class="no-shows-msg text-muted mt-2" *ngIf="mapping.shows.length === 0">
+                <small>No shows available for this movie at this location on {{ formatDateUI(selectedDate).date }} {{ formatDateUI(selectedDate).month }}.</small>
             </div>
         </div>
 
