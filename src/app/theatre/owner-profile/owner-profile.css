@@ -1,0 +1,259 @@
+/* ============================================
+   Owner Profile - Dark Theme CSS
+   Colors: #1e1e2f (dark bg), #ff4e50 (accent)
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #13131f;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+}
+
+/* ── Container ── */
+.profile-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* ── Page Title ── */
+.profile-container h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 24px;
+    letter-spacing: -0.5px;
+    position: relative;
+    padding-left: 16px;
+}
+
+.profile-container h2::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 70%;
+    background: #ff4e50;
+    border-radius: 2px;
+}
+
+/* ── Profile Card ── */
+.profile-card {
+    background: #1e1e2f;
+    color: white;
+    padding: 28px;
+    border-radius: 14px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Section Headings inside cards ── */
+.profile-card h3,
+.theatre-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ff4e50;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+}
+
+/* ── Form Groups ── */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #9090aa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+/* ── Inputs ── */
+.form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    background: #13131f;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #ff4e50;
+    box-shadow: 0 0 0 3px rgba(255, 78, 80, 0.15);
+}
+
+/* ── Read-only fields ── */
+.form-group input.readonly-field,
+.form-group input[readonly] {
+    color: #9090aa;
+    cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.04);
+    background: #1a1a2a;
+}
+
+.form-group input[readonly]:focus {
+    border-color: rgba(255, 255, 255, 0.04);
+    box-shadow: none;
+}
+
+/* ── Theatre Card ── */
+.theatre-card {
+    background: #1e1e2f;
+    padding: 28px;
+    border-radius: 14px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Theatre Box ── */
+.theatre-box {
+    background: #13131f;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    border-left: 4px solid #ff4e50;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.theatre-box:last-child {
+    margin-bottom: 0;
+}
+
+.theatre-box:hover {
+    transform: translateX(4px);
+    box-shadow: -4px 0 16px rgba(255, 78, 80, 0.15);
+}
+
+.theatre-box p {
+    color: #e0e0f0;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.theatre-box p:last-child {
+    margin-bottom: 0;
+    color: #9090aa;
+    font-size: 0.82rem;
+}
+
+/* ── Empty State ── */
+.empty-state {
+    text-align: center;
+    padding: 32px 20px;
+    color: #9090aa;
+    font-size: 0.9rem;
+}
+
+/* ── Actions Row ── */
+.actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* ── Buttons ── */
+button {
+    padding: 11px 22px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    letter-spacing: 0.3px;
+}
+
+/* Primary - red accent */
+button,
+button.btn-primary {
+    background: #ff4e50;
+    color: white;
+}
+
+button:hover,
+button.btn-primary:hover {
+    background: #e03d3f;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(255, 78, 80, 0.35);
+}
+
+button:active,
+button.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Secondary - ghost style */
+button.btn-secondary {
+    background: transparent;
+    color: #ff4e50;
+    border: 1px solid #ff4e50;
+}
+
+button.btn-secondary:hover {
+    background: rgba(255, 78, 80, 0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(255, 78, 80, 0.15);
+}
+
+/* Danger - logout */
+button.btn-danger {
+    background: transparent;
+    color: #9090aa;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+button.btn-danger:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .profile-container {
+        padding: 16px;
+        margin: 16px auto;
+    }
+
+    .profile-card,
+    .theatre-card {
+        padding: 20px;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    button {
+        width: 100%;
+        text-align: center;
+    }
+}

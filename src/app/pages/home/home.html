@@ -8,14 +8,20 @@
                 <li class="nav-item"><a class="nav-link" routerLink="/only-movies">Movies</a></li>
 
                 <li class="nav-item dropdown">
-                    <div class="dropdown-toggle">
-                        Select City <i class="bi bi-chevron-down"></i> </div>
+                    <div class="dropdown-toggle" id="cityDropdown" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="bi bi-geo-alt"></i>
+                        {{ selectedCity ? selectedCity.cityName : 'Select City' }}
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
 
-                    <ul class="dropdown-menu">
-                        <li><a href="#" (click)="$event.preventDefault()">Ahmedabad</a></li>
-                        <li><a href="#" (click)="$event.preventDefault()">Gandhinagar</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#" (click)="$event.preventDefault()">Surat</a></li>
+                    <ul class="dropdown-menu" aria-labelledby="cityDropdown">
+                        <!-- <li *ngIf="cities.length === 0"><a class="dropdown-item" href="#">Loading...</a></li> -->
+                        <li *ngFor="let city of cities">
+                            <a class="dropdown-item" href="#" (click)="selectCity(city, $event)">
+                                {{ city.cityName }} <small class="text-muted">({{ city.pincode }})</small>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item"><a class="nav-link" href="#">Offers</a></li>
@@ -32,11 +38,6 @@
                 <input type="search" placeholder="Search for movies...">
                 <button type="submit">Search</button>
             </form>
-
-            <div>
-                <button class="admin-btn" routerLink="/admin">ADMIN</button>
-
-            </div>
 
         </div>
     </div>

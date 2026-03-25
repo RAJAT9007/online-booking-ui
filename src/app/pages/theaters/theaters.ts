@@ -68,9 +68,20 @@ export class TheatersComponent {
   }
 
   deleteTheatre(id: number) {
-    this.theatreService.deleteTheatre(id).subscribe(() => {
-      this.theaters = this.theaters.filter(t => t.id !== id);
-    });
+
+    if (!id) {
+      console.log("Theatre ID not found");
+      return;
+    }
+
+    const confirmDelete = confirm("Are you sure you want to delete this theatre?");
+
+    if (confirmDelete) {
+      this.theatreService.deleteTheatre(id).subscribe(() => {
+        this.theaters = this.theaters.filter(t => t.id !== id);
+        console.log("Theatre deleted successfully");
+      });
+    }
   }
 
   resetForm() {

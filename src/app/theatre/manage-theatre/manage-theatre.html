@@ -5,20 +5,19 @@
     <!-- Top Bar -->
     <div class="top-bar">
 
-        <input type="text" placeholder="Search by Register ID" [(ngModel)]="searchText">
+        <input type="text" placeholder="Search by Screen Name" [(ngModel)]="searchText">
 
-        <select [ngModel]="selectedTheatreId" (ngModelChange)="onTheatreChange($event)">
-            <option value="0">Select Theatre</option>
-            <option *ngFor="let t of theatres" [value]="t.id">
-                {{t.name}}
-            </option>
+        <select [(ngModel)]="selectedTheatreId" (ngModelChange)="onTheatreChange($event)">
+            <option [value]="null" disabled selected>-- Select Theatre --</option>
+            <option *ngFor="let t of theatres" [value]="t.id">{{ t.name }}</option>
         </select>
 
     </div>
 
-    <!-- Add Screen Button (only if theatre selected) -->
+    <!-- Add Screen Button / Back Buttons -->
     <div class="d-flex justify-content-between my-3">
-        <button *ngIf="selectedTheatreId && !viewingSeatLayoutForScreen && !viewingMoviesForScreen" class="add-btn" (click)="openAddForm()">
+        <button *ngIf="selectedTheatreId && !viewingSeatLayoutForScreen && !viewingMoviesForScreen" class="add-btn"
+            (click)="openAddForm()">
             ➕ Add Screen
         </button>
         <button *ngIf="viewingSeatLayoutForScreen" class="btn btn-secondary" (click)="closeManageSeats()">
@@ -29,7 +28,7 @@
         </button>
     </div>
 
-    <!-- FORM -->
+    <!-- ADD / EDIT SCREEN FORM -->
     <div *ngIf="showForm && !viewingSeatLayoutForScreen && !viewingMoviesForScreen" class="form-box">
         <div class="form-group mb-2">
             <label>Theatre ID</label>
@@ -42,13 +41,14 @@
             <option value="ACTIVE">ACTIVE</option>
             <option value="INACTIVE">INACTIVE</option>
         </select>
-
         <button (click)="saveScreen()">{{ isEditMode ? 'Update' : 'Save' }}</button>
-        <button class="btn btn-outline-secondary ml-2" (click)="showForm = false" style="margin-left:5px;">Cancel</button>
+        <button class="btn btn-outline-secondary ml-2" (click)="showForm = false"
+            style="margin-left:5px;">Cancel</button>
     </div>
 
-    <!-- No Screens -->
-    <div *ngIf="screens.length === 0 && selectedTheatreId && !viewingSeatLayoutForScreen && !viewingMoviesForScreen" class="no-data">
+    <!-- No Screens Message -->
+    <div *ngIf="screens.length === 0 && selectedTheatreId && !viewingSeatLayoutForScreen && !viewingMoviesForScreen"
+        class="no-data">
         No screens found. Add one 🎭
     </div>
 
@@ -61,7 +61,6 @@
             <th>Status</th>
             <th>Actions</th>
         </tr>
-
         <tr *ngFor="let s of filteredScreens()">
             <td>{{ s.id }}</td>
             <td>{{ s.screenName }}</td>
@@ -82,17 +81,23 @@
 
     <!-- SEAT LAYOUT VIEW -->
     <div *ngIf="viewingSeatLayoutForScreen" class="seat-layout-page mt-4">
-        
+
         <div class="bulk-controls">
             <h5>Bulk Price Controls</h5>
             <div class="bulk-items">
-                <span class="seat seat-premium" style="width: 25px; height: 25px;"></span> Premium: 
-                <input type="number" [(ngModel)]="bulkPrices.PREMIUM">
-                <button class="btn btn-sm btn-primary ml-2" (click)="bulkUpdateSeatPrice('PREMIUM')">Update</button>
-                
-                <span class="seat seat-normal ml-3" style="width: 25px; height: 25px; margin-left: 25px;"></span> Normal:
-                <input type="number" [(ngModel)]="bulkPrices.NORMAL">
-                <button class="btn btn-sm btn-primary ml-2" (click)="bulkUpdateSeatPrice('NORMAL')">Update</button>
+
+                <span class="seat seat-recliner" style="width:25px; height:25px;"></span> Recliner:
+                <input type="number" [(ngModel)]="bulkPrices.RECLINER">
+                <button class="btn btn-sm btn-primary ml-2" (click)="bulkUpdateSeatPrice('RECLINER')">Update</button>
+
+                <span class="seat seat-gold" style="width:25px; height:25px; margin-left:25px;"></span> Gold:
+                <input type="number" [(ngModel)]="bulkPrices.GOLD">
+                <button class="btn btn-sm btn-primary ml-2" (click)="bulkUpdateSeatPrice('GOLD')">Update</button>
+
+                <span class="seat seat-silver" style="width:25px; height:25px; margin-left:25px;"></span> Silver:
+                <input type="number" [(ngModel)]="bulkPrices.SILVER">
+                <button class="btn btn-sm btn-primary ml-2" (click)="bulkUpdateSeatPrice('SILVER')">Update</button>
+
             </div>
         </div>
 
@@ -113,16 +118,16 @@
         </div>
     </div>
 
-    <!-- Edit Panel Overlay -->
+    <!-- Seat Edit Panel Overlay -->
     <div class="edit-panel-overlay" *ngIf="showEditPanel">
         <div class="edit-panel">
             <h3>Seat {{ selectedSeat?.rowName }}{{ selectedSeat?.seatNumber }}</h3>
             <div class="form-group mt-2">
                 <label>Seat Type</label>
                 <select class="form-control w-100 p-2" [(ngModel)]="selectedSeat.seatType">
-                    <option value="PREMIUM">Premium</option>
+                    <option value="RECLINER">Recliner</option>
                     <option value="GOLD">Gold</option>
-                    <option value="NORMAL">Normal</option>
+                    <option value="SILVER">Silver</option>
                 </select>
             </div>
             <div class="form-group mt-2">
@@ -134,7 +139,8 @@
                 </select>
             </div>
             <div class="mt-4 text-right">
-                <button class="btn btn-secondary mr-2" (click)="closeEditPanel()" style="margin-right: 10px;">Cancel</button>
+                <button class="btn btn-secondary mr-2" (click)="closeEditPanel()"
+                    style="margin-right: 10px;">Cancel</button>
                 <button class="btn btn-primary" (click)="saveSeatChanges()">Save Changes</button>
             </div>
         </div>
@@ -143,24 +149,36 @@
     <!-- MOVIES LAYOUT VIEW -->
     <div *ngIf="viewingMoviesForScreen" class="movies-layout-page mt-4">
         <h4 class="mb-3">Assigned Movies (Shows)</h4>
-        
-        <!-- Add Show Form -->
-        <div class="form-box" style="display: flex; gap: 10px; align-items: flex-end;">
+
+        <!-- ✅ CORRECT Add Show Form - inside movies section only -->
+        <div class="form-box" style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+
+            <!-- Movie -->
             <div class="form-group mb-0">
                 <label>Movie</label>
-                <select class="form-control" [(ngModel)]="showFormDetails.movieId" style="width: 200px;">
+                <select class="form-control" [(ngModel)]="showFormDetails.movieId"
+                    (ngModelChange)="onMovieOrTimeChange()" style="width: 200px;">
                     <option value="">Select Movie</option>
-                    <option *ngFor="let m of availableMovies" [value]="m.id">{{ m.title }}</option>
+                    <option *ngFor="let m of availableMovies" [value]="m.id">
+                        {{ m.title }} ({{ m.duration }} min)
+                    </option>
                 </select>
             </div>
+
+            <!-- Start Time -->
             <div class="form-group mb-0">
                 <label>Start Time</label>
-                <input type="datetime-local" class="form-control" [(ngModel)]="showFormDetails.startTime">
+                <input type="datetime-local" class="form-control" [(ngModel)]="showFormDetails.startTime"
+                    (ngModelChange)="onMovieOrTimeChange()" />
             </div>
+
+            <!-- End Time - auto calculated readonly -->
             <div class="form-group mb-0">
-                <label>End Time</label>
+                <label>End Time (auto)</label>
                 <input type="datetime-local" class="form-control" [(ngModel)]="showFormDetails.endTime">
             </div>
+
+            <!-- Language -->
             <div class="form-group mb-0">
                 <label>Language</label>
                 <select class="form-control" [(ngModel)]="showFormDetails.language">
@@ -169,10 +187,7 @@
                     <option value="Telugu">Telugu</option>
                 </select>
             </div>
-            <div class="form-group mb-0">
-                <label>Base Price</label>
-                <input type="number" class="form-control" [(ngModel)]="showFormDetails.price" style="width: 100px;">
-            </div>
+
             <button class="btn btn-primary" (click)="addShow()">Assign</button>
         </div>
 
@@ -180,14 +195,13 @@
         <div *ngIf="shows.length === 0" class="no-data mt-4">
             No movies assigned to this screen yet.
         </div>
-        
+
         <table *ngIf="shows.length > 0" class="mt-4">
             <tr>
                 <th>Movie Title</th>
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Language</th>
-                <th>Price</th>
                 <th>Actions</th>
             </tr>
             <tr *ngFor="let show of shows">
@@ -195,7 +209,6 @@
                 <td>{{ show.startTime | date:'medium' }}</td>
                 <td>{{ show.endTime | date:'shortTime' }}</td>
                 <td>{{ show.language }}</td>
-                <td>₹{{ show.price }}</td>
                 <td>
                     <button class="btn-delete" (click)="deleteShow(show.id)">🗑️ Remove</button>
                 </td>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MoviesService } from '../../services/movies.Service';
+import { CityService } from '../../services/city.Service';
 import { Movie } from '../../models/movie.model';
 import { OnlyMovies } from "../only-movies/only-movies";
 
@@ -13,11 +14,14 @@ import { OnlyMovies } from "../only-movies/only-movies";
   styleUrls: ['./home.css']
 })
 export class HomeComponent implements OnInit {
-  /* 🗺️ Manual Poster Map (Matches Spring Boot Title to public/posters folder) */
   /* 🔎 Search & Filter */
   searchTerm: string = '';
   selectedGenre: string = '';
   genres: string[] = ['Action', 'Comedy', 'Drama', 'Sci-Fi'];
+
+  /* 🏙️ City Selection */
+  cities: any[] = [];
+  selectedCity: any = null;
 
   /* 🎬 Movie Lists */
   movies: Movie[] = [];
@@ -28,17 +32,45 @@ export class HomeComponent implements OnInit {
   /* ⭐ Slider Control */
   currentIndex: number = 0;
 
-  constructor(private router: Router, private moviesService: MoviesService) { }
+  constructor(
+    private router: Router,
+    private moviesService: MoviesService,
+    private cityService: CityService
+  ) { }
 
   ngOnInit(): void {
+    this.loadCities();
     this.loadMovies();
     this.autoSlide();
   }
+
+  loadCities(): void {
+    this.cityService.getAllCities().subscribe({
+      next: (data: any) => {
+        this.cities = data;
+        const storedCity = localStorage.getItem('selectedCity');
+        if (storedCity) {
+          this.selectedCity = JSON.parse(storedCity);
+        } else if (this.cities.length > 0) {
+          this.selectedCity = this.cities[0];
+          localStorage.setItem('selectedCity', JSON.stringify(this.selectedCity));
+        }
+      },
+      error: (err) => console.error('Failed to load cities:', err)
+    });
+  }
+
+  selectCity(city: any, event: Event): void {
+    event.preventDefault();
+    this.selectedCity = city;
+    localStorage.setItem('selectedCity', JSON.stringify(this.selectedCity));
+    // Optional: reload movies if movies depend on city in the backend
+  }
+
   getPosterPath(movie: any): string {
     if (movie.poster_Url.startsWith('http')) {
       return movie.poster_Url;
     }
-
     return `assets/posters/${movie.poster_Url}`;
   }
 
@@ -48,13 +80,9 @@ export class HomeComponent implements OnInit {
         this.movies = data.map(movie => ({
           ...movie
         }));
-
         this.applyFilters();
-
         this.nowShowing = this.movies.filter(m => m.status === 'ACTIVE');
         this.upcoming = this.movies.filter(m => m.status === 'PENDING');
-
-        console.log('Movies loaded with posters:', this.movies);
       },
       error: (err) => {
         console.error('Failed to load movies from Spring Boot:', err);
@@ -71,22 +99,10 @@ export class HomeComponent implements OnInit {
   }
 
   /* 🔥 Next Slide */
-  nextSlide() {
-    // if (this.currentIndex < this.poster.length - 1) {
-    //   this.currentIndex++;
-    // } else {
-    //   this.currentIndex = 0;
-    // }
-  }
+  nextSlide() { }
 
   /* 🔥 Previous Slide */
-  prevSlide() {
-    if (this.currentIndex > 0) {
-      this.currentIndex--;
-    } else {
-      // this.currentIndex = this.poster.length - 1;
-    }
-  }
+  prevSlide() { }
 
   /* 🔥 Auto Sliding */
   autoSlide() {
@@ -97,7 +113,7 @@ export class HomeComponent implements OnInit {
 
   /* 🚪 Login Logout */
   logout() {
-    localStorage.removeItem('jwtToken'); // ✅ match your token key
+    localStorage.removeItem('jwtToken');
     this.router.navigate(['/login']);
   }
 
@@ -105,19 +121,5 @@ export class HomeComponent implements OnInit {
   bookMovie(id: number) {
     this.router.navigate(['/movie-details', id]);
   }
-
-  // Inside your HomeComponent class
-  updateMoviePoster(movieId: number, newImageName: string) {
-    const movie = this.movies.find(m => m.id === movieId);
-
-    if (movie) {
-      movie.poster_Url = newImageName;
-      this.applyFilters();
-
-      console.log(`Poster for ${movie.title} updated to ${newImageName}`);
-    }
-  }
-
-
 }
 

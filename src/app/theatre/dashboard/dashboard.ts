@@ -25,42 +25,71 @@ export class Dashboard implements OnInit {
   todayRevenue: number = 0;
 
   isLoading: boolean = false;
+  viewingSeatLayoutForScreen: number | null = null;
+  viewingMoviesForScreen: number | null = null;
+  screens: never[] | undefined;
 
   constructor(
     private theatreService: TheatreService,
     private screenService: ScreenService,
     private http: HttpClient
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadTheatres();
   }
 
   loadTheatres() {
+    const ownerId = Number(localStorage.getItem('ownerId'));
+    const role = localStorage.getItem('role');
+
+    // Basic validation: if there's no ownerId and they are an OWNER, they shouldn't see anything
+    if (!ownerId && role === 'OWNER') {
+      console.error("No Owner ID found in storage");
+      this.theatres = [];
+      this.totalTheatres = 0;
+      return;
+    }
+
     this.theatreService.getTheatres().subscribe({
       next: (res: any) => {
-        this.theatres = res;
+        // STRICT FILTER: If the user is an OWNER, only show their theatres.
+        // If the user is an ADMIN, you might want to show all (res), 
+        // otherwise, default to filtering by ownerId for safety.
+        if (role === 'OWNER') {
+          this.theatres = res.filter((t: any) => t.ownerId === ownerId);
+        } else if (role === 'ADMIN') {
+          this.theatres = res; // Admins see everything
+        } else {
+          this.theatres = []; // Unknown roles see nothing
+        }
+
         this.totalTheatres = this.theatres.length;
+
+        // OPTIONAL: Auto-select the first theatre if only one exists
+        if (this.theatres.length === 1) {
+          this.onTheatreChange(this.theatres[0].id);
+        }
       },
       error: (err: any) => console.error("Error loading theatres", err)
     });
   }
 
-  private getHeaders() {
-    const token = localStorage.getItem('jwtToken');
-    return { headers: new HttpHeaders().set('Authorization', 'Bearer ' + token) };
-  }
-
   onTheatreChange(id: any) {
     const theatreId = Number(id);
     this.selectedTheatreId = theatreId;
-    
-    if (!theatreId) {
+
+    if (!theatreId || isNaN(theatreId)) {
       this.resetMetrics();
       return;
     }
-    
+
+    // Trigger the metrics fetch for the selected theatre
     this.fetchMetricsForTheatre(theatreId);
+  }
+  private getHeaders() {
+    const token = localStorage.getItem('jwtToken');
+    return { headers: new HttpHeaders().set('Authorization', 'Bearer ' + token) };
   }
 
   resetMetrics() {

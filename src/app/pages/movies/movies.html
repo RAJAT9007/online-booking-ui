@@ -27,6 +27,15 @@
         <form (ngSubmit)="saveMovie()" #movieForm="ngForm">
             <h3 class="form-title">{{ isEdit ? 'Update Details' : 'New Movie Details' }}</h3>
 
+            <div class="form-group full-width" *ngIf="userRole === 'ADMIN'">
+                <label>Select Theatre Area (Admin Tracking Only)</label>
+                <select name="selectedTheatre" [(ngModel)]="selectedTheatreId">
+                    <option value="">-- No Direct Allocation --</option>
+                    <option *ngFor="let t of theatres" [value]="t.id">{{ t.name }} ({{ t.cityId }})</option>
+                </select>
+                <small class="text-muted">Currently movies are global, this acts as context.</small>
+            </div>
+
             <div class="form-grid">
                 <div class="form-group">
                     <label>Movie Title</label>
@@ -101,9 +110,9 @@
                     </td>
                     <td class="text-center">
                         <button class="edit-icon-btn" (click)="editMovie(m)"><i
-                                class="bi bi-pencil-square"></i></button>
+                                class="bi bi-pencil-square"></i>Update</button>
                         <button class="delete-icon-btn" (click)="deleteMovie(m.id)"><i
-                                class="bi bi-trash3"></i></button>
+                                class="bi bi-trash3"></i>Delete</button>
                     </td>
                 </tr>
             </tbody>

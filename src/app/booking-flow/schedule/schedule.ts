@@ -7,6 +7,8 @@ import { ScreenService } from '../../services/screen.service';
 import { ShowService } from '../../services/show.service';
 import { MoviesService } from '../../services/movies.Service';
 import { Theatre } from '../../models/theatre.model';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-schedule',
@@ -19,10 +21,18 @@ export class Schedule implements OnInit {
   movieId: number | null = null;
   movieDetails: any = null;
 
-  selectedDate: string | null = null;
+  /* 📅 Date Selection */
+  selectedDate: string = '';
+  availableDates: string[] = [];
+
+  /* 🏙️ City Filter */
+  selectedCity: any = null;
+
   shows: any[] = [];
   theatres: Theatre[] = [];
-  theatreShowsMapping: any[] = []; // Array of objects: { theatre: Theatre, shows: any[] }
+  rawTheatreScreens: any[] = []; // Caches { theatre, screens }
+
+  theatreShowsMapping: any[] = []; // { theatre: Theatre, shows: any[], screens: any[] }
 
   constructor(
     private route: ActivatedRoute,
@@ -35,11 +45,48 @@ export class Schedule implements OnInit {
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('movieId');
+    const storedCity = localStorage.getItem('selectedCity');
+    if (storedCity) {
+      this.selectedCity = JSON.parse(storedCity);
+    }
+
+    this.generateDates();
+
     if (idParam) {
       this.movieId = Number(idParam);
+      // Fetch details and shows synchronously-structured to avoid race mismatch
       this.loadMovieDetails();
       this.loadShows();
     }
+  }
+
+  generateDates() {
+    const dates = [];
+    for (let i = 0; i < 7; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() + i);
+      // Ensure strictly local YYYY-MM-DD format regardless of timezone
+      const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
+        .toISOString()
+        .split('T')[0];
+      dates.push(localDate);
+    }
+    this.availableDates = dates;
+    this.selectedDate = dates[0];
+  }
+
+  formatDateUI(dateStr: string) {
+    const date = new Date(dateStr);
+    return {
+      day: date.toLocaleDateString('en', { weekday: 'short' }),
+      date: date.getDate().toString(),
+      month: date.toLocaleDateString('en', { month: 'short' })
+    };
+  }
+
+  selectDate(d: string) {
+    this.selectedDate = d;
+    this.updateMapping();
   }
 
   loadMovieDetails() {
@@ -55,44 +102,75 @@ export class Schedule implements OnInit {
       this.showService.getShowsByMovie(this.movieId).subscribe({
         next: (shows) => {
           this.shows = shows;
-          this.loadTheatresAndMapShows();
+          this.loadTheatresAndScreens();
         },
         error: (err) => console.error('Error fetching shows:', err),
       });
     }
   }
 
-  loadTheatresAndMapShows() {
+  loadTheatresAndScreens() {
     this.theatreService.getTheatres().subscribe({
       next: (theatres) => {
-        this.theatres = theatres;
-        this.theatreShowsMapping = [];
+        // FILTER THEATRE BY SELECTED CITY
+        if (this.selectedCity) {
+          this.theatres = theatres.filter(t => t.cityId === this.selectedCity.id);
+        } else {
+          this.theatres = theatres;
+        }
 
-        // For each theatre, fetch its screens
-        this.theatres.forEach((theatre) => {
-          this.screenService.getScreensByTheatre(theatre.id).subscribe({
-            next: (screens) => {
-              // Now find which shows match these screens
-              const screenIds = screens.map((s) => s.id);
-              const matchingShows = this.shows.filter((show) => screenIds.includes(show.screenId));
+        if (this.theatres.length === 0) {
+            this.rawTheatreScreens = [];
+            this.updateMapping();
+            return;
+        }
 
-              if (matchingShows.length > 0) {
-                this.theatreShowsMapping.push({
-                  theatre: theatre,
-                  shows: matchingShows,
-                  screens: screens, // Optional: to display screen names
+        // Resolving asynchronous loop with forkJoin
+        const screenRequests = this.theatres.map(theatre => 
+           this.screenService.getScreensByTheatre(theatre.id).pipe(
+               catchError(error => of([])) // Return empty array if error
+           )
+        );
+
+        forkJoin(screenRequests).subscribe((screensArray: any[]) => {
+            this.rawTheatreScreens = [];
+            this.theatres.forEach((theatre, index) => {
+                this.rawTheatreScreens.push({
+                   theatre: theatre,
+                   screens: screensArray[index]
                 });
-              }
-            },
-          });
+            });
+            // Update UI safely strictly after all network calls complete
+            this.updateMapping();
         });
       },
       error: (err) => console.error('Error fetching theatres:', err),
     });
   }
 
-  getScreenName(showsMapping: any, screenId: number): string {
-    const screen = showsMapping.screens.find((s: any) => s.id === screenId);
+  updateMapping() {
+    this.theatreShowsMapping = [];
+
+    this.rawTheatreScreens.forEach((ts) => {
+      const screenIds = ts.screens.map((s: any) => s.id);
+
+      const matchingShows = this.shows.filter((show) => {
+        // filter by screen and matching date
+        return screenIds.includes(show.screenId) && show.startTime.startsWith(this.selectedDate);
+      });
+
+      if (matchingShows.length > 0) {
+        this.theatreShowsMapping.push({
+          theatre: ts.theatre,
+          shows: matchingShows,
+          screens: ts.screens,
+        });
+      }
+    });
+  }
+
+  getScreenName(mapping: any, screenId: number): string {
+    const screen = mapping.screens.find((s: any) => s.id === screenId);
     return screen ? screen.screenName : 'Unknown Screen';
   }
 
@@ -102,7 +180,7 @@ export class Schedule implements OnInit {
   }
 
   goToSeatBooking(theatre: Theatre, show: any) {
-    // We could pass showId or theatreId via Route params, but let's just navigate for now
     this.router.navigate(['/seat-booking']);
   }
 }
+

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ScreenService } from '../../services/screen.service';
 import { TheatreService } from '../../services/theatre.service';
+import { ShowService } from '../../services/show.service';         // ✅ ADDED
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -28,16 +29,27 @@ export class ManageTheatre implements OnInit {
   rows: string[] = [];
   seatGrid: { [key: string]: any[] } = {};
   isLoadingLayout: boolean = false;
-  
+
   // Seat Edit State
   showEditPanel: boolean = false;
   selectedSeat: any = null;
-  bulkPrices = { PREMIUM: 300, NORMAL: 200 };
+  bulkPrices = { RECLINER: 500, GOLD: 300, SILVER: 200 };
 
-  // Inject HttpClient securely since old services might be pruned
+  // Show / Movies State
+  viewingMoviesForScreen: number | null = null;
+  shows: any[] = [];
+  availableMovies: any[] = [];
+  showFormDetails: any = {
+    movieId: '',
+    startTime: '',
+    endTime: '',
+    language: 'English'
+  };
+
   constructor(
     private theatreService: TheatreService,
     private screenService: ScreenService,
+    private showService: ShowService,                               // ✅ ADDED
     private http: HttpClient
   ) { }
 
@@ -45,46 +57,55 @@ export class ManageTheatre implements OnInit {
     this.loadTheatres();
   }
 
+  // ── Theatres ──────────────────────────────────────────────────
+
   loadTheatres() {
+    const ownerId = Number(localStorage.getItem('ownerId'));
+    const role = localStorage.getItem('role');
+
     this.theatreService.getTheatres().subscribe({
-      next: (res: any) => this.theatres = res,
-      error: (err: any) => console.error("Error loading theatres", err)
+      next: (res: any) => {
+        this.theatres = role === 'OWNER'
+          ? res.filter((t: any) => t.ownerId === ownerId)
+          : res;
+      },
+      error: (err: any) => console.error('Error loading theatres', err)
     });
   }
 
-  // ✅ When dropdown changes perfectly tied to ngModel
   onTheatreChange(id: any) {
-    this.viewingSeatLayoutForScreen = null; // Reset layout view
-    if (this.viewingMoviesForScreen) this.viewingMoviesForScreen = null; // Reset movie view
-    
+    this.viewingSeatLayoutForScreen = null;
+    if (this.viewingMoviesForScreen) this.viewingMoviesForScreen = null;
+
     const theatreId = Number(id);
     this.selectedTheatreId = theatreId;
-    
-    if (!theatreId) {
+
+    if (!theatreId || isNaN(theatreId)) {
       this.screens = [];
       return;
     }
-    
+
     this.loadScreens();
   }
 
+  // ── Screens ───────────────────────────────────────────────────
+
   loadScreens() {
     if (!this.selectedTheatreId) return;
-    this.screens = []; // instantly clear old screens while loading
+    this.screens = [];
     this.screenService.getScreensByTheatre(this.selectedTheatreId).subscribe({
-      next: (res) => {
-        this.screens = res;
-      },
+      next: (res) => this.screens = res,
       error: (err) => console.error(err)
     });
   }
 
   filteredScreens() {
     if (!this.searchText) return this.screens;
-    return this.screens.filter(screen => screen.screenName?.toLowerCase().includes(this.searchText.toLowerCase()));
+    return this.screens.filter(s =>
+      s.screenName?.toLowerCase().includes(this.searchText.toLowerCase())
+    );
   }
 
-  // SCREEN CRUD
   openAddForm() {
     this.resetForm();
     this.isEditMode = false;
@@ -99,7 +120,7 @@ export class ManageTheatre implements OnInit {
 
   saveScreen() {
     if (!this.selectedTheatreId) {
-      alert("Select theatre first");
+      alert('Select theatre first');
       return;
     }
 
@@ -112,32 +133,21 @@ export class ManageTheatre implements OnInit {
 
     if (this.isEditMode && this.screen.id) {
       this.screenService.updateScreen(this.screen.id, payload).subscribe({
-        next: () => {
-          alert("Screen updated successfully ✅");
-          this.showForm = false;
-          this.loadScreens();
-        },
-        error: (err) => console.error("Error updating", err)
+        next: () => { alert('Screen updated successfully ✅'); this.showForm = false; this.loadScreens(); },
+        error: (err) => console.error('Error updating', err)
       });
     } else {
       this.screenService.addScreen(payload).subscribe({
-        next: () => {
-          alert("Screen added successfully ✅");
-          this.showForm = false;
-          this.loadScreens();
-        },
-        error: (err) => console.error("Error adding", err)
+        next: () => { alert('Screen added successfully ✅'); this.showForm = false; this.loadScreens(); },
+        error: (err) => console.error('Error adding', err)
       });
     }
   }
 
   deleteScreen(id: number) {
-    if (confirm("Are you sure you want to delete this screen?")) {
+    if (confirm('Are you sure you want to delete this screen?')) {
       this.screenService.deleteScreen(id).subscribe({
-        next: () => {
-          alert("Screen deleted!");
-          this.loadScreens();
-        },
+        next: () => { alert('Screen deleted!'); this.loadScreens(); },
         error: (err) => console.error(err)
       });
     }
@@ -147,7 +157,8 @@ export class ManageTheatre implements OnInit {
     this.screen = { id: null, screenName: '', totalSeats: '', status: '' };
   }
 
-  // === SEAT LAYOUT LOGIC ===
+  // ── Seat Layout ───────────────────────────────────────────────
+
   openManageSeats(screenId: number) {
     this.viewingSeatLayoutForScreen = screenId;
     this.fetchSeats(screenId);
@@ -178,20 +189,14 @@ export class ManageTheatre implements OnInit {
           this.isLoadingLayout = false;
         }
       },
-      error: (err) => {
-        console.error("Error fetching seats", err);
-        this.isLoadingLayout = false;
-      }
+      error: (err) => { console.error('Error fetching seats', err); this.isLoadingLayout = false; }
     });
   }
 
   generateSeats(screenId: number) {
     this.http.post(`http://localhost:8082/api/seats/generate/${screenId}`, {}, { responseType: 'text', ...this.getHeaders() }).subscribe({
       next: () => this.fetchSeats(screenId),
-      error: (err) => {
-        console.error("Error generating seats", err);
-        this.isLoadingLayout = false;
-      }
+      error: (err) => { console.error('Error generating seats', err); this.isLoadingLayout = false; }
     });
   }
 
@@ -209,13 +214,12 @@ export class ManageTheatre implements OnInit {
 
   getSeatClass(seat: any): string {
     if (seat.status === 'BLOCKED' || seat.status === 'INACTIVE') return 'seat-blocked';
-    if (seat.seatType === 'PREMIUM') return 'seat-premium';
-    if (seat.seatType === 'GOLD') return 'seat-gold'; 
+    if (seat.seatType === 'RECLINER') return 'seat-recliner';
+    if (seat.seatType === 'GOLD') return 'seat-gold';
     if (seat.seatType === 'SILVER') return 'seat-silver';
-    return 'seat-normal'; 
+    return 'seat-normal';
   }
 
-  // Seat Edit panel
   openEditPanel(seat: any) {
     this.selectedSeat = { ...seat };
     this.showEditPanel = true;
@@ -233,54 +237,41 @@ export class ManageTheatre implements OnInit {
         if (this.viewingSeatLayoutForScreen) this.fetchSeats(this.viewingSeatLayoutForScreen);
         this.closeEditPanel();
       },
-      error: (err) => {
-        console.error("Fallback Update", err);
-        this.applyLocalUpdate();
-      }
+      error: (err) => { console.error('Fallback Update', err); this.applyLocalUpdate(); }
     });
   }
 
   applyLocalUpdate() {
     const index = this.seats.findIndex(s => s.id === this.selectedSeat.id);
-    if (index !== -1) {
-      this.seats[index] = this.selectedSeat;
-      this.buildGrid();
-    }
+    if (index !== -1) { this.seats[index] = this.selectedSeat; this.buildGrid(); }
     this.closeEditPanel();
   }
 
-  bulkUpdateSeatPrice(type: 'PREMIUM' | 'NORMAL') {
+  bulkUpdateSeatPrice(type: 'RECLINER' | 'GOLD' | 'SILVER') {
     const price = this.bulkPrices[type];
     if (this.viewingSeatLayoutForScreen) {
-      this.http.put(`http://localhost:8082/api/seats/screen/${this.viewingSeatLayoutForScreen}/bulk-price`, { seatType: type, price }, this.getHeaders())
-        .subscribe({
-          next: () => this.fetchSeats(this.viewingSeatLayoutForScreen!),
-          error: () => this.localBulkUpdate(type, price)
-        });
+      this.http.put(
+        `http://localhost:8082/api/seats/screen/${this.viewingSeatLayoutForScreen}/bulk-price`,
+        { seatType: type, price },
+        this.getHeaders()
+      ).subscribe({
+        next: () => this.fetchSeats(this.viewingSeatLayoutForScreen!),
+        error: () => this.localBulkUpdate(type, price)
+      });
     }
   }
 
   localBulkUpdate(type: string, price: number) {
-    this.seats.forEach(s => { if (s.seatType === type) { s.price = price; } });
+    this.seats.forEach(s => { if (s.seatType === type) s.price = price; });
     this.buildGrid();
-    alert(`Bulk update complete for ${type} to ${price}`);
+    alert(`Bulk update complete for ${type} to ₹${price}`);
   }
 
-  // --- Show / Movies State ---
-  viewingMoviesForScreen: number | null = null;
-  shows: any[] = [];
-  availableMovies: any[] = [];
-  showFormDetails: any = {
-    movieId: '',
-    startTime: '',
-    endTime: '',
-    language: 'English',
-    price: 250
-  };
+  // ── Shows / Movies ────────────────────────────────────────────
 
   openManageMovies(screenId: number) {
     this.viewingMoviesForScreen = screenId;
-    this.viewingSeatLayoutForScreen = null; // hide layout
+    this.viewingSeatLayoutForScreen = null;
     this.fetchMovies();
     this.fetchShows(screenId);
   }
@@ -293,51 +284,91 @@ export class ManageTheatre implements OnInit {
   fetchMovies() {
     this.http.get<any[]>('http://localhost:8082/api/movies/all', this.getHeaders()).subscribe({
       next: (res) => this.availableMovies = res,
-      error: (err) => console.error("Error fetching movies", err)
+      error: (err) => console.error('Error fetching movies', err)
     });
   }
 
   fetchShows(screenId: number) {
     this.http.get<any[]>(`http://localhost:8082/api/shows/screen/${screenId}`, this.getHeaders()).subscribe({
-      next: (res) => this.shows = res,
-      error: (err) => console.error("Error fetching shows", err)
+      next: (res) => {
+        console.log('🎬 Shows fetched:', res);
+        this.shows = res;
+      },
+      error: (err) => console.error('Error fetching shows', err)
     });
   }
 
+  // ✅ Auto-calculate endTime from movie duration + startTime
+  onMovieOrTimeChange() {
+    const movie = this.availableMovies.find(m => m.id == this.showFormDetails.movieId);
+    const startTime = this.showFormDetails.startTime;
+
+    if (movie && movie.duration && startTime) {
+      const start = new Date(startTime);
+
+      if (isNaN(start.getTime())) return; // guard invalid date
+
+      const end = new Date(start.getTime() + movie.duration * 60 * 1000);
+
+      const pad = (n: number) => n.toString().padStart(2, '0');
+      this.showFormDetails.endTime =
+        `${end.getFullYear()}-` +
+        `${pad(end.getMonth() + 1)}-` +
+        `${pad(end.getDate())}T` +
+        `${pad(end.getHours())}:` +
+        `${pad(end.getMinutes())}`;
+
+      console.log('✅ endTime calculated:', this.showFormDetails.endTime);
+    }
+  }
+
+  // ✅ Save show to DB using ShowService
   addShow() {
-    if (!this.showFormDetails.movieId || !this.showFormDetails.startTime || !this.showFormDetails.endTime) {
-      alert("Movie, Start Time, and End Time are required");
+    if (!this.showFormDetails.movieId || !this.showFormDetails.startTime) {
+      alert('Please select Movie and Start Time');
       return;
     }
-    
+
+    if (!this.showFormDetails.endTime) {
+      alert('End time could not be calculated. Please select movie and start time again.');
+      return;
+    }
+
     const payload = {
       movieId: Number(this.showFormDetails.movieId),
       screenId: this.viewingMoviesForScreen,
-      startTime: this.showFormDetails.startTime,
-      endTime: this.showFormDetails.endTime,
-      language: this.showFormDetails.language,
-      price: this.showFormDetails.price
+      startTime: this.showFormDetails.startTime,  // e.g. "2024-03-25T15:00"
+      endTime: this.showFormDetails.endTime,     // e.g. "2024-03-25T17:05"
+      language: this.showFormDetails.language
     };
 
-    this.http.post('http://localhost:8082/api/shows/create', payload, this.getHeaders()).subscribe({
-      next: () => {
-        alert("Show assigned to screen successfully!");
+    console.log('📦 Sending payload:', payload);
+
+    // ✅ Using ShowService.createShow() instead of direct http.post
+    this.showService.createShow(payload).subscribe({
+      next: (res) => {
+        console.log('✅ Show saved to DB:', res);
+        alert('Show assigned successfully!');
         this.fetchShows(this.viewingMoviesForScreen!);
-        // Reset form
-        this.showFormDetails = { movieId: '', startTime: '', endTime: '', language: 'English', price: 250 };
+        // ✅ Reset form
+        this.showFormDetails = { movieId: '', startTime: '', endTime: '', language: 'English' };
       },
       error: (err) => {
-        console.error("Error adding show", err);
-        alert("Failed to add show. Check backend logs.");
+        console.error('❌ Error saving show', err);
+        alert('Failed to save show. Check console for details.');
       }
     });
   }
 
+  // ✅ Delete show using ShowService
   deleteShow(id: number) {
-    if(confirm("Are you sure you want to remove this movie/show?")) {
-      this.http.delete(`http://localhost:8082/api/shows/${id}`, { responseType: 'text', ...this.getHeaders() }).subscribe({
-        next: () => this.fetchShows(this.viewingMoviesForScreen!),
-        error: (err) => console.error("Error deleting show", err)
+    if (confirm('Are you sure you want to remove this show?')) {
+      this.showService.deleteShow(id).subscribe({
+        next: () => {
+          alert('Show removed!');
+          this.fetchShows(this.viewingMoviesForScreen!);
+        },
+        error: (err) => console.error('Error deleting show', err)
       });
     }
   }

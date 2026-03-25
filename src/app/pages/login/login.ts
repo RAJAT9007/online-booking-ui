@@ -38,6 +38,9 @@ export class LoginComponent {
       next: (res: any) => {
         if (res.token) {
           localStorage.setItem("jwtToken", res.token);
+          if (res.id) localStorage.setItem("ownerId", res.id.toString());
+          if (res.email) localStorage.setItem("email", res.email);
+          if (res.role) localStorage.setItem("role", res.role);
           
           const role = this.authService.getUserRole();
           

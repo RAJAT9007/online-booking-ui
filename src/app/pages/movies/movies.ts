@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { MoviesService } from '../../services/movies.Service';
 import { Movie } from '../../models/movie.model';
 
@@ -16,11 +16,15 @@ export class MoviesComponent {
 
   showForm = false;
   isEdit = false;
-  searchTerm: string = '';   // ✅ added
+  searchTerm: string = '';
   genres: string[] = ['Action', 'Comedy', 'Drama', 'Sci-Fi'];
   selectedGenre: string = '';
   movies: Movie[] = [];
   filteredMovies: Movie[] = [];
+  
+  userRole: string | null = '';
+  theatres: any[] = [];
+  selectedTheatreId: string = '';
 
   movie: Movie = {
     id: 0,
@@ -37,16 +41,28 @@ export class MoviesComponent {
 
 
 
-  constructor(private moviesService: MoviesService) { }
+  constructor(private moviesService: MoviesService, private http: HttpClient) { }
 
   ngOnInit() {
+    this.userRole = localStorage.getItem('role');
     this.loadMovies();
+    if (this.userRole === 'ADMIN') {
+      this.loadTheatres();
+    }
+  }
+
+  loadTheatres() {
+    const token = localStorage.getItem("jwtToken");
+    const headers = { 'Authorization': 'Bearer ' + token };
+    this.http.get<any[]>('http://localhost:8082/api/theatre/all', { headers }).subscribe(res => {
+      this.theatres = res;
+    });
   }
 
   loadMovies() {
     this.moviesService.showAll().subscribe(data => {
       this.movies = data;
-      this.filteredMovies = data; // ✅ inside subscribe
+      this.filteredMovies = data; 
     });
   }
 
@@ -88,14 +104,23 @@ export class MoviesComponent {
 
 
   deleteMovie(id: number) {
+
     if (!id) {
       console.log("Movie ID not found");
       return;
     }
-    this.moviesService.deleteMovie(id).subscribe(() => {
-      this.movies = this.movies.filter(m => m.id !== id);
-      this.filteredMovies = [...this.movies]; // ✅ keep filtered list in sync
-    });
+
+    const confirmDelete = confirm("Are you sure you want to delete this movie?");
+
+    if (confirmDelete) {
+      this.moviesService.deleteMovie(id).subscribe(() => {
+
+        this.movies = this.movies.filter(m => m.id !== id);
+        this.filteredMovies = [...this.movies];
+
+        console.log("Movie deleted successfully");
+      });
+    }
   }
 
   resetForm() {

@@ -2,8 +2,11 @@
 
     <h2>Create Theatre</h2>
 
-    <label>Owner Id</label>
-    <input type="number" [(ngModel)]="theatre.ownerId">
+    <!-- In your create theatre form -->
+    <div class="form-group">
+        <label>Owner ID</label>
+        <input type="text" [(ngModel)]="theatre.ownerId" placeholder="Enter Owner ID" />
+    </div>
 
     <label>Theatre Name</label>
     <input [(ngModel)]="theatre.name">

@@ -1,0 +1,43 @@
+<div class="profile-container">
+    <h2>Owner Profile</h2>
+
+    <div class="profile-card">
+        <h3>Account Info</h3>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input type="text" [value]="ownerEmail" readonly />
+        </div>
+
+        <div class="form-group">
+            <label>Role</label>
+            <input type="text" [value]="role" readonly />
+        </div>
+
+        <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" [(ngModel)]="ownerPhone" placeholder="Enter phone number" maxlength="10" />
+        </div>
+
+        <div class="actions">
+            <button class="btn-primary" (click)="savePhone()">Save Phone</button>
+        </div>
+    </div>
+
+    <div class="theatre-card">
+        <h3>My Theatres</h3>
+
+        <div *ngFor="let t of theatre" class="theatre-box">
+            <p>{{ t.name }}</p>
+            <p>{{ t.location }}</p>
+        </div>
+
+        <div *ngIf="theatre.length === 0" class="empty-state">
+            No theatres found.
+        </div>
+    </div>
+
+    <div class="actions">
+        <button class="btn-danger" (click)="logout()">Logout</button>
+    </div>
+</div>

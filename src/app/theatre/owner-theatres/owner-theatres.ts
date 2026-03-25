@@ -30,8 +30,10 @@ export class OwnerTheatreComponent {
   ) { }
 
   ngOnInit() {
-    const user = JSON.parse(localStorage.getItem("user")!);
-    this.theatre.ownerId = user.id;   // ⭐ default ownerId
+    const ownerId = localStorage.getItem("ownerId");
+    if (ownerId) {
+      this.theatre.ownerId = Number(ownerId);
+    }
   }
 
   createTheatre() {

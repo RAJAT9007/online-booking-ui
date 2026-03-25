@@ -19,6 +19,7 @@ import { ManageTheatre } from './theatre/manage-theatre/manage-theatre';
 import { OwnerPage } from './theatre/owner-page/owner-page';
 import { OwnerTheatreComponent } from './theatre/owner-theatres/owner-theatres';
 import { Dashboard } from './theatre/dashboard/dashboard';
+import { OwnerProfileComponent } from './theatre/owner-profile/owner-profile';
 
 export const routes: Routes = [
     { path: '', component: LandingComponent },
@@ -60,7 +61,9 @@ export const routes: Routes = [
         component: OwnerPage,
         children: [
             { path: 'dashboard', component: OwnerPage }, // simple for now
-            { path: 'screens', component: ManageTheatre }
+            { path: 'screens', component: ManageTheatre },
+            { path: 'movie', component: MoviesComponent },
+            { path: 'profile', component: OwnerProfileComponent }
         ]
     },
     {
@@ -71,7 +74,8 @@ export const routes: Routes = [
             { path: 'dashboard', loadComponent: () => import('./pages/admin/dashboard/dashboard').then(m => m.DashboardComponent) },
             // { path: 'movies', component: MoviesComponent },
             { path: 'theaters', component: TheatersComponent },
-            { path: 'city', component: City }
+            { path: 'city', component: City },
+            { path: 'movies', component: MoviesComponent }
         ]
     },
     {

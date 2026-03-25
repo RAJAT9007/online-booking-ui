@@ -35,6 +35,23 @@
 <div class="schedule-container">
     <h2>Tickets for {{ movieDetails?.title || 'Movie' }}</h2>
 
+    <p class="city-indicator" *ngIf="selectedCity">
+        Showing theatres in <strong>{{ selectedCity.cityName }}</strong> <span class="text-muted">({{
+            selectedCity.pincode }})</span>
+    </p>
+
+    <!-- Date Selection Strip -->
+    <div class="date-section">
+        <div class="date-strip">
+            <div *ngFor="let date of availableDates" class="date-card" [class.active]="selectedDate === date"
+                (click)="selectDate(date)">
+                <span class="day">{{ formatDateUI(date).day }}</span>
+                <span class="num">{{ formatDateUI(date).date }}</span>
+                <span class="month">{{ formatDateUI(date).month }}</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Dynamic Theater Shows List -->
     <div class="theater-list">
         <div class="theater-card" *ngFor="let mapping of theatreShowsMapping">
@@ -47,7 +64,7 @@
                 <div class="show-item" *ngFor="let show of mapping.shows">
                     <div class="show-info">
                         <span class="screen-name">{{ getScreenName(mapping, show.screenId) }}</span>
-                        <span class="language-tag">{{ show.language }}</span>
+                        <span class="language-tag">{{ show.language || 'Standard' }}</span>
                         <span class="price-tag">₹{{ show.price }}</span>
                     </div>
                     <button class="time-btn" (click)="goToSeatBooking(mapping.theatre, show)">
@@ -58,7 +75,7 @@
         </div>
 
         <div *ngIf="theatreShowsMapping.length === 0" class="no-shows">
-            <p>No shows available for this movie right now.</p>
+            <p>No shows available for this movie on the selected date or city right now.</p>
         </div>
     </div>
 </div>
