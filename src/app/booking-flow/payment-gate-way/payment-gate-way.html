@@ -1,0 +1,24 @@
+<div class="payment-container">
+    <div class="payment-card">
+        <h2 class="title">Select Payment Method</h2>
+        <div class="amount-badge">
+            <span>Total Amount</span>
+            <span class="price">₹{{ finalAmount }}</span>
+        </div>
+
+        <div class="payment-options">
+            <button class="pay-btn upi" (click)="completeBooking('UPI')">
+                <span class="icon">📱</span> Pay with UPI
+            </button>
+            <button class="pay-btn debit" (click)="completeBooking('Debit Card')">
+                <span class="icon">💳</span> Pay with Debit Card
+            </button>
+            <button class="pay-btn credit" (click)="completeBooking('Credit Card')">
+                <span class="icon">🏦</span> Pay with Credit Card
+            </button>
+            <button class="pay-btn qr" (click)="completeBooking('QR Code')">
+                <span class="icon">📷</span> Pay with QR Code
+            </button>
+        </div>
+    </div>
+</div>

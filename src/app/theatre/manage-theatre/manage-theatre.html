@@ -71,7 +71,7 @@
                 </span>
             </td>
             <td>
-                <button class="btn-manage" (click)="openManageSeats(s.id)">🍿 Manage Layout</button>
+                <button class="btn-manage" (click)="openManageSeats(s.id)">💰 Configure Pricing</button>
                 <button class="btn-movies mx-2" (click)="openManageMovies(s.id)">🎥 Movies</button>
                 <button class="btn-edit mr-2" (click)="openEditForm(s)">✏️ Edit</button>
                 <button class="btn-delete" (click)="deleteScreen(s.id)">🗑️ Delete</button>
@@ -101,49 +101,6 @@
             </div>
         </div>
 
-        <div *ngIf="isLoadingLayout" class="text-center my-5">
-            Loading seats...
-        </div>
-
-        <div *ngIf="!isLoadingLayout" class="layout-container text-center">
-            <div class="screen-curve">Screen</div>
-            <div class="seat-row" *ngFor="let row of rows">
-                <div class="row-label">{{ row }}</div>
-                <div class="seat-container" *ngFor="let seat of seatGrid[row]">
-                    <div class="seat" [ngClass]="getSeatClass(seat)" (click)="openEditPanel(seat)">
-                        {{ seat.seatNumber }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Seat Edit Panel Overlay -->
-    <div class="edit-panel-overlay" *ngIf="showEditPanel">
-        <div class="edit-panel">
-            <h3>Seat {{ selectedSeat?.rowName }}{{ selectedSeat?.seatNumber }}</h3>
-            <div class="form-group mt-2">
-                <label>Seat Type</label>
-                <select class="form-control w-100 p-2" [(ngModel)]="selectedSeat.seatType">
-                    <option value="RECLINER">Recliner</option>
-                    <option value="GOLD">Gold</option>
-                    <option value="SILVER">Silver</option>
-                </select>
-            </div>
-            <div class="form-group mt-2">
-                <label>Status</label>
-                <select class="form-control w-100 p-2" [(ngModel)]="selectedSeat.status">
-                    <option value="ACTIVE">Active (Available)</option>
-                    <option value="BLOCKED">Blocked</option>
-                    <option value="INACTIVE">Inactive</option>
-                </select>
-            </div>
-            <div class="mt-4 text-right">
-                <button class="btn btn-secondary mr-2" (click)="closeEditPanel()"
-                    style="margin-right: 10px;">Cancel</button>
-                <button class="btn btn-primary" (click)="saveSeatChanges()">Save Changes</button>
-            </div>
-        </div>
     </div>
 
     <!-- MOVIES LAYOUT VIEW -->
@@ -210,7 +167,8 @@
                 <td>{{ show.endTime | date:'shortTime' }}</td>
                 <td>{{ show.language }}</td>
                 <td>
-                    <button class="btn-delete" (click)="deleteShow(show.showId)">🗑️ Remove</button>
+                    <!-- ✅ show.id is the correct field — Show entity has 'id', not 'showId' -->
+                    <button class="btn-delete" (click)="deleteShow(show.id)">🗑️ Remove</button>
                 </td>
             </tr>
         </table>

@@ -65,8 +65,9 @@ export class ManageTheatre implements OnInit {
 
     this.theatreService.getTheatres().subscribe({
       next: (res: any) => {
+        // ✅ Type-safe: Number(t.ownerId) ensures API string values are compared as numbers
         this.theatres = role === 'OWNER'
-          ? res.filter((t: any) => t.ownerId === ownerId)
+          ? res.filter((t: any) => Number(t.ownerId) === ownerId)
           : res;
       },
       error: (err: any) => console.error('Error loading theatres', err)
@@ -289,6 +290,7 @@ export class ManageTheatre implements OnInit {
   }
 
   fetchShows(screenId: number) {
+    // ✅ Correct endpoint: /api/shows/screen/{screenId}
     this.http.get<any[]>(`http://localhost:8082/api/shows/screen/${screenId}`, this.getHeaders()).subscribe({
       next: (res) => {
         console.log('🎬 Shows fetched:', res);
@@ -334,23 +336,27 @@ export class ManageTheatre implements OnInit {
       return;
     }
 
+    // ✅ Spring Boot LocalDateTime requires seconds: "2026-03-26T14:00:00"
+    // datetime-local gives "2026-03-26T14:00" (no seconds) → causes 400 Bad Request
+    const ensureSeconds = (dt: string) => dt && dt.length === 16 ? dt + ':00' : dt;
+
     const payload = {
       movieId: Number(this.showFormDetails.movieId),
       screenId: this.viewingMoviesForScreen,
-      startTime: this.showFormDetails.startTime,  // e.g. "2024-03-25T15:00"
-      endTime: this.showFormDetails.endTime,     // e.g. "2024-03-25T17:05"
-      language: this.showFormDetails.language
+      startTime: ensureSeconds(this.showFormDetails.startTime),
+      endTime: ensureSeconds(this.showFormDetails.endTime),
+      language: this.showFormDetails.language,
+      price: 0  // ✅ Required by ShowDTO — set default; owner can change per seat
     };
 
     console.log('📦 Sending payload:', payload);
 
-    // ✅ Using ShowService.createShow() instead of direct http.post
     this.showService.createShow(payload).subscribe({
       next: (res) => {
         console.log('✅ Show saved to DB:', res);
         alert('Show assigned successfully!');
         this.fetchShows(this.viewingMoviesForScreen!);
-        // ✅ Reset form
+        // Reset form
         this.showFormDetails = { movieId: '', startTime: '', endTime: '', language: 'English' };
       },
       error: (err) => {
@@ -360,7 +366,7 @@ export class ManageTheatre implements OnInit {
     });
   }
 
-  // ✅ Delete show using ShowService
+  // ✅ Delete show — show.id is the correct field (not show.showId)
   deleteShow(id: number) {
     if (confirm('Are you sure you want to remove this show?')) {
       this.showService.deleteShow(id).subscribe({

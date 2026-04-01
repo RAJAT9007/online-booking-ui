@@ -1,0 +1,114 @@
+/* Container to center everything on the page */
+.payment-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* The main card */
+.payment-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+.title {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* Amount Badge Styling */
+.amount-badge {
+    background: #f8f9fa;
+    border: 1px dashed #e50914;
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.amount-badge span {
+    color: #666;
+    font-weight: 600;
+}
+
+.amount-badge .price {
+    color: #e50914;
+    font-size: 1.4rem;
+    font-weight: 800;
+}
+
+/* Payment Options Grid */
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Individual Button Styling */
+.pay-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 14px 20px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #444;
+}
+
+.pay-btn .icon {
+    margin-right: 15px;
+    font-size: 1.2rem;
+}
+
+/* Hover Effects */
+.pay-btn:hover {
+    border-color: #e50914;
+    background-color: #fff5f5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.1);
+}
+
+/* Active State */
+.pay-btn:active {
+    transform: translateY(0);
+}
+
+/* Optional: Specific border-left colors for variety */
+.upi {
+    border-left: 5px solid #5f259f;
+}
+
+.debit {
+    border-left: 5px solid #1a73e8;
+}
+
+.credit {
+    border-left: 5px solid #f4b400;
+}
+
+.qr {
+    border-left: 5px solid #0f9d58;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .payment-card {
+        padding: 20px;
+    }
+}

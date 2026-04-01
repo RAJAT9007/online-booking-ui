@@ -1,82 +1,421 @@
-.seat-page {
-    background: #0f0f1a;
-    min-height: 100vh;
-    padding: 30px;
-    color: white;
-    text-align: center;
+:host {
+  display: block;
+  background: #0f0f14;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
 }
 
-.screen {
-    margin: 20px auto;
-    width: 60%;
-    padding: 8px;
-    background: linear-gradient(to bottom, #ccc, #888);
-    color: black;
-    border-radius: 6px;
+/* PAGE WRAPPER */
+.seat-booking-page {
+  padding: 20px;
+  max-width: 1100px;
+  margin: auto;
 }
 
-.row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 6px 0;
+/* LOADING */
+.loading-overlay {
+  text-align: center;
+  margin-top: 120px;
 }
 
-.row-name {
-    width: 30px;
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  border-top: 3px solid #ff4d6d;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ERROR */
+.error-banner {
+  background: rgba(255, 80, 80, 0.15);
+  border: 1px solid rgba(255, 80, 80, 0.4);
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-banner button {
+  background: #ff4d6d;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #fff;
+}
+
+/* SHOW META */
+.show-meta {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.chip {
+  background: #1b1b24;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+/* LEGEND */
+.legend {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: #bbb;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(255, 255, 255, 0.03);
+  padding: 10px 16px;
+  border-radius: 12px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  border-radius: 4px;
+  margin-right: 4px;
+}
+
+.dot.premium {
+  background: #4d7cff;
+}
+
+.dot.gold {
+  background: #d4af37;
+}
+
+.dot.silver {
+  background: #7c7c8a;
+}
+
+.dot.selected {
+  background: #ff4d6d;
+}
+
+.dot.booked {
+  background: #222;
+}
+
+.dot.disabled {
+  background: repeating-linear-gradient(45deg, #333, #333 3px, #222 3px, #222 6px);
+}
+
+/* SCREEN */
+.screen-wrap {
+  text-align: center;
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+
+.screen-bar {
+  width: 60%;
+  margin: auto;
+  background: linear-gradient(90deg, #999, #fff, #999);
+  color: #000;
+  padding: 8px;
+  border-radius: 40px;
+  font-size: 12px;
+  letter-spacing: 4px;
+}
+
+/* GRID */
+.seat-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.seat-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.row-label {
+  width: 22px;
+  text-align: center;
+  color: #777;
+  font-weight: 600;
 }
 
 .seats {
-    display: flex;
-    gap: 6px;
+  display: flex;
+  gap: 6px;
 }
 
+/* SEAT BUTTON */
 .seat {
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    font-size: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all .2s ease;
+  color: #fff;
 }
 
-/* seat types */
-
-.silver {
-    background: #2c2c2c;
-    border: 1px solid #aaa;
+/* TYPES */
+.seat.premium {
+  background: linear-gradient(145deg, #3f63ff, #2b45c7);
 }
 
-.gold {
-    background: #3b2f00;
-    border: 1px solid gold;
+.seat.gold {
+  background: linear-gradient(145deg, #d4af37, #a88924);
 }
 
-.recliner {
-    background: #001a33;
-    border: 1px solid #00bfff;
+.seat.silver {
+  background: linear-gradient(145deg, #5a5a6a, #3c3c48);
 }
 
-.selected {
-    background: #4caf50;
+/* STATES */
+.seat:hover:not(:disabled) {
+  transform: translateY(-3px);
 }
 
-.booked {
-    background: #e53935;
-    cursor: not-allowed;
+.seat.selected {
+  background: #ff4d6d;
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(255, 77, 109, 0.6);
 }
 
-.summary {
-    margin-top: 30px;
+.seat.booked {
+  background: #1a1a1a;
+  cursor: not-allowed;
+  opacity: .4;
 }
 
-button {
-    padding: 10px 25px;
-    border: none;
-    background: #ff4081;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
+.seat.disabled {
+  background: repeating-linear-gradient(45deg,
+      #444,
+      #444 4px,
+      #222 4px,
+      #222 8px);
+  cursor: not-allowed;
+}
+
+/* BOOKING SUMMARY */
+.booking-summary {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #14141c;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* header row */
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.summary-header h3 {
+  font-size: 14px;
+  margin: 0;
+  font-weight: 500;
+}
+
+.total {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* 🎬 MOVIE TITLE STYLING */
+/* 🎬 HEADER CONTAINER */
+.movie-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+/* 🎯 TITLE SECTION */
+.movie-title-section {
+  text-align: center;
+  position: relative;
+}
+
+/* 🔥 MOVIE TITLE */
+.movie-title {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+
+  background: linear-gradient(90deg, #ff4d6d, #ff7a3c, #ffb347);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  text-shadow: 0 0 15px rgba(255, 77, 109, 0.3);
+}
+
+/* ✨ Animated underline glow */
+.movie-subline {
+  height: 3px;
+  width: 120px;
+  margin: 8px auto 0;
+  border-radius: 10px;
+
+  background: linear-gradient(90deg, #ff4d6d, transparent);
+  box-shadow: 0 0 12px rgba(255, 77, 109, 0.6);
+
+  animation: glowLine 2s ease-in-out infinite alternate;
+}
+
+@keyframes glowLine {
+  from {
+    width: 80px;
+    opacity: 0.6;
+  }
+
+  to {
+    width: 140px;
+    opacity: 1;
+  }
+}
+
+/* 🎟️ META INFO (chips improved) */
+.movie-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.meta-chip {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 8px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  backdrop-filter: blur(6px);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  transition: all 0.2s ease;
+}
+
+.meta-chip:hover {
+  background: rgba(255, 77, 109, 0.15);
+  border-color: rgba(255, 77, 109, 0.4);
+}
+
+/* chips */
+.selected-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.s-chip {
+  background: #222;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 14px;
+}
+
+/* pay button */
+/* 🚀 PREMIUM PAY BUTTON */
+/* 🎯 CLEAN & COMPACT PAY BUTTON */
+.btn-pay {
+  width: 100%;
+  padding: 8px 14px;
+  /* ⬅️ reduced height */
+
+  border: none;
+  border-radius: 8px;
+
+  font-size: 13px;
+  /* ⬅️ smaller text */
+  font-weight: 600;
+
+  color: #fff;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #ff4d6d, #ff7a3c);
+
+  box-shadow: 0 4px 12px rgba(255, 77, 109, 0.25);
+  transition: all 0.2s ease;
+}
+
+/* 🔥 Hover */
+.btn-pay:hover:not(:disabled) {
+  transform: translateY(-1px);
+  /* ⬅️ less movement */
+  box-shadow: 0 6px 14px rgba(255, 77, 109, 0.35);
+}
+
+/* 👇 Click press effect */
+.btn-pay:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* ✨ Shine effect */
+.btn-pay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(120deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent);
+
+  transition: 0.5s;
+}
+
+.btn-pay:hover::before {
+  left: 100%;
+}
+
+/* EMPTY */
+.empty-hint {
+  text-align: center;
+  margin-top: 40px;
+  color: #777;
+}
+
+/* RESPONSIVE */
+@media (max-width:768px) {
+  .seat {
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+  }
+
+  .screen-bar {
+    width: 80%;
+  }
 }

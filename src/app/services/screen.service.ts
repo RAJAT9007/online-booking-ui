@@ -24,8 +24,6 @@ export class ScreenService {
     }
 
     addScreen(screenData: any): Observable<any> {
-        const token = localStorage.getItem("jwtToken");
-        const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
         return this.http.post<any>(this.apiUrl + "/add", screenData, { headers: this.getHeaders() });
     }
 

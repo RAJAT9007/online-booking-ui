@@ -68,7 +68,14 @@ export class MoviesDetails implements OnInit {
 
   bookTickets() {
     console.log('movie.id:', this.movie.id);
-    this.router.navigate(['/schedule', this.movie.id]);
+    this.router.navigate(['/schedule', this.movie.id],
+      {
+        queryParams: {
+          movietitle: this.movie.title
+        }
+      }
+    );
+
   }
 
   getPosterPath(movie: any): string {

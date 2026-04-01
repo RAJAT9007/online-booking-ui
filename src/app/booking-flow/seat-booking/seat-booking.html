@@ -1,38 +1,93 @@
-<div class="seat-page">
+<div class="seat-booking-page">
 
-    <h2>Select Seats</h2>
-
-    <div class="screen">SCREEN</div>
-
-    <div *ngIf="isLoading" class="loading">Loading seats...</div>
-
-    <div *ngIf="!isLoading">
-
-        <div *ngFor="let row of rows" class="row">
-            <span class="row-name">{{row.rowName}}</span>
-
-            <div class="seats">
-                <div *ngFor="let seat of row.seats" class="seat" [ngClass]="getSeatClass(seat)"
-                    (click)="toggleSeat(seat)">
-                    {{seat.seatNumber}}
-                </div>
-            </div>
-
-            <span class="row-name">{{row.rowName}}</span>
-        </div>
-
-        <div class="summary" *ngIf="selectedSeats.length > 0">
-            <p>Seats:
-                <span *ngFor="let s of selectedSeats">
-                    {{s.rowName}}{{s.seatNumber}}
-                </span>
-            </p>
-
-            <h3>Total ₹{{totalAmount}}</h3>
-
-            <button (click)="proceed()">Proceed to Payment</button>
-        </div>
-
+    <!-- ── LOADING ── -->
+    <div class="loading-overlay" *ngIf="isLoading()">
+        <div class="spinner"></div>
+        <p>Loading seat layout…</p>
     </div>
 
+    <!-- ── ERROR ── -->
+    <div class="error-banner" *ngIf="error && !isLoading()">
+        <span>⚠️ {{ error }}</span>
+        <button (click)="loadSeatLayout()">Retry</button>
+    </div>
+
+    <ng-container *ngIf="!isLoading() && !error">
+
+        <!-- ── SHOW INFO ── -->
+        <div class="movie-header">
+
+            <div class="movie-title-section">
+                <h1 class="movie-title">{{ movietitle }}</h1>
+                <div class="movie-subline"></div>
+            </div>
+
+            <div class="movie-meta">
+                <!-- <span class="meta-chip">🎬 Show #{{ showId }}</span> -->
+                <span class="movie-title">{{theatrename}} </span>
+                <!-- <span class="meat-chip">{{screenId}} </span>
+                <span class="meta-chip" *ngIf="showDate">📅 {{ showDate }}</span>
+                <span class="meta-chip" *ngIf="showTime">⏰ {{ showTime }}</span> -->
+            </div>
+
+        </div>
+
+        <!-- ── LEGEND ── -->
+        <div class="legend">
+            <span class="dot premium"></span> Premium
+            <span class="dot gold"></span> Gold
+            <span class="dot silver"></span> Silver
+            <span class="dot selected"></span> Selected
+            <span class="dot booked"></span> Booked
+            <span class="dot disabled"></span> Disabled
+        </div>
+
+
+        <!-- ── SEAT GRID ── -->
+        <div class="seat-grid">
+            <div class="seat-row" *ngFor="let row of rowObjects">
+                <span class="row-label">{{ row.rowName }}</span>
+
+                <div class="seats">
+                    <button *ngFor="let seat of row.seats" class="seat {{ getSeatClass(seat) }}"
+                        [attr.title]="seat.seatType + ' | ₹' + seat.price"
+                        [disabled]="isBooked(seat) || isDisabled(seat)" (click)="toggleSeat(seat)">
+                        {{ seat.seatNumber.slice(1) }}
+                    </button>
+                </div>
+
+                <span class="row-label">{{ row.rowName }}</span>
+            </div>
+        </div>
+
+
+        <!-- ── SCREEN ── -->
+        <div class="screen-wrap">
+            <div class="screen-bar">🎥 SCREEN THIS WAY</div>
+        </div>
+
+        <!-- ── BOOKING SUMMARY (sticky bottom) ── -->
+        <div class="booking-summary" *ngIf="selectedSeats.length > 0">
+            <div class="summary-header">
+                <h3>🎟️ {{ selectedSeats.length }} seat{{ selectedSeats.length > 1 ? 's' : '' }} selected</h3>
+                <span class="total">₹{{ totalAmount | number:'1.0-0' }}</span>
+            </div>
+
+            <div class="selected-chips">
+                <span class="s-chip" *ngFor="let seat of selectedSeats" (click)="removeSeat(seat.id)">
+                    {{ seat.seatNumber }} ×
+                </span>
+            </div>
+
+            <button class="btn-pay" [disabled]="isProcessing" (click)="proceedToPayment()">
+                {{ isProcessing ? 'Redirecting…' : '💳 Pay ₹' + totalAmount }}
+            </button>
+        </div>
+
+        <!-- ── EMPTY STATE ── -->
+        <div class="empty-hint" *ngIf="selectedSeats.length === 0">
+            <p>Click an available seat to select it.</p>
+        </div>
+
+    </ng-container>
 </div>

@@ -19,16 +19,19 @@ import { catchError } from 'rxjs/operators';
 })
 export class Schedule implements OnInit {
   movieId: number | null = null;
-  movieDetails: any = null;
-
+  // movieDetails: any = null;
   /* 📅 Date Selection */
   selectedDate: string = '';
   availableDates: string[] = [];
+
+  movietitle: string = '';
+  // theatrename: string = '';
 
   /* 🏙️ City Filter */
   selectedCity: any = null;
 
   shows: any[] = [];
+  screens: any[] = [];
   theatres: Theatre[] = [];
   rawTheatreScreens: any[] = []; // Caches { theatre, screens }
 
@@ -58,6 +61,9 @@ export class Schedule implements OnInit {
       this.loadMovieDetails();
       this.loadShows();
     }
+    const q = this.route.snapshot.queryParamMap;
+    this.movietitle = q.get('movietitle') || '';
+
   }
 
   generateDates() {
@@ -92,7 +98,7 @@ export class Schedule implements OnInit {
   loadMovieDetails() {
     if (this.movieId) {
       this.moviesService.getById(this.movieId).subscribe((data) => {
-        this.movieDetails = data;
+        this.movietitle = data.title;
       });
     }
   }
@@ -163,10 +169,10 @@ export class Schedule implements OnInit {
         });
       }
 
-      console.log("Selected Date:", this.selectedDate);
-      console.log("Selected City:", this.selectedCity);
-      console.log("Shows:", this.shows);
-      console.log("Raw Theatre Screens:", this.rawTheatreScreens);
+      // console.log("Selected Date:", this.selectedDate);
+      // console.log("Selected City:", this.selectedCity);
+      // console.log("Shows:", this.shows);
+      // console.log("Raw Theatre Screens:", this.rawTheatreScreens);
     });
 
     // Optional: Sort so theatres WITH shows are pushed to the top, and empty ones show below
@@ -186,13 +192,14 @@ export class Schedule implements OnInit {
   goToSeatBooking(theatre: Theatre, show: any) {
     this.router.navigate(['/seat-booking'], {
       queryParams: {
-        showId: show.showId,
-        date: this.selectedDate,
-        time: show.startTime,
+        movietitle: this.movietitle,
+        showId: show.id,
+        theatreId: theatre.id,
+        theatrename: theatre.name,
         screenId: show.screenId,
-        price: show.price || 120
+        showDate: this.selectedDate,
+        showTime: show.startTime
       }
     });
   }
 }
-

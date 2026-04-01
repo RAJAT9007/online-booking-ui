@@ -7,9 +7,6 @@ import { Theatre } from '../models/theatre.model';
     providedIn: 'root'
 })
 export class TheatreService {
-    getTheatresByOwner() {
-        throw new Error('Method not implemented.');
-    }
 
     private apiUrl = "http://localhost:8082/api/theatre";
 

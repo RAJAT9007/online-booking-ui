@@ -1,0 +1,120 @@
+<div class="payment-page">
+
+    <!-- HEADER -->
+    <div class="payment-header">
+        <a routerLink="/home" class="back-btn">← Back</a>
+        <h1>Book-Your <span>VIBE</span></h1>
+    </div>
+
+    <div class="payment-container">
+
+        <!-- LEFT : ORDER SUMMARY -->
+        <div class="order-summary">
+
+            <h2>Order Summary</h2>
+
+            <div class="summary-card">
+
+                <!-- Seat Wise Price -->
+                <div class="summary-row" *ngFor="let seat of selectedSeats">
+                    <span class="label">
+                        Seat {{ seat.seatNumber }}
+                    </span>
+                    <span class="value">
+                        ₹{{ seat.price }}
+                    </span>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- Seat Total -->
+                <div class="summary-row">
+                    <span class="label">Seat Total</span>
+                    <span class="value">₹{{ seatTotal }}</span>
+                </div>
+
+                <!-- Convenience Fee -->
+                <div class="summary-row">
+                    <span class="label">Convenience Fee</span>
+                    <span class="value">₹{{ convenienceFee }}</span>
+                </div>
+
+                <!-- GST -->
+                <div class="summary-row">
+                    <span class="label">GST (18%)</span>
+                    <span class="value">
+                        ₹{{ gst | number:'1.0-0' }}
+                    </span>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- FINAL TOTAL -->
+                <div class="summary-row total">
+                    <span class="label">Total Payable</span>
+                    <span class="value highlight">
+                        ₹{{ finalAmount | number:'1.0-0' }}
+                    </span>
+                </div>
+
+            </div>
+
+            <!-- Seat Tags -->
+            <div class="seats-info">
+                <h4>Selected Seats</h4>
+
+                <div class="seat-tags">
+                    <span class="seat-tag" *ngFor="let seat of selectedSeats">
+                        {{ seat.seatNumber }}
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT : PAYMENT SECTION -->
+        <div class="payment-options">
+
+            <h2>Payment</h2>
+
+            <div class="secure-badge">
+                🔒 100% Secure Payment
+            </div>
+
+            <div class="razorpay-card">
+                <img src="https://razorpay.com/favicon.ico" width="26">
+                <div>
+                    <h4>Pay with Razorpay</h4>
+                    <p>UPI • Cards • Net Banking • Wallets</p>
+                </div>
+            </div>
+
+            <div class="amount-display">
+                <span>Total Payable</span>
+                <span class="amount">
+                    ₹{{ finalAmount | number:'1.0-0' }}
+                </span>
+            </div>
+
+            <button class="btn-pay" (click)="payNow()" [disabled]="isLoading">
+
+                <span *ngIf="!isLoading">
+                    Pay ₹{{ finalAmount | number:'1.0-0' }}
+                </span>
+
+                <!-- <span *ngIf="isLoading">
+                    Processing Payment...
+                </span> -->
+
+            </button>
+
+            <p class="terms">
+                By completing purchase you agree to our
+                <a href="#">Terms & Conditions</a>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>

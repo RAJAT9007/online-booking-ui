@@ -1,27 +1,39 @@
-/* PAGE BACKGROUND */
-
-.schedule-container {
-    max-width: 1000px;
-    margin: 40px auto;
-    padding: 20px;
-    font-family: "Segoe UI", Arial, sans-serif;
+/* 🌑 PAGE BACKGROUND */
+:host {
+    display: block;
+    background: #0f0f14;
+    color: #fff;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
 }
 
-/* HEADING */
+.schedule-container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 20px;
+}
 
+/* 🎬 TITLE */
 .schedule-container h2 {
     text-align: center;
-    font-weight: 600;
-    margin-bottom: 5px;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 6px;
+
+    background: linear-gradient(90deg, #ff4d6d, #ff7a3c);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .city-indicator {
     text-align: center;
-    color: #666;
+    color: #aaa;
     margin-bottom: 25px;
 }
 
-/* DATE STRIP */
+/* 📅 DATE STRIP */
+/* 📅 DATE STRIP UPGRADE (KEEP STRUCTURE SAME) */
 
 .date-section {
     display: flex;
@@ -33,148 +45,197 @@
     display: flex;
     gap: 12px;
     overflow-x: auto;
-    padding-bottom: 5px;
+    padding: 6px 4px;
 }
 
+/* 🔥 DATE CARD */
 .date-card {
     min-width: 70px;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
+    padding: 10px 8px;
+    border-radius: 12px;
     text-align: center;
     cursor: pointer;
-    transition: 0.2s;
-    background: white;
+
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    transition: all 0.25s ease;
+    position: relative;
 }
 
+/* ✨ Hover */
 .date-card:hover {
-    border-color: #e91e63;
-    transform: translateY(-2px);
+    transform: translateY(-3px) scale(1.03);
+    border-color: #ff4d6d;
+    box-shadow: 0 6px 16px rgba(255, 77, 109, 0.25);
 }
 
+/* 🚀 ACTIVE */
 .date-card.active {
-    background: #e91e63;
-    color: white;
-    border-color: #e91e63;
+    background: linear-gradient(135deg, #ff4d6d, #ff7a3c);
+    color: #fff;
+    border: none;
+
+    box-shadow: 0 6px 18px rgba(255, 77, 109, 0.5);
 }
 
+/* 🧊 TEXT */
 .day {
     display: block;
-    font-size: 12px;
+    font-size: 11px;
+    color: #aaa;
 }
 
 .num {
     display: block;
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 700;
+    margin: 2px 0;
 }
 
 .month {
     display: block;
-    font-size: 12px;
+    font-size: 11px;
+    color: #aaa;
 }
 
-/* THEATRE CARD */
 
+/* ACTIVE TEXT COLOR FIX */
+.date-card.active .day,
+.date-card.active .month {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* OPTIONAL: subtle glow indicator */
+.date-card.active::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 3px;
+    border-radius: 10px;
+
+    background: linear-gradient(90deg, #ff4d6d, transparent);
+    box-shadow: 0 0 10px rgba(255, 77, 109, 0.7);
+}
+
+.date-strip {
+    scroll-behavior: smooth;
+}
+
+
+/* 🎭 THEATRE CARD */
 .theater-list {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
 }
 
 .theater-card {
-    background: white;
-    border-radius: 12px;
-    padding: 18px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-    transition: 0.2s;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 14px;
+    padding: 16px;
+
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(8px);
+
+    transition: all 0.25s ease;
 }
 
 .theater-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
+    border-color: rgba(255, 77, 109, 0.4);
 }
 
+/* HEADER */
 .theater-header h4 {
     margin: 0;
+    font-size: 16px;
     font-weight: 600;
 }
 
 .theater-address {
     margin: 4px 0 12px;
-    color: #777;
-    font-size: 14px;
+    color: #888;
+    font-size: 13px;
 }
 
-/* SHOWS WRAPPER */
-
+/* 🎟️ SHOWS */
 .shows-wrapper {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 12px;
 }
-
-/* SINGLE SHOW ITEM */
 
 .show-item {
-    border: 1px solid #eee;
-    padding: 10px 12px;
-    border-radius: 8px;
-    background: #fafafa;
-    min-width: 160px;
+    background: #14141c;
+    border-radius: 10px;
+    padding: 10px;
+    min-width: 150px;
+
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* SHOW INFO */
-
+/* INFO */
 .show-info {
-    font-size: 12px;
+    font-size: 11px;
     margin-bottom: 6px;
-    color: #555;
     display: flex;
     justify-content: space-between;
+    color: #aaa;
 }
 
 .screen-name {
     font-weight: 600;
+    color: #fff;
 }
 
 .language-tag {
-    background: #eee;
+    background: #222;
     padding: 2px 6px;
     border-radius: 4px;
 }
 
 .price-tag {
-    color: #2e7d32;
+    color: #4caf50;
     font-weight: 600;
 }
 
-/* TIME BUTTON */
-
+/* ⏱️ TIME BUTTON */
 .time-btn {
     width: 100%;
-    padding: 8px;
+    padding: 7px;
+
     border-radius: 6px;
-    border: 1px solid #4caf50;
-    background: white;
-    color: #4caf50;
+    border: 1px solid #ff4d6d;
+
+    background: transparent;
+    color: #ff4d6d;
+
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.2s;
+
+    transition: all 0.2s ease;
 }
 
 .time-btn:hover {
-    background: #4caf50;
-    color: white;
+    background: linear-gradient(135deg, #ff4d6d, #ff7a3c);
+    color: #fff;
+    border: none;
+    transform: scale(1.05);
 }
 
-/* NO SHOW MESSAGE */
-
+/* ❌ EMPTY */
 .no-shows {
     text-align: center;
-    color: #999;
+    color: #777;
     margin-top: 50px;
 }
 
 .no-shows-msg {
-    font-size: 13px;
+    font-size: 12px;
+    color: #666;
 }

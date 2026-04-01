@@ -1,0 +1,80 @@
+/* Normal Screen Styling */
+.receipt-card {
+    width: 400px;
+    margin: 20px auto;
+    padding: 30px;
+    border: 2px solid #333;
+    /* The "Box" border */
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Courier New', Courier, monospace;
+    /* Gives a receipt feel */
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.receipt-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.receipt-table th,
+.receipt-table td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.total-section {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.print-btn {
+    background: #e50914;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+/* PRINT LOGIC */
+@media print {
+
+    /* Hide everything on the page */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Show only the receipt box and its children */
+    #receipt-box,
+    #receipt-box * {
+        visibility: visible;
+    }
+
+    /* Position the box at the very top-left for the printer */
+    #receipt-box {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none;
+        /* Optional: remove border for clean print */
+        box-shadow: none;
+    }
+
+    /* Hide the buttons so they don't print */
+    .actions {
+        display: none;
+    }
+}
