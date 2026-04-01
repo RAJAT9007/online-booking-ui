@@ -198,7 +198,8 @@ export class Schedule implements OnInit {
         theatrename: theatre.name,
         screenId: show.screenId,
         showDate: this.selectedDate,
-        showTime: show.startTime
+        showTime: show.startTime,
+
       }
     });
   }

@@ -30,9 +30,11 @@ export const routes: Routes = [
     { path: 'seat-booking', component: SeatBooking },
     { path: 'only-movies', component: OnlyMovies },
     { path: 'payment', component: Payment },
+    // { path: 'receipt', component: Receipt },
     { path: 'receipt/:id', component: Receipt },
     { path: 'city', component: City },
     { path: 'theatre-owner', component: ManageTheatre },
+    { path: 'payment-gateway', component: PaymentGateway },
     { path: 'payment-gateway/:bookingId', component: PaymentGateway },
     {
         path: 'owner',

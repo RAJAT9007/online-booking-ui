@@ -38,7 +38,7 @@ export class SeatBooking implements OnInit {
   error = '';
   movietitle: string = '';
   theatrename: string = '';
-  userId: string = '';
+
 
   constructor(
     private route: ActivatedRoute,
@@ -127,7 +127,7 @@ export class SeatBooking implements OnInit {
     const seatIds = this.selectedSeats.map(s => s.id).join(',');
 
     this.router.navigate(['/payment'], {
-      queryParams: { showId: this.showId, seatIds, amount: this.totalAmount, userId: this.userId }
+      queryParams: { showId: this.showId, seatIds, amount: this.totalAmount }
     }).then(ok => { if (!ok) this.isProcessing = false; })
       .catch(() => { this.isProcessing = false; });
   }

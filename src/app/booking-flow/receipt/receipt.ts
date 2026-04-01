@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule, DatePipe } from '@angular/common';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-receipt',
@@ -80,6 +82,28 @@ export class Receipt implements OnInit {
 
   printReceipt(): void {
     window.print();
+  }
+
+  downloadPDF(): void {
+    const receiptElement = document.getElementById('receipt-box');
+
+    // Add the specific type check here
+    if (receiptElement instanceof HTMLElement) {
+      html2canvas(receiptElement, { scale: 2 }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight);
+
+        // Use the safe naming convention
+        pdf.save(`Booking_Receipt_${this.bookingData.id || this.bookingId}.pdf`);
+      });
+    } else {
+      console.error("Could not find the 'receipt-box' element to create PDF.");
+    }
   }
 
 }

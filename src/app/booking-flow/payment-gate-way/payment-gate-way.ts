@@ -11,8 +11,8 @@ import { PaymentGatewayService } from '../../services/paymentGateway.service';
   styleUrls: ['./payment-gate-way.css']
 })
 export class PaymentGateway implements OnInit {
+  bookingId!: number;
   showId!: number;
-  selectedSeats: any[] = [];
   finalAmount = 0;
 
   constructor(
@@ -22,49 +22,32 @@ export class PaymentGateway implements OnInit {
   ) { }
 
   ngOnInit() {
+    // ✅ FIXED: Changed paramMap to queryParamMap
+    this.bookingId = Number(this.route.snapshot.queryParamMap.get('bookingId'));
+
     // Get query params passed from Payment Page
     this.showId = Number(this.route.snapshot.queryParamMap.get('showId'));
-    const seatsData = this.route.snapshot.queryParamMap.get('seats');
-    this.selectedSeats = seatsData ? JSON.parse(seatsData) : [];
     this.finalAmount = Number(this.route.snapshot.queryParamMap.get('totalAmount'));
-
-
   }
 
   // Common booking API call with selected payment mode
   completeBooking(paymentMode: string) {
-    // Check if we have the data we need
-    if (!this.showId || this.showId === 0) {
-      alert('Error: Show ID is missing. Please restart your booking.');
+    if (!this.bookingId || this.bookingId === 0) {
+      alert('Error: Booking ID is missing. Please restart your booking.');
       return;
     }
 
-    const seatIds = this.selectedSeats.map(s => s.id);
-    if (seatIds.length === 0) {
-      alert('No seats selected!');
-      return;
-    }
-
-    // Step 1: Create booking (PENDING)
-    this.paymentService.completeBooking(this.showId, seatIds, this.finalAmount, paymentMode)
-      .subscribe({
-        next: (booking: any) => {
-          // Call your new Stripe backend endpoint
-          this.paymentService.createCheckoutSession(booking.bookingId, this.finalAmount, this.showId).subscribe({
-              next: (response) => {
-                  window.location.href = response.checkoutUrl;
-              },
-              error: (err) => {
-                  console.error("Checkout Session Error:", err);
-                  alert('Could not start checkout session');
-              }
-          });
-        },
-        error: (err) => {
-          console.error("Booking Creation Error:", err);
-          alert('Could not create booking. Check if Show ID ' + this.showId + ' exists.');
-        }
-      });
+    // Step 2: Payment (Booking is ALREADY PENDING). Go straight to checkout session!
+    this.paymentService.createCheckoutSession(this.bookingId, this.finalAmount, this.showId).subscribe({
+      next: (response) => {
+        window.location.href = response.checkoutUrl;
+        alert('Seats are booked');
+      },
+      error: (err) => {
+        console.error("Checkout Session Error:", err);
+        alert('Could not start checkout session');
+      }
+    });
   }
   // payNow() {
 
