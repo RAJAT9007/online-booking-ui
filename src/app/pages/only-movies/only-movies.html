@@ -32,17 +32,17 @@
 
             <form class="nav-search">
                 <input type="search" placeholder="Search for movies...">
-                <button type="submit">Search</button>
+                <button type="button">Search</button>
             </form>
         </div>
     </div>
 </nav>
 
 <div class="container mt-5 mb-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="section-title">🎬 All Movies</h2>
         <a routerLink="/only-movies" class="view-all">View All</a>
-    </div>
+    </div> -->
 
     <div class="movie-grid">
         <div class="movie-card-v2" *ngFor="let movie of filteredMovies">

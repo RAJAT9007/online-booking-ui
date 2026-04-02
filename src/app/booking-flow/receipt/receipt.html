@@ -1,4 +1,4 @@
-<div class="receipt-container" *ngIf="!isLoading && bookingData">
+<div class="receipt-container" *ngIf="!isLoading() && bookingData">
     <div id="receipt-box" class="receipt-card">
         <div class="header">
             <h1>Book-Your VIBE</h1>
@@ -51,12 +51,12 @@
 </div>
 
 <!-- Loading State -->
-<div class="loading-state" *ngIf="isLoading">
+<div class="loading-state" *ngIf="isLoading()">
     <p>Loading your receipt...</p>
 </div>
 
 <!-- Error State -->
-<div class="error-state" *ngIf="!isLoading && !bookingData">
+<div class="error-state" *ngIf="!isLoading() && !bookingData">
     <p>⚠️ Could not load booking details. Please contact support.</p>
     <button class="home-btn" routerLink="/home">Back to Home</button>
 </div>

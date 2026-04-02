@@ -1,217 +1,338 @@
+/* =========================================
+   GLOBAL & BACKGROUND
+   ========================================= */
 :host {
     display: block;
-    background: #0f1014;
+    background: radial-gradient(circle at top center, #1a1a24 0%, #0f1014 100%);
     min-height: 100vh;
     color: #fff;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* HEADER */
+/* =========================================
+   HEADER
+   ========================================= */
 .payment-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 40px;
+    padding: 20px 5%;
+    background: rgba(15, 16, 20, 0.8);
+    backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .payment-header h1 {
-    font-size: 26px;
-    font-weight: 700;
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: 1px;
 }
 
 .payment-header span {
     color: #e50914;
+    /* Vibe Red */
 }
 
 .back-btn {
-    color: #bbb;
+    color: #a3a3a3;
     text-decoration: none;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.3s;
+}
+
+.back-btn:hover {
+    color: #fff;
+}
+
+.secure-text {
+    color: #00c878;
     font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
-/* CONTAINER */
+/* =========================================
+   CONTAINER & SUMMARY BOX
+   ========================================= */
 .payment-container {
-    max-width: 1100px;
-    margin: 40px auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    padding: 0 20px;
+    max-width: 450px;
+    /* Sleek Mobile-App Style Compact Width */
+    margin: 30px auto;
+    padding: 0 15px;
 }
 
-/* LEFT SUMMARY */
 .order-summary {
     background: #15161c;
     padding: 24px;
-    border-radius: 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
 }
 
-.order-summary h2 {
-    margin-bottom: 18px;
+.summary-header-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-/* SUMMARY CARD */
+.summary-header-title h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Normal Timer class (Aapke paas pehle se hai) */
+
+
+/* =========================================
+   PRICING ROWS
+   ========================================= */
 .summary-card {
     background: #1c1d25;
     padding: 18px;
     border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .summary-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    align-items: center;
+    margin-bottom: 12px;
     font-size: 14px;
 }
 
-.summary-row.total {
-    font-size: 18px;
-    font-weight: 700;
+.summary-row:last-child {
+    margin-bottom: 0;
 }
 
 .label {
-    color: #aaa;
+    color: #a3a3a3;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .value {
     font-weight: 600;
+    color: #e0e0e0;
 }
 
-.highlight {
-    color: #e50914;
-}
-
-/* DIVIDER */
+/* Dividers */
 .divider {
     height: 1px;
     background: rgba(255, 255, 255, 0.08);
-    margin: 12px 0;
+    margin: 16px 0;
 }
 
-/* SEATS TAG */
+.divider.dashed {
+    background: none;
+    border-top: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+/* Highlighted Total Box */
+.total-box {
+    background: rgba(229, 9, 20, 0.05);
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(229, 9, 20, 0.2);
+    margin-top: 10px;
+}
+
+.total-box .label {
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.total-box .highlight {
+    font-size: 20px;
+    color: #e50914;
+    font-weight: 800;
+}
+
+/* =========================================
+   SEATS TAGS (Horizontal Scroll included)
+   ========================================= */
 .seats-info {
-    margin-top: 20px;
+    margin-top: 25px;
+}
+
+.seats-info h4 {
+    font-size: 15px;
+    color: #ccc;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .seat-tags {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    /* Forces chips in one line */
     gap: 8px;
-    margin-top: 10px;
+    overflow-x: auto;
+    /* Enables horizontal scroll */
+    padding-bottom: 8px;
+    /* Space for scrollbar */
+
+    /* Firefox Scrollbar Styling */
+    scrollbar-width: thin;
+    scrollbar-color: #e50914 transparent;
+}
+
+/* Custom Webkit Scrollbar */
+.seat-tags::-webkit-scrollbar {
+    height: 4px;
+}
+
+.seat-tags::-webkit-scrollbar-track {
+    background: #2a2a32;
+    border-radius: 10px;
+}
+
+.seat-tags::-webkit-scrollbar-thumb {
+    background: #e50914;
+    border-radius: 10px;
 }
 
 .seat-tag {
-    background: #22232b;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-}
-
-/* RIGHT PAYMENT */
-.payment-options {
-    background: #15161c;
-    padding: 24px;
-    border-radius: 14px;
-}
-
-.payment-options h2 {
-    margin-bottom: 16px;
-}
-
-/* SECURE BADGE */
-.secure-badge {
-    background: rgba(0, 200, 120, 0.12);
-    border: 1px solid rgba(0, 200, 120, 0.3);
-    padding: 10px;
+    background: #2a2a32;
+    color: #fff;
+    padding: 6px 14px;
     border-radius: 8px;
-    margin-bottom: 18px;
     font-size: 13px;
+    font-weight: 600;
+    border: 1px solid #444;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+    /* Prevents squeezing */
+    white-space: nowrap;
+    /* Keeps text in one line */
 }
 
-/* RAZORPAY CARD */
-.razorpay-card {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    background: #1c1d25;
-    padding: 14px;
-    border-radius: 10px;
-    margin-bottom: 18px;
+/* =========================================
+   PAY BUTTON & ANIMATION
+   ========================================= */
+.pay-action {
+    margin-top: 30px;
 }
 
-.razorpay-card h4 {
-    margin: 0;
-}
-
-.razorpay-card p {
-    margin: 0;
-    font-size: 12px;
-    color: #aaa;
-}
-
-/* AMOUNT DISPLAY */
-.amount-display {
-    display: flex;
-    justify-content: space-between;
-    background: #1c1d25;
-    padding: 16px;
-    border-radius: 10px;
-    margin-bottom: 18px;
-    font-size: 16px;
-}
-
-.amount {
-    font-weight: 700;
-    color: #e50914;
-}
-
-/* PAY BUTTON */
 .btn-pay {
     width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, #e50914, #ff2d55);
+    padding: 16px;
+    background: linear-gradient(135deg, #e50914, #b8060f);
+    color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: .25s;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 20px rgba(229, 9, 20, 0.25);
 }
 
-.btn-pay:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(229, 9, 20, 0.4);
+.btn-pay span {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 10px;
+}
+
+.btn-amount {
+    font-size: 18px;
+}
+
+.btn-pay:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(229, 9, 20, 0.4);
+    background: linear-gradient(135deg, #ff1a26, #cc0812);
+}
+
+.btn-pay:active:not(:disabled) {
+    transform: translateY(1px);
 }
 
 .btn-pay:disabled {
     background: #333;
+    color: #777;
     cursor: not-allowed;
     box-shadow: none;
 }
 
-/* TERMS */
+/* Spinner Animation for Processing State */
+.spin-icon {
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner-text {
+    justify-content: center !important;
+    /* Centers text when loading */
+}
+
+/* =========================================
+   TERMS & RESPONSIVE
+   ========================================= */
 .terms {
-    margin-top: 14px;
+    margin-top: 20px;
     font-size: 12px;
-    color: #888;
+    color: #777;
     text-align: center;
+    line-height: 1.5;
 }
 
 .terms a {
     color: #e50914;
     text-decoration: none;
+    font-weight: 600;
 }
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
+.terms a:hover {
+    text-decoration: underline;
+}
 
-    .payment-container {
-        grid-template-columns: 1fr;
-    }
-
+@media (max-width: 600px) {
     .payment-header {
-        padding: 16px 20px;
+        padding: 15px 20px;
     }
 
+    .payment-header h1 {
+        font-size: 20px;
+    }
+
+    .secure-text {
+        display: none;
+        /* Mobile screen me space bachane ke liye chupaya */
+    }
+
+    .order-summary {
+        padding: 20px;
+    }
 }

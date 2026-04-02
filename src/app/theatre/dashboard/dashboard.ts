@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TheatreService } from '../../services/theatre.service';
@@ -32,7 +32,8 @@ export class Dashboard implements OnInit {
   constructor(
     private theatreService: TheatreService,
     private screenService: ScreenService,
-    private http: HttpClient
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -70,8 +71,12 @@ export class Dashboard implements OnInit {
         if (this.theatres.length === 1) {
           this.onTheatreChange(this.theatres[0].id);
         }
+        this.cdr.detectChanges();
       },
-      error: (err: any) => console.error("Error loading theatres", err)
+      error: (err: any) => {
+        console.error("Error loading theatres", err);
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -114,6 +119,7 @@ export class Dashboard implements OnInit {
         if (pendingRequests === 0) {
           this.generateSimulatedMetrics();
           this.isLoading = false;
+          this.cdr.detectChanges();
           return;
         }
 
@@ -141,6 +147,7 @@ export class Dashboard implements OnInit {
       error: (err) => {
         console.error(err);
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -148,6 +155,7 @@ export class Dashboard implements OnInit {
   finishLoadingMetrics() {
     this.generateSimulatedMetrics();
     this.isLoading = false;
+    this.cdr.detectChanges();
   }
 
   generateSimulatedMetrics() {

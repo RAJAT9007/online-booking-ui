@@ -27,12 +27,12 @@
     <div class="theatre-card">
         <h3>My Theatres</h3>
 
-        <div *ngFor="let t of theatre" class="theatre-box">
+        <div *ngFor="let t of theatre()" class="theatre-box">
             <p>{{ t.name }}</p>
             <p>{{ t.location }}</p>
         </div>
 
-        <div *ngIf="theatre.length === 0" class="empty-state">
+        <div *ngIf="theatre().length === 0" class="empty-state">
             No theatres found.
         </div>
     </div>

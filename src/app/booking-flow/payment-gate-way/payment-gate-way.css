@@ -106,6 +106,41 @@
     border-left: 5px solid #0f9d58;
 }
 
+.timer {
+    background: rgba(229, 9, 20, 0.15);
+    color: #ff4d4d;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+}
+
+/* 🔥 Danger Time (Last 1 minute) */
+.danger-time {
+    background: #e50914 !important;
+    color: white !important;
+    animation: pulse 1s infinite;
+    /* Blinking effect */
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
 /* Responsive adjustments */
 @media (max-width: 480px) {
     .payment-card {

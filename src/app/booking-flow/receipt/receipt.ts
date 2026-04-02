@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -17,7 +17,7 @@ export class Receipt implements OnInit {
 
   bookingId: string | null = null;
   bookingData: any = null;
-  isLoading = true;
+  isLoading = signal(true);
   today = new Date();
 
   constructor(
@@ -36,13 +36,13 @@ export class Receipt implements OnInit {
         this.fetchBookingDetails(this.bookingId);
       }
     } else {
-      this.isLoading = false;
+      this.isLoading.set(false);
       console.error('No Booking ID found in URL');
     }
   }
 
   verifySession(sessionId: string, bookingId: string) {
-    this.isLoading = true;
+    this.isLoading.set(true);
     this.http.post<any>(`http://localhost:8082/api/payments/verify-session?sessionId=${sessionId}&bookingId=${bookingId}`, {}, this.getAuthHeaders())
       .subscribe({
         next: () => {
@@ -51,7 +51,7 @@ export class Receipt implements OnInit {
         error: (err) => {
           console.error('Payment verification failed', err);
           alert('Payment verification failed. Please contact support.');
-          this.isLoading = false;
+          this.isLoading.set(false);
         }
       });
   }
@@ -66,16 +66,16 @@ export class Receipt implements OnInit {
   }
 
   fetchBookingDetails(id: string) {
-    this.isLoading = true;
+    this.isLoading.set(true);
     this.http.get<any>(`http://localhost:8082/api/bookings/${id}`, this.getAuthHeaders())
       .subscribe({
         next: (data) => {
           this.bookingData = data;
-          this.isLoading = false;
+          this.isLoading.set(false);
         },
         error: (err) => {
           console.error('Could not fetch booking details', err);
-          this.isLoading = false;
+          this.isLoading.set(false);
         }
       });
   }

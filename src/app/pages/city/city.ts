@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CityService } from '../../services/city.Service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-city',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './city.html',
   styleUrls: ['./city.css']
@@ -18,7 +19,7 @@ export class City implements OnInit {
   };
 
   // Data List
-  cities: any[] = [];
+  cities = signal<any[]>([]);
 
   // Edit Mode
   editingId: number | null = null;
@@ -33,7 +34,7 @@ export class City implements OnInit {
   getCities() {
     this.cityService.getAllCities().subscribe({
       next: (res: any) => {
-        this.cities = res;
+        this.cities.set(res);
         console.log("Cities:", this.cities);
       },
       error: (err) => {
@@ -50,8 +51,8 @@ export class City implements OnInit {
       return;
     }
 
-    if (this.city.pincode.length !== 6) {
-      alert("Pincode must be 6 digits");
+    if (String(this.city.pincode).length !== 6) {
+      alert("Pincode must be exactly 6 digits");
       return;
     }
 

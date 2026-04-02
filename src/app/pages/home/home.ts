@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -35,7 +35,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private router: Router,
     private moviesService: MoviesService,
-    private cityService: CityService
+    private cityService: CityService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -77,25 +78,47 @@ export class HomeComponent implements OnInit {
   loadMovies(): void {
     this.moviesService.showAll().subscribe({
       next: (data) => {
-        this.movies = data.map(movie => ({
-          ...movie
-        }));
-        this.applyFilters();
+        this.movies = data.map(movie => ({ ...movie }));
+
+        // TEST: Niche wali line add karein
+        this.filteredMovies = [...this.movies];
+
+        // TEST: applyFilters ko thodi der ke liye comment (band) kar dein
+        // this.applyFilters(); 
+
         this.nowShowing = this.movies.filter(m => m.status === 'ACTIVE');
         this.upcoming = this.movies.filter(m => m.status === 'PENDING');
+        this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Failed to load movies from Spring Boot:', err);
+        console.error('Failed to load movies:', err);
       }
     });
   }
 
   applyFilters() {
-    const term = this.searchTerm.toLowerCase();
-    this.filteredMovies = this.movies.filter(m =>
-      (m.title.toLowerCase().includes(term) || m.genre.toLowerCase().includes(term)) &&
-      (this.selectedGenre === '' || m.genre === this.selectedGenre)
-    );
+    // 1. FAST RETURN: If no search term and no genre is selected, show ALL movies immediately
+    if (!this.searchTerm && !this.selectedGenre) {
+      this.filteredMovies = [...this.movies];
+      return;
+    }
+
+    // 2. SAFE FILTERING: Handle missing search terms or null values safely
+    const term = (this.searchTerm || '').toLowerCase();
+
+    this.filteredMovies = this.movies.filter(m => {
+      // Safely check title and genre (prevents crashes if they are null in the database)
+      const safeTitle = m.title ? m.title.toLowerCase() : '';
+      const safeGenre = m.genre ? m.genre.toLowerCase() : '';
+
+      // Check if it matches the search bar
+      const matchesSearch = term === '' || safeTitle.includes(term) || safeGenre.includes(term);
+
+      // Check if it matches the dropdown
+      const matchesGenre = this.selectedGenre === '' || m.genre === this.selectedGenre;
+
+      return matchesSearch && matchesGenre;
+    });
   }
 
   /* 🔥 Next Slide */
@@ -120,6 +143,10 @@ export class HomeComponent implements OnInit {
   /* 🎟️ Book Movie */
   bookMovie(id: number) {
     this.router.navigate(['/movie-details', id]);
+  }
+
+  showAllMovies() {
+    this.router.navigate(['/only-movies']);
   }
 }
 

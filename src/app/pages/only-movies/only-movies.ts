@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -45,7 +45,7 @@ export class OnlyMovies implements OnInit, OnDestroy {
   currentIndex: number = 0;
   slideInterval: any;
 
-  constructor(private router: Router, private moviesService: MoviesService) { }
+  constructor(private router: Router, private moviesService: MoviesService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.loadMovies();
@@ -82,6 +82,7 @@ export class OnlyMovies implements OnInit, OnDestroy {
         this.nowShowing = this.movies.filter(m => m.status === 'ACTIVE');
         this.upcoming = this.movies.filter(m => m.status === 'PENDING');
 
+        this.cdr.detectChanges();
         console.log('Movies loaded with posters:', this.movies);
       },
       error: (err) => {

@@ -75,7 +75,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let t of theaters; let i=index" class="table-row">
+                <tr *ngFor="let t of theaters(); let i=index" class="table-row">
                     <td>{{ i + 1 }}</td>
                     <td class="primary-text">{{ t.name }}</td>
                     <td class="address-cell">{{ t.address }}</td>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TheatreService } from '../../services/theatre.service';
 import { Router } from '@angular/router';
@@ -26,7 +26,8 @@ export class OwnerTheatreComponent {
 
   constructor(
     private theatreService: TheatreService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -37,14 +38,12 @@ export class OwnerTheatreComponent {
   }
 
   createTheatre() {
-
     this.theatreService.addTheatre(this.theatre)
       .subscribe((res: any) => {
-
         localStorage.setItem("theatreId", res.theatreId); // ⭐ store
+        this.cdr.detectChanges();
         this.router.navigate(['/owner/screens']);         // ⭐ next step
       });
-
   }
 
   openTheatres() {

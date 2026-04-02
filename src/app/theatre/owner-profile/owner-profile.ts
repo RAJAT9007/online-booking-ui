@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TheatreService } from '../../services/theatre.service';
@@ -19,13 +19,14 @@ export class OwnerProfileComponent implements OnInit {
   ownerPhone: string = '';          // ✅ NEW
   ownerId: number = 0;
   role: string | null = '';
-  theatre: any[] = [];
+  theatre = signal<any[]>([]);
 
   constructor(
     private theatreService: TheatreService,
     private router: Router,
     private http: HttpClient,
-    private toastr: ToastrService   // ✅ NEW
+    private toastr: ToastrService,   // ✅ NEW
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -39,7 +40,8 @@ export class OwnerProfileComponent implements OnInit {
 
   getMyTheatres() {
     this.theatreService.getTheatres().subscribe((res: any) => {
-      this.theatre = res.filter((t: any) => t.ownerId === this.ownerId);
+      this.theatre.set(res.filter((t: any) => t.ownerId === this.ownerId));
+      this.cdr.detectChanges();
     });
   }
 

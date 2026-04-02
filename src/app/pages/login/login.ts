@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -23,7 +23,7 @@ export class LoginComponent {
     private authService: AuthService,
     private router: Router,
     private toastr: ToastrService,
-
+    private ngZone: NgZone
   ) { }
 
   onLogin() {
@@ -41,16 +41,18 @@ export class LoginComponent {
           if (res.id) localStorage.setItem("ownerId", res.id.toString());
           if (res.email) localStorage.setItem("email", res.email);
           if (res.role) localStorage.setItem("role", res.role);
-          
+
           const role = this.authService.getUserRole();
-          
-          if (role === 'ADMIN') {
-            this.router.navigate(['/admin']);
-          } else if (role === 'OWNER') {
-            this.router.navigate(['/owner']);
-          } else {
-            this.router.navigate(['/home']);
-          }
+
+          this.ngZone.run(() => {
+            if (role === 'ADMIN') {
+              this.router.navigate(['/admin']);
+            } else if (role === 'OWNER') {
+              this.router.navigate(['/owner']);
+            } else {
+              this.router.navigate(['/home']);
+            }
+          });
         }
       }, error: (error) => {
         this.toastr.error("Invalid email or password");

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TheatreService } from '../../services/theatre.service';
@@ -24,7 +24,7 @@ export class TheatersComponent {
     theatreId: ""
   };
 
-  theaters: Theatre[] = [];
+  theaters = signal<Theatre[]>([]);
   isEdit = false;
   showForm = false;
 
@@ -35,7 +35,7 @@ export class TheatersComponent {
   }
 
   loadTheatres() {
-    this.theatreService.getTheatres().subscribe(data => this.theaters = data);
+    this.theatreService.getTheatres().subscribe(data => this.theaters.set(data));
   }
 
   openAddForm() {
@@ -47,14 +47,14 @@ export class TheatersComponent {
   saveTheatre() {
     if (this.isEdit) {
       this.theatreService.updateTheatre(this.theater.id, this.theater).subscribe(updatedTheatre => {
-        const index = this.theaters.findIndex(t => t.id === updatedTheatre.id);
-        if (index !== -1) this.theaters[index] = updatedTheatre;
+        const index = this.theaters().findIndex(t => t.id === updatedTheatre.id);
+        if (index !== -1) this.theaters()[index] = updatedTheatre;
         this.showForm = false;
         this.resetForm();
       });
     } else {
       this.theatreService.addTheatre(this.theater).subscribe(newTheatre => {
-        this.theaters.push(newTheatre as Theatre);
+        this.theaters.set([...this.theaters(), newTheatre as Theatre]);
         this.showForm = false;
         this.resetForm();
       });
@@ -78,7 +78,7 @@ export class TheatersComponent {
 
     if (confirmDelete) {
       this.theatreService.deleteTheatre(id).subscribe(() => {
-        this.theaters = this.theaters.filter(t => t.id !== id);
+        this.theaters.set(this.theaters().filter(t => t.id !== id));
         console.log("Theatre deleted successfully");
       });
     }

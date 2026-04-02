@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -19,9 +19,9 @@ export class MoviesComponent {
   searchTerm: string = '';
   genres: string[] = ['Action', 'Comedy', 'Drama', 'Sci-Fi'];
   selectedGenre: string = '';
-  movies: Movie[] = [];
-  filteredMovies: Movie[] = [];
-  
+  movies = signal<Movie[]>([]);
+  filteredMovies = signal<Movie[]>([]);
+
   userRole: string | null = '';
   theatres: any[] = [];
   selectedTheatreId: string = '';
@@ -61,17 +61,17 @@ export class MoviesComponent {
 
   loadMovies() {
     this.moviesService.showAll().subscribe(data => {
-      this.movies = data;
-      this.filteredMovies = data; 
+      this.movies.set(data);
+      this.filteredMovies.set(data);
     });
   }
 
   filterMovies() {
     const term = this.searchTerm.toLowerCase();
-    this.filteredMovies = this.movies.filter(m =>
+    this.filteredMovies.set(this.movies().filter(m =>
       (m.title.toLowerCase().includes(term) || m.genre.toLowerCase().includes(term)) &&
       (this.selectedGenre === '' || m.genre === this.selectedGenre)
-    );
+    ));
   }
 
   openAddForm() {
@@ -115,8 +115,8 @@ export class MoviesComponent {
     if (confirmDelete) {
       this.moviesService.deleteMovie(id).subscribe(() => {
 
-        this.movies = this.movies.filter(m => m.id !== id);
-        this.filteredMovies = [...this.movies];
+        this.movies.set(this.movies().filter(m => m.id !== id));
+        this.filteredMovies.set([...this.movies()]);
 
         console.log("Movie deleted successfully");
       });

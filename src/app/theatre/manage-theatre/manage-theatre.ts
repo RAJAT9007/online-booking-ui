@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ScreenService } from '../../services/screen.service';
 import { TheatreService } from '../../services/theatre.service';
 import { ShowService } from '../../services/show.service';         // ✅ ADDED
@@ -50,7 +50,8 @@ export class ManageTheatre implements OnInit {
     private theatreService: TheatreService,
     private screenService: ScreenService,
     private showService: ShowService,                               // ✅ ADDED
-    private http: HttpClient
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -69,6 +70,7 @@ export class ManageTheatre implements OnInit {
         this.theatres = role === 'OWNER'
           ? res.filter((t: any) => Number(t.ownerId) === ownerId)
           : res;
+        this.cdr.detectChanges();
       },
       error: (err: any) => console.error('Error loading theatres', err)
     });
@@ -95,7 +97,10 @@ export class ManageTheatre implements OnInit {
     if (!this.selectedTheatreId) return;
     this.screens = [];
     this.screenService.getScreensByTheatre(this.selectedTheatreId).subscribe({
-      next: (res) => this.screens = res,
+      next: (res) => {
+        this.screens = res;
+        this.cdr.detectChanges();
+      },
       error: (err) => console.error(err)
     });
   }
@@ -188,6 +193,7 @@ export class ManageTheatre implements OnInit {
           this.seats = data;
           this.buildGrid();
           this.isLoadingLayout = false;
+          this.cdr.detectChanges();
         }
       },
       error: (err) => { console.error('Error fetching seats', err); this.isLoadingLayout = false; }
@@ -284,7 +290,10 @@ export class ManageTheatre implements OnInit {
 
   fetchMovies() {
     this.http.get<any[]>('http://localhost:8082/api/movies/all', this.getHeaders()).subscribe({
-      next: (res) => this.availableMovies = res,
+      next: (res) => {
+        this.availableMovies = res;
+        this.cdr.detectChanges();
+      },
       error: (err) => console.error('Error fetching movies', err)
     });
   }
@@ -295,6 +304,7 @@ export class ManageTheatre implements OnInit {
       next: (res) => {
         console.log('🎬 Shows fetched:', res);
         this.shows = res;
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Error fetching shows', err)
     });

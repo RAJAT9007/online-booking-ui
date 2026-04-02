@@ -62,8 +62,7 @@
                 <div class="show-item" *ngFor="let show of mapping.shows">
                     <div class="show-info">
                         <span class="screen-name">{{ getScreenName(mapping, show.screenId) }}</span>
-                        <span class="language-tag">{{ show.language || 'Hindi' }}</span>
-                        <!-- <span class="price-tag">₹{{ show.price || 150 }}</span> -->
+                        <span class="language-tag">{{ show.language }}</span>
                     </div>
                     <button class="time-btn" (click)="goToSeatBooking(mapping.theatre, show)">
                         {{ formatTime(show.startTime) }}

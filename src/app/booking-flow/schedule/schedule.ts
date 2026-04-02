@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -44,6 +44,7 @@ export class Schedule implements OnInit {
     private screenService: ScreenService,
     private showService: ShowService,
     private moviesService: MoviesService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -177,6 +178,7 @@ export class Schedule implements OnInit {
 
     // Optional: Sort so theatres WITH shows are pushed to the top, and empty ones show below
     this.theatreShowsMapping.sort((a, b) => b.shows.length - a.shows.length);
+    this.cdr.detectChanges();
   }
 
   getScreenName(mapping: any, screenId: number): string {

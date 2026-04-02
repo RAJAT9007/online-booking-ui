@@ -23,6 +23,7 @@ export class Payment implements OnInit {
 
   isLoading = false;
 
+
   // ✅ Holding the numeric user ID
   userId: number = 0;
 
@@ -95,7 +96,9 @@ export class Payment implements OnInit {
         this.calculateAmount(ids.length);
       }
     }
+
   }
+
 
   calculateAmount(seatCount: number) {
     this.convenienceFee = seatCount * 20;
@@ -111,16 +114,16 @@ export class Payment implements OnInit {
     if (this.isLoading) return;
 
     if (this.pendingBookingId) {
-        // If we already successfully created a pending booking moments ago,
-        // do not trigger a 409 DB error! Just route them instantly!
-        this.router.navigate(['/payment-gateway'], {
-            queryParams: {
-              bookingId: this.pendingBookingId,
-              showId: this.showId,
-              totalAmount: this.finalAmount
-            }
-        });
-        return;
+      // If we already successfully created a pending booking moments ago,
+      // do not trigger a 409 DB error! Just route them instantly!
+      this.router.navigate(['/payment-gateway'], {
+        queryParams: {
+          bookingId: this.pendingBookingId,
+          showId: this.showId,
+          totalAmount: this.finalAmount
+        }
+      });
+      return;
     }
 
     this.isLoading = true;

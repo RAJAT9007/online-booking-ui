@@ -95,7 +95,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let m of filteredMovies; let i = index" class="table-row">
+                <tr *ngFor="let m of filteredMovies(); let i = index" class="table-row">
                     <td>{{ i + 1 }}</td>
                     <td class="movie-cell">
                         <span class="movie-name">{{ m.title }}</span>
