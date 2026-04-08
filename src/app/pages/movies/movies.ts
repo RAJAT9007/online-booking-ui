@@ -21,6 +21,8 @@ export class MoviesComponent {
   selectedGenre: string = '';
   movies = signal<Movie[]>([]);
   filteredMovies = signal<Movie[]>([]);
+  currentPage = signal<number>(1);
+  pageSize = signal<number>(5);
 
   userRole: string | null = '';
   theatres: any[] = [];
@@ -63,7 +65,29 @@ export class MoviesComponent {
     this.moviesService.showAll().subscribe(data => {
       this.movies.set(data);
       this.filteredMovies.set(data);
+      this.currentPage.set(1);
     });
+  }
+
+  get paginatedMovies() {
+    const startIndex = (this.currentPage() - 1) * this.pageSize();
+    return this.filteredMovies().slice(startIndex, startIndex + this.pageSize());
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredMovies().length / this.pageSize());
+  }
+
+  nextPage() {
+    if (this.currentPage() < this.totalPages) {
+      this.currentPage.set(this.currentPage() + 1);
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.set(this.currentPage() - 1);
+    }
   }
 
   filterMovies() {
@@ -72,6 +96,7 @@ export class MoviesComponent {
       (m.title.toLowerCase().includes(term) || m.genre.toLowerCase().includes(term)) &&
       (this.selectedGenre === '' || m.genre === this.selectedGenre)
     ));
+    this.currentPage.set(1);
   }
 
   openAddForm() {

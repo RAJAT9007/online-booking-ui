@@ -26,12 +26,14 @@ export const routes: Routes = [
     { path: '', component: LandingComponent },
     { path: 'home', component: HomeComponent },
     { path: 'movie-details/:id', component: MoviesDetails },// Movies Details 
+    { path: 'schedule', component: Schedule },
     { path: 'schedule/:movieId', component: Schedule }, // शेड्यूल के लिए पाथ
     { path: 'seat-booking', component: SeatBooking },
     { path: 'only-movies', component: OnlyMovies },
     { path: 'payment', component: Payment },
     // { path: 'receipt', component: Receipt },
     { path: 'receipt/:id', component: Receipt },
+    { path: 'profile', loadComponent: () => import('./pages/user-profile/user-profile').then(m => m.UserProfileComponent) },
     { path: 'city', component: City },
     { path: 'theatre-owner', component: ManageTheatre },
     { path: 'payment-gateway', component: PaymentGateway },
@@ -79,7 +81,8 @@ export const routes: Routes = [
             // { path: 'movies', component: MoviesComponent },
             { path: 'theaters', component: TheatersComponent },
             { path: 'city', component: City },
-            { path: 'movies', component: MoviesComponent }
+            { path: 'movies', component: MoviesComponent },
+            { path: 'login', component: LoginComponent }
         ]
     },
     {

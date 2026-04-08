@@ -14,8 +14,8 @@ export class PaymentGateway implements OnInit {
   bookingId!: number;
   showId!: number;
   finalAmount = 0;
-  timeLeft = signal(600); // 10 minutes in seconds (10 * 60)
-  displayTime: string = '10:00';
+  timeLeft = signal(300); // 10 minutes in seconds (10 * 60)
+  displayTime: string = '05:00';
   timerInterval: any;
 
   constructor(
@@ -91,83 +91,4 @@ export class PaymentGateway implements OnInit {
       }
     });
   }
-  // payNow() {
-
-  //   this.isLoading = true;
-
-  //   const seatIds =
-  //     this.selectedSeats.map(s => s.id);
-
-  //   this.http.post<any>(
-  //     'http://localhost:8082/api/bookings/create',
-  //     {
-  //       showId: this.showId,
-  //       seatIds: seatIds,
-  //       totalAmount: this.finalAmount
-  //     }
-  //   ).subscribe({
-
-  //     next: (booking) => {
-
-  //       const options = {
-
-  //         key: 'YOUR_RAZORPAY_KEY',
-  //         amount: Math.round(this.finalAmount * 100),
-  //         currency: 'INR',
-  //         name: 'Book-Your VIBE',
-  //         description: 'Movie Ticket Booking',
-
-  //         handler: (response: any) => {
-
-  //           this.http.post(
-  //             'http://localhost:8082/api/payment/verify',
-  //             {
-  //               bookingId: booking.id,
-  //               razorpayOrderId:
-  //                 response.razorpay_order_id,
-  //               razorpayPaymentId:
-  //                 response.razorpay_payment_id,
-  //               razorpaySignature:
-  //                 response.razorpay_signature
-  //             }
-  //           ).subscribe({
-  //             next: () => {
-  //               this.router.navigate(
-  //                 ['/booking-confirmation', booking.id]
-  //               );
-  //             },
-  //             error: () => {
-  //               alert('Payment verification failed');
-  //               this.isLoading = false;
-  //             }
-  //           });
-
-  //         },
-
-  //         modal: {
-  //           ondismiss: () => {
-  //             this.http.put(
-  //               `http://localhost:8082/api/bookings/cancel/${booking.id}`,
-  //               {}
-  //             ).subscribe();
-  //             this.isLoading = false;
-  //           }
-  //         },
-
-  //         theme: { color: '#e50914' }
-
-  //       };
-
-  //       const rzp = new (window as any).Razorpay(options);
-  //       rzp.open();
-  //     },
-
-  //     error: () => {
-  //       alert('Booking failed');
-  //       this.isLoading = false;
-  //     }
-
-  //   });
-
-  // }
 }

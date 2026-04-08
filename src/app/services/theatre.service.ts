@@ -12,28 +12,27 @@ export class TheatreService {
 
     constructor(private http: HttpClient) { }
 
-    getTheatres(): Observable<Theatre[]> {
+    // Centralized helper method for headers
+    private getAuthHeaders() {
         const token = localStorage.getItem("jwtToken");
-        const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
-        return this.http.get<Theatre[]>(this.apiUrl + "/all", { headers });
+        return {
+            headers: new HttpHeaders().set('Authorization', `Bearer ${token}`)
+        };
+    }
+
+    getTheatres(): Observable<Theatre[]> {
+        return this.http.get<Theatre[]>(`${this.apiUrl}/all`, this.getAuthHeaders());
     }
 
     addTheatre(theatre: Theatre): Observable<Theatre> {
-        const token = localStorage.getItem("jwtToken");
-        const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
-        return this.http.post<Theatre>(this.apiUrl + "/add", theatre, { headers });
+        return this.http.post<Theatre>(`${this.apiUrl}/add`, theatre, this.getAuthHeaders());
     }
 
     updateTheatre(id: number, theatre: Theatre): Observable<Theatre> {
-        const token = localStorage.getItem("jwtToken");
-        const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
-        return this.http.put<Theatre>(`${this.apiUrl}/${id}`, theatre, { headers });
+        return this.http.put<Theatre>(`${this.apiUrl}/${id}`, theatre, this.getAuthHeaders());
     }
 
     deleteTheatre(id: number): Observable<void> {
-        const token = localStorage.getItem("jwtToken");
-        const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
-        return this.http.delete<void>(`${this.apiUrl}/delete/${id}`, { headers });
+        return this.http.delete<void>(`${this.apiUrl}/delete/${id}`, this.getAuthHeaders());
     }
-
 }

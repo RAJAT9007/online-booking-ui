@@ -21,10 +21,12 @@ export class TheatersComponent {
     cityId: 0,
     ownerId: 0,
     status: 'ACTIVE',
-    theatreId: ""
+    // theatreId: ""
   };
 
   theaters = signal<Theatre[]>([]);
+  currentPage = signal<number>(1);
+  pageSize = signal<number>(5);
   isEdit = false;
   showForm = false;
 
@@ -35,7 +37,31 @@ export class TheatersComponent {
   }
 
   loadTheatres() {
-    this.theatreService.getTheatres().subscribe(data => this.theaters.set(data));
+    this.theatreService.getTheatres().subscribe(data => {
+      this.theaters.set(data);
+      this.currentPage.set(1);
+    });
+  }
+
+  get paginatedTheaters() {
+    const startIndex = (this.currentPage() - 1) * this.pageSize();
+    return this.theaters().slice(startIndex, startIndex + this.pageSize());
+  }
+
+  get totalPages() {
+    return Math.ceil(this.theaters().length / this.pageSize());
+  }
+
+  nextPage() {
+    if (this.currentPage() < this.totalPages) {
+      this.currentPage.set(this.currentPage() + 1);
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.set(this.currentPage() - 1);
+    }
   }
 
   openAddForm() {
@@ -90,7 +116,7 @@ export class TheatersComponent {
       name: '',
       address: '',
       cityId: 0,
-      theatreId: '',
+      // theatreId: '',
       status: '',
       ownerId: 0,
     };

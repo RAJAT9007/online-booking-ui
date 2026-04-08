@@ -41,11 +41,13 @@ export class CityService {
     }
 
     // ✅ UPDATE
-    updateCity(id: number, body: { name: string; pincode: string }) {
+    updateCity(id: number, body: any) {
+        // The backend explicitly demands `@RequestBody String cityName` for this route,
+        // so we must send only the string value directly as plain text.
         return this.http.put(
             this.apiUrl + "/update/" + id,
-            body,  // ✅ correct body
-            { headers: this.getHeaders() }
+            body.cityName,
+            { headers: this.getHeaders().set('Content-Type', 'text/plain') }
         );
     }
 }

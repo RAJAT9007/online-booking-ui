@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   genres: string[] = ['Action', 'Comedy', 'Drama', 'Sci-Fi'];
 
   /* 🏙️ City Selection */
-  cities: any[] = [];
+  cities = signal<any[]>([]);
   selectedCity: any = null;
 
   /* 🎬 Movie Lists */
@@ -48,12 +48,12 @@ export class HomeComponent implements OnInit {
   loadCities(): void {
     this.cityService.getAllCities().subscribe({
       next: (data: any) => {
-        this.cities = data;
+        this.cities.set(data);
         const storedCity = localStorage.getItem('selectedCity');
         if (storedCity) {
           this.selectedCity = JSON.parse(storedCity);
-        } else if (this.cities.length > 0) {
-          this.selectedCity = this.cities[0];
+        } else if (this.cities().length > 0) {
+          this.selectedCity = this.cities()[0];
           localStorage.setItem('selectedCity', JSON.stringify(this.selectedCity));
         }
       },
@@ -112,7 +112,9 @@ export class HomeComponent implements OnInit {
       const safeGenre = m.genre ? m.genre.toLowerCase() : '';
 
       // Check if it matches the search bar
-      const matchesSearch = term === '' || safeTitle.includes(term) || safeGenre.includes(term);
+      const matchesSearch = term === '' || 
+                            safeTitle.startsWith(term) || 
+                            safeTitle.includes(' ' + term);
 
       // Check if it matches the dropdown
       const matchesGenre = this.selectedGenre === '' || m.genre === this.selectedGenre;
@@ -147,6 +149,18 @@ export class HomeComponent implements OnInit {
 
   showAllMovies() {
     this.router.navigate(['/only-movies']);
+  }
+
+  seachByTitle() {
+    this.moviesService.searchByTitle(this.searchTerm).subscribe({
+      next: (data) => {
+        this.filteredMovies = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to load movies:', err);
+      }
+    });
   }
 }
 

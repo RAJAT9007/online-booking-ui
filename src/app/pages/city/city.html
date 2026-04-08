@@ -1,36 +1,80 @@
-<div class="city-container">
+<div class="admin-card">
+    <div class="header">
+        <div class="title-group">
+            <h2 class="text-gradient">🏙️ City Management</h2>
+            <p class="subtitle">Manage operational cities and pincodes</p>
+        </div>
 
-    <div class="city-title">Manage Cities</div>
-
-    <div class="city-form">
-        <input class="city-input" [(ngModel)]="city.cityName" name="cityName" placeholder="Enter City">
-
-        <input class="city-input" [(ngModel)]="city.pincode" name="pincode" placeholder="Enter Pincode">
-
-        <button *ngIf="!editingId" class="add-btn" (click)="addCity()">Add</button>
-        <button *ngIf="editingId" class="update-btn" (click)="updateCity()">Update</button>
+        <button class="add-btn" (click)="openAddForm()" *ngIf="!showForm">
+            <i class="bi bi-plus-lg"></i> Add City
+        </button>
     </div>
-    <table class="city-table">
 
-        <thead>
-            <tr>
-                <th>City Name</th>
-                <th>Pincode</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
+    <div class="glass-form fade-in" *ngIf="showForm">
+        <form (ngSubmit)="saveCity()" #cityForm="ngForm">
+            <h3 class="form-title">{{ isEdit ? 'Update City' : 'Register New City' }}</h3>
 
-        <tbody>
-            <tr *ngFor="let c of cities()">
-                <td>{{c.cityName}}</td>
-                <td>{{c.pincode}}</td>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>City Name</label>
+                    <input type="text" placeholder="e.g. Mumbai" [(ngModel)]="city.cityName" name="cityName" required>
+                </div>
 
-                <td>
-                    <button class="edit-btn" (click)="editCity(c)">Edit</button>
-                    <button class="delete-btn" (click)="deleteCity(c.id)">Delete</button>
-                </td>
-            </tr>
-        </tbody>
+                <div class="form-group">
+                    <label>Pincode</label>
+                    <input type="number" placeholder="Enter 6-digit Pincode" [(ngModel)]="city.pincode" name="pincode"
+                        required>
+                </div>
+            </div>
 
-    </table>
+            <div class="form-actions">
+                <button class="save-btn" type="submit">Confirm Details</button>
+                <button class="cancel-btn" type="button" (click)="closeForm()">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-container" *ngIf="cities().length > 0">
+        <table class="vibe-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>City Name</th>
+                    <th>Pincode</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let c of paginatedCities; let i=index" class="table-row">
+                    <td>{{ (currentPage() - 1) * pageSize() + i + 1 }}</td>
+                    <td class="primary-text">{{ c.cityName }}</td>
+                    <td><span class="id-badge">{{ c.pincode }}</span></td>
+                    <td class="text-center">
+                        <button class="edit-icon-btn" (click)="editCity(c)"><i
+                                class="bi bi-pencil-square"></i>Update</button>
+                        <button class="delete-icon-btn" (click)="deleteCity(c.id)"><i
+                                class="bi bi-trash3"></i>Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls" *ngIf="totalPages > 1">
+        <button class="page-btn" [disabled]="currentPage() === 1" (click)="prevPage()">
+            <i class="bi bi-chevron-left"></i> Previous
+        </button>
+        <div class="page-info">
+            <span>Page {{ currentPage() }} of {{ totalPages }}</span>
+        </div>
+        <button class="page-btn" [disabled]="currentPage() === totalPages" (click)="nextPage()">
+            Next <i class="bi bi-chevron-right"></i>
+        </button>
+    </div>
+
+    <div *ngIf="cities().length === 0" class="empty-state">
+        <i class="bi bi-geo-alt"></i>
+        <p>No cities registered yet.</p>
+    </div>
 </div>

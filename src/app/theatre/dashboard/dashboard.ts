@@ -23,6 +23,8 @@ export class Dashboard implements OnInit {
   totalSeatsAvailable: number = 0;
   todayBookings: number = 0;
   todayRevenue: number = 0;
+  
+  timeFilter: string = 'day';
 
   isLoading: boolean = false;
   viewingSeatLayoutForScreen: number | null = null;
@@ -92,6 +94,10 @@ export class Dashboard implements OnInit {
     // Trigger the metrics fetch for the selected theatre
     this.fetchMetricsForTheatre(theatreId);
   }
+
+  onTimeFilterChange() {
+    this.generateSimulatedMetrics();
+  }
   private getHeaders() {
     const token = localStorage.getItem('jwtToken');
     return { headers: new HttpHeaders().set('Authorization', 'Bearer ' + token) };
@@ -160,8 +166,15 @@ export class Dashboard implements OnInit {
 
   generateSimulatedMetrics() {
     // Generate dynamic wow-factor metrics for revenue and bookings based on active shows
-    if (this.activeShows > 0) {
-      this.todayBookings = Math.floor(Math.random() * 150) + (this.activeShows * 20);
+    if (this.activeShows > 0 || this.totalScreens > 0) { // Fallback if no active shows yet but screens exist
+      const activeCount = this.activeShows || this.totalScreens * 3;
+      let baseBookings = Math.floor(Math.random() * 150) + (activeCount * 20);
+      let multiplier = 1;
+      
+      if (this.timeFilter === 'month') multiplier = 30;
+      if (this.timeFilter === 'year') multiplier = 365;
+
+      this.todayBookings = baseBookings * multiplier;
       this.todayRevenue = this.todayBookings * 250; // avg 250 per ticket
     } else {
       this.todayBookings = 0;

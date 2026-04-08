@@ -1,43 +1,55 @@
-<div class="profile-container">
-    <h2>Owner Profile</h2>
+<div class="profile-layout">
+    <div class="profile-sidebar">
+        <div class="avatar-circle">
+            <i class="bi bi-briefcase-fill"></i>
+        </div>
+        <h2>Owner Hub</h2>
+        <p class="role-badge">Theatre Partner</p>
 
-    <div class="profile-card">
-        <h3>Account Info</h3>
-
-        <div class="form-group">
-            <label>Email</label>
-            <input type="text" [value]="ownerEmail" readonly />
+        <div class="contact-info">
+            <p><i class="bi bi-envelope"></i> {{ ownerEmail }}</p>
         </div>
 
-        <div class="form-group">
-            <label>Role</label>
-            <input type="text" [value]="role" readonly />
-        </div>
-
-        <div class="form-group">
-            <label>Phone Number</label>
-            <input type="tel" [(ngModel)]="ownerPhone" placeholder="Enter phone number" maxlength="10" />
-        </div>
-
-        <div class="actions">
-            <button class="btn-primary" (click)="savePhone()">Save Phone</button>
-        </div>
+        <button class="logout-btn" (click)="logout()">
+            <i class="bi bi-box-arrow-right"></i> Sign Out
+        </button>
     </div>
 
-    <div class="theatre-card">
-        <h3>My Theatres</h3>
+    <div class="profile-content admin-card">
+        <h2 class="text-gradient">Partner Profile</h2>
+        <p class="subtitle">Manage your personal details and partner network locations.</p>
 
-        <div *ngFor="let t of theatre()" class="theatre-box">
-            <p>{{ t.name }}</p>
-            <p>{{ t.location }}</p>
+        <div class="glass-form" style="margin-top: 30px;">
+            <h3>Contact Details</h3>
+            <div class="form-group" style="max-width: 400px; margin-top: 15px;">
+                <label>Operational Phone Number</label>
+                <div style="display: flex; gap: 10px; align-items: center; justify-content: center;">
+                  <input type="tel" [(ngModel)]="ownerPhone" placeholder="Enter mobile number" maxlength="10" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: #fff;">
+                  <button class="add-btn" (click)="savePhone()" style="padding: 12px 20px;">Save Sync</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container" style="margin-top: 40px;" *ngIf="theatre().length > 0">
+            <table class="vibe-table">
+                <thead>
+                    <tr>
+                        <th>Theatre Block</th>
+                        <th>Network Base Location</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let t of theatre()" class="table-row">
+                        <td class="primary-text"><i class="bi bi-building"></i> {{ t.name }}</td>
+                        <td>{{ t.location }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div *ngIf="theatre().length === 0" class="empty-state">
-            No theatres found.
+            <i class="bi bi-buildings"></i>
+            <p>You have not registered any partner theatres yet.</p>
         </div>
-    </div>
-
-    <div class="actions">
-        <button class="btn-danger" (click)="logout()">Logout</button>
     </div>
 </div>

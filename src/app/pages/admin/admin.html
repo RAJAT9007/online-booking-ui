@@ -1,47 +1,36 @@
 <div class="admin-container">
 
-    <!-- Fixed Sidebar -->
-    <aside class="sidebar">
-        <div>
-            <!-- Branding -->
-            <div class="sidebar-brand">
-                <h2 class="text-gradient">Admin Panel</h2>
-                <span class="admin-tag">MovieBooking</span>
-            </div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
 
-            <!-- Navigation Links -->
-            <ul class="nav-list">
-                <!-- Use routerLink for Angular SPA navigation without page reloads -->
-                <!-- Use routerLinkActive to automatically apply the "active" CSS class -->
-                <li routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
-                    <i class="bi bi-speedometer2"></i> <span>Dashboard</span>
-                </li>
+        <button routerLink="/admin/dashboard" routerLinkActive="active" class="menu-btn">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </button>
 
-                <li routerLink="/admin/city" routerLinkActive="active" class="nav-item">
-                    <i class="bi bi-geo-alt"></i> <span>Manage Cities</span>
-                </li>
+        <button routerLink="/admin/city" routerLinkActive="active" class="menu-btn">
+            <i class="bi bi-geo-alt"></i> Manage Cities
+        </button>
 
-                <li routerLink="/admin/theaters" routerLinkActive="active" class="nav-item">
-                    <i class="bi bi-building-gear"></i> <span>Manage Theaters</span>
-                </li>
+        <button routerLink="/admin/theaters" routerLinkActive="active" class="menu-btn">
+            <i class="bi bi-building-gear"></i> Manage Theaters
+        </button>
 
-                <li routerLink="/admin/movies" routerLinkActive="active" class="nav-item">
-                    <i class="bi bi-film"></i> <span>Manage Movies</span>
-                </li>
-            </ul>
+        <button routerLink="/admin/movies" routerLinkActive="active" class="menu-btn">
+            <i class="bi bi-film"></i> Manage Movies
+        </button>
+
+        <div class="sidebar-footer" style="margin-top: auto; padding-top: 20px;">
+            <button (click)="logout()" class="logout-btn menu-btn"
+                style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); justify-content: center; width: 100%;">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </button>
         </div>
+    </div>
 
-        <div class="sidebar-footer">
-            <button class="logout-btn">Logout</button>
-        </div>
-    </aside>
-
-    <!-- Main Content Area -->
-    <main class="content-area">
-        <div class="glass-container">
-            <!-- ✅ The Child Components (City, Theatre) will load HERE! -->
-            <router-outlet></router-outlet>
-        </div>
-    </main>
+    <!-- Content Area -->
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
 
 </div>

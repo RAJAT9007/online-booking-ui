@@ -1,0 +1,67 @@
+<div class="profile-layout">
+
+    <div class="profile-sidebar">
+        <div class="avatar-circle">
+            <i class="bi bi-person-circle"></i>
+        </div>
+        <h2>User Hub</h2>
+        <p class="role-badge">Movie Buff</p>
+
+        <div class="contact-info">
+            <p><i class="bi bi-envelope"></i> {{ userEmail }}</p>
+        </div>
+
+        <button class="logout-btn" (click)="logout()">
+            <i class="bi bi-box-arrow-right"></i> Sign Out
+        </button>
+    </div>
+
+    <div class="profile-content admin-card">
+        <h2 class="text-gradient">Tickets & History</h2>
+        <p class="subtitle">Your past bookings and upcoming shows.</p>
+
+        <div *ngIf="isLoading()" class="glass-form"
+            style="display: flex; gap: 15px; justify-content: center; align-items: center;">
+            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+            Loading History...
+        </div>
+
+        <div class="table-container" *ngIf="!isLoading() && userBookings().length > 0">
+            <table class="vibe-table">
+                <thead>
+                    <tr>
+                        <th>Booking Ref</th>
+                        <th>Movie Details</th>
+                        <th>Show Time</th>
+                        <th>Amount Paid</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let b of userBookings()" class="table-row">
+                        <td><span class="id-badge">#{{ b.bookingId }}</span></td>
+                        <td class="primary-text">
+                            <i class="bi bi-film"></i> {{ b.resolvedMovieName || 'Loading...' }}
+                        </td>
+                        <td>
+                            <i class="bi bi-clock"></i> {{ b.resolvedShowTime ? (b.resolvedShowTime | date:'medium') :
+                            (b.bookingTime | date:'medium') }}
+                        </td>
+                        <td>₹ {{ b.totalAmount }}</td>
+                        <td>
+                            <span class="status-badge" [ngClass]="b.status === 'CONFIRMED' ? 'positive' : 'negative'">
+                                {{ b.status }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div *ngIf="!isLoading() && userBookings().length === 0" class="empty-state">
+            <i class="bi bi-ticket-perforated"></i>
+            <p>You haven't booked any movies yet!</p>
+            <button class="add-btn" routerLink="/home" style="margin-top: 15px;">Browse Shows</button>
+        </div>
+    </div>
+</div>

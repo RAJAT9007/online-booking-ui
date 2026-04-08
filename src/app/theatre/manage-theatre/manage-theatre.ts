@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, signal } from '@angular/core';
 import { ScreenService } from '../../services/screen.service';
 import { TheatreService } from '../../services/theatre.service';
-import { ShowService } from '../../services/show.service';         // ✅ ADDED
+import { ShowService } from '../../services/show.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -25,7 +25,7 @@ export class ManageTheatre implements OnInit {
 
   // Seat Layout State
   viewingSeatLayoutForScreen: number | null = null;
-  seats: any[] = [];
+  seats = signal<any[]>([]);
   rows: string[] = [];
   seatGrid: { [key: string]: any[] } = {};
   isLoadingLayout: boolean = false;
@@ -33,7 +33,7 @@ export class ManageTheatre implements OnInit {
   // Seat Edit State
   showEditPanel: boolean = false;
   selectedSeat: any = null;
-  bulkPrices = { RECLINER: 500, GOLD: 300, SILVER: 200 };
+  bulkPrices = { PREMIUM: 500, GOLD: 300, SILVER: 200 };
 
   // Show / Movies State
   viewingMoviesForScreen: number | null = null;
@@ -49,7 +49,7 @@ export class ManageTheatre implements OnInit {
   constructor(
     private theatreService: TheatreService,
     private screenService: ScreenService,
-    private showService: ShowService,                               // ✅ ADDED
+    private showService: ShowService,
     private http: HttpClient,
     private cdr: ChangeDetectorRef
   ) { }
@@ -66,7 +66,6 @@ export class ManageTheatre implements OnInit {
 
     this.theatreService.getTheatres().subscribe({
       next: (res: any) => {
-        // ✅ Type-safe: Number(t.ownerId) ensures API string values are compared as numbers
         this.theatres = role === 'OWNER'
           ? res.filter((t: any) => Number(t.ownerId) === ownerId)
           : res;
@@ -116,6 +115,7 @@ export class ManageTheatre implements OnInit {
     this.resetForm();
     this.isEditMode = false;
     this.showForm = true;
+
   }
 
   openEditForm(s: any) {
@@ -172,7 +172,7 @@ export class ManageTheatre implements OnInit {
 
   closeManageSeats() {
     this.viewingSeatLayoutForScreen = null;
-    this.seats = [];
+    this.seats.set([]);
     this.rows = [];
     this.seatGrid = {};
   }
@@ -190,7 +190,7 @@ export class ManageTheatre implements OnInit {
         if (data.length === 0) {
           this.generateSeats(screenId);
         } else {
-          this.seats = data;
+          this.seats.set(data);
           this.buildGrid();
           this.isLoadingLayout = false;
           this.cdr.detectChanges();
@@ -210,7 +210,7 @@ export class ManageTheatre implements OnInit {
   buildGrid() {
     const rowSet = new Set<string>();
     this.seatGrid = {};
-    const sortedSeats = [...this.seats].sort((a, b) => parseInt(a.seatNumber) - parseInt(b.seatNumber));
+    const sortedSeats = [...this.seats()].sort((a, b) => parseInt(a.seatNumber) - parseInt(b.seatNumber));
     sortedSeats.forEach(seat => {
       rowSet.add(seat.rowName);
       if (!this.seatGrid[seat.rowName]) this.seatGrid[seat.rowName] = [];
@@ -249,12 +249,12 @@ export class ManageTheatre implements OnInit {
   }
 
   applyLocalUpdate() {
-    const index = this.seats.findIndex(s => s.id === this.selectedSeat.id);
-    if (index !== -1) { this.seats[index] = this.selectedSeat; this.buildGrid(); }
+    const index = this.seats().findIndex(s => s.id === this.selectedSeat.id);
+    if (index !== -1) { this.seats.set(this.selectedSeat); this.buildGrid(); }
     this.closeEditPanel();
   }
 
-  bulkUpdateSeatPrice(type: 'RECLINER' | 'GOLD' | 'SILVER') {
+  bulkUpdateSeatPrice(type: 'PREMIUM' | 'GOLD' | 'SILVER') {
     const price = this.bulkPrices[type];
     if (this.viewingSeatLayoutForScreen) {
       this.http.put(
@@ -269,7 +269,7 @@ export class ManageTheatre implements OnInit {
   }
 
   localBulkUpdate(type: string, price: number) {
-    this.seats.forEach(s => { if (s.seatType === type) s.price = price; });
+    this.seats().forEach(s => { if (s.seatType === type) s.price = price; });
     this.buildGrid();
     alert(`Bulk update complete for ${type} to ₹${price}`);
   }
@@ -299,7 +299,6 @@ export class ManageTheatre implements OnInit {
   }
 
   fetchShows(screenId: number) {
-    // ✅ Correct endpoint: /api/shows/screen/{screenId}
     this.http.get<any[]>(`http://localhost:8082/api/shows/screen/${screenId}`, this.getHeaders()).subscribe({
       next: (res) => {
         console.log('🎬 Shows fetched:', res);
@@ -310,7 +309,6 @@ export class ManageTheatre implements OnInit {
     });
   }
 
-  // ✅ Auto-calculate endTime from movie duration + startTime
   onMovieOrTimeChange() {
     const movie = this.availableMovies.find(m => m.id == this.showFormDetails.movieId);
     const startTime = this.showFormDetails.startTime;
@@ -318,7 +316,7 @@ export class ManageTheatre implements OnInit {
     if (movie && movie.duration && startTime) {
       const start = new Date(startTime);
 
-      if (isNaN(start.getTime())) return; // guard invalid date
+      if (isNaN(start.getTime())) return;
 
       const end = new Date(start.getTime() + movie.duration * 60 * 1000);
 
@@ -334,7 +332,6 @@ export class ManageTheatre implements OnInit {
     }
   }
 
-  // ✅ Save show to DB using ShowService
   addShow() {
     if (!this.showFormDetails.movieId || !this.showFormDetails.startTime) {
       alert('Please select Movie and Start Time');
@@ -346,8 +343,6 @@ export class ManageTheatre implements OnInit {
       return;
     }
 
-    // ✅ Spring Boot LocalDateTime requires seconds: "2026-03-26T14:00:00"
-    // datetime-local gives "2026-03-26T14:00" (no seconds) → causes 400 Bad Request
     const ensureSeconds = (dt: string) => dt && dt.length === 16 ? dt + ':00' : dt;
 
     const payload = {
@@ -356,7 +351,7 @@ export class ManageTheatre implements OnInit {
       startTime: ensureSeconds(this.showFormDetails.startTime),
       endTime: ensureSeconds(this.showFormDetails.endTime),
       language: this.showFormDetails.language,
-      price: 0  // ✅ Required by ShowDTO — set default; owner can change per seat
+      price: 0
     };
 
     console.log('📦 Sending payload:', payload);
@@ -366,7 +361,6 @@ export class ManageTheatre implements OnInit {
         console.log('✅ Show saved to DB:', res);
         alert('Show assigned successfully!');
         this.fetchShows(this.viewingMoviesForScreen!);
-        // Reset form
         this.showFormDetails = { movieId: '', startTime: '', endTime: '', language: 'English' };
       },
       error: (err) => {
@@ -376,7 +370,7 @@ export class ManageTheatre implements OnInit {
     });
   }
 
-  // ✅ Delete show — show.id is the correct field (not show.showId)
+  // Delete show — show.id is the correct field (not show.showId)
   deleteShow(id: number) {
     if (confirm('Are you sure you want to remove this show?')) {
       this.showService.deleteShow(id).subscribe({

@@ -6,12 +6,18 @@
     </div>
 
     <!-- Theatre Selector -->
-    <div class="dashboard-controls">
+    <div class="dashboard-controls" style="display: flex; gap: 20px; align-items: center; justify-content: center; flex-wrap: wrap;">
         <select [ngModel]="selectedTheatreId" (ngModelChange)="onTheatreChange($event)" class="theatre-dropdown">
-            <option value="0">Select a Theatre to View Metrics</option>
+            <option [value]="null" disabled selected>Select a Theatre to View Metrics</option>
             <option *ngFor="let t of theatres" [value]="t.id">
                 🏢 {{ t.name }}
             </option>
+        </select>
+        
+        <select [(ngModel)]="timeFilter" (change)="onTimeFilterChange()" class="time-dropdown" style="padding: 12px 20px; border-radius: 12px; background: rgba(30, 41, 59, 0.8); color: white; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; outline: none; font-size: 16px;">
+            <option value="day">📅 Statistics by Day</option>
+            <option value="month">📅 Statistics by Month</option>
+            <option value="year">📅 Statistics by Year</option>
         </select>
     </div>
 
@@ -27,7 +33,7 @@
         <div class="metric-card card-revenue">
             <div class="icon">💰</div>
             <div class="metric-info">
-                <h3>Today Revenue</h3>
+                <h3>Revenue Generated ({{ timeFilter | uppercase }})</h3>
                 <h2>₹{{ todayRevenue | number:'1.0-0' }}</h2>
             </div>
             <div class="glow"></div>
@@ -36,7 +42,7 @@
         <div class="metric-card card-bookings">
             <div class="icon">🎟</div>
             <div class="metric-info">
-                <h3>Total Bookings Today</h3>
+                <h3>Total Bookings ({{ timeFilter | uppercase }})</h3>
                 <h2>{{ todayBookings }}</h2>
             </div>
             <div class="glow"></div>

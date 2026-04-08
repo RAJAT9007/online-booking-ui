@@ -28,4 +28,11 @@ export class BookingService {
         );
     }
 
+    getUserBookingHistory(userId: number) {
+        return this.http.get(
+            `${this.api}/users/${userId}`,
+            this.headers()
+        );
+    }
+
 }

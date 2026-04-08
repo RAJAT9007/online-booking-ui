@@ -1,5 +1,6 @@
 /* Container to center everything on the page */
 .payment-container {
+
     display: flex;
     justify-content: center;
     align-items: center;

@@ -1,4 +1,73 @@
-<div class="dashboard-container">
-    <h2>Welcome to the Admin Dashboard</h2>
-    <p>Select an option from the sidebar to manage your application.</p>
+<div class="admin-card">
+    <div class="header">
+        <div class="title-group">
+            <h2 class="text-gradient">📊 System Overview</h2>
+            <p class="subtitle">Real-time system statistics and ticketing margins</p>
+        </div>
+
+        <div class="action-bar">
+            <div class="search-box">
+                <i class="bi bi-funnel"></i>
+                <select class="genre-select" [(ngModel)]="selectedTheaterId" (change)="onFilterChange()">
+                    <option value="all">Global (All Theaters)</option>
+                    <option *ngFor="let t of theaters" [value]="t.id">{{ t.name }}</option>
+                </select>
+            </div>
+            
+            <div class="search-box">
+                <i class="bi bi-calendar-event"></i>
+                <select class="genre-select" [(ngModel)]="timeFilter" (change)="onFilterChange()">
+                    <option value="day">📅 Day</option>
+                    <option value="month">📅 Month</option>
+                    <option value="year">📅 Year</option>
+                </select>
+            </div>
+            
+            <button class="add-btn refresh-btn" (click)="onFilterChange()">
+                <i class="bi bi-arrow-clockwise"></i> Refresh Sync
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon box-purple">
+                <i class="bi bi-ticket-perforated"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Total Tickets Booked ({{ timeFilter | uppercase }})</h3>
+                <p class="stat-number">{{ totalTicketsBooked | number }}</p>
+                <span class="stat-trend positive"><i class="bi bi-arrow-up-right"></i> +12.5% this week</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon box-emerald">
+                <i class="bi bi-ui-checks-grid"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Empty Seats Available</h3>
+                <p class="stat-number">{{ totalSeatsAvailable | number }}</p>
+                <span class="stat-trend negative"><i class="bi bi-arrow-down-right"></i> -4.2% filling fast</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon box-blue">
+                <i class="bi bi-buildings"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Active Partner Theaters</h3>
+                <p class="stat-number">{{ activeTheaters }}</p>
+                <span class="stat-trend neutral"><i class="bi bi-dash"></i> No changes</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="glass-form fade-in" style="margin-top: 30px; text-align: center; padding: 60px;">
+        <i class="bi bi-bar-chart-line" style="font-size: 4rem; color: rgba(255,255,255,0.1);"></i>
+        <h3 style="color: #cbd5e1; margin-top: 20px;">Data Visualization Matrix</h3>
+        <p style="color: #94a3b8; max-width: 500px; margin: 10px auto;">Detailed charting maps will be populated here as your platform gathers more historical data. Use the filters above to drill down into specific theater seating statuses.</p>
+    </div>
 </div>

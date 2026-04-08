@@ -20,9 +20,14 @@ export class City implements OnInit {
 
   // Data List
   cities = signal<any[]>([]);
+  
+  currentPage = signal<number>(1);
+  pageSize = signal<number>(5);
 
-  // Edit Mode
+  // Status
+  showForm = false;
   editingId: number | null = null;
+  get isEdit() { return this.editingId !== null; }
 
   constructor(private cityService: CityService) { }
 
@@ -30,12 +35,21 @@ export class City implements OnInit {
     this.getCities();
   }
 
-  // ✅ GET ALL CITIES
+  openAddForm() {
+    this.showForm = true;
+    this.resetForm();
+  }
+
+  closeForm() {
+    this.showForm = false;
+    this.resetForm();
+  }
+
   getCities() {
     this.cityService.getAllCities().subscribe({
       next: (res: any) => {
         this.cities.set(res);
-        console.log("Cities:", this.cities);
+        this.currentPage.set(1);
       },
       error: (err) => {
         console.error("Error fetching cities", err);
@@ -43,9 +57,28 @@ export class City implements OnInit {
     });
   }
 
-  // ✅ ADD CITY
-  addCity() {
+  get paginatedCities() {
+    const startIndex = (this.currentPage() - 1) * this.pageSize();
+    return this.cities().slice(startIndex, startIndex + this.pageSize());
+  }
 
+  get totalPages() {
+    return Math.ceil(this.cities().length / this.pageSize());
+  }
+
+  nextPage() {
+    if (this.currentPage() < this.totalPages) {
+      this.currentPage.set(this.currentPage() + 1);
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.set(this.currentPage() - 1);
+    }
+  }
+
+  saveCity() {
     if (!this.city.cityName || !this.city.pincode) {
       alert("Please fill all fields");
       return;
@@ -56,58 +89,49 @@ export class City implements OnInit {
       return;
     }
 
-    this.cityService.addCity(this.city).subscribe({
-      next: () => {
-        alert("City added successfully ✅");
-        this.getCities();
-        this.resetForm();
-      },
-      error: (err) => {
-        console.error("Error adding city", err);
-      }
-    });
+    if (this.isEdit && this.editingId) {
+      this.cityService.updateCity(this.editingId, this.city).subscribe({
+        next: () => {
+          this.getCities();
+          this.closeForm();
+        },
+        error: (err) => {
+          console.error("Error updating city", err);
+        }
+      });
+    } else {
+      this.cityService.addCity(this.city).subscribe({
+        next: () => {
+          this.getCities();
+          this.closeForm();
+        },
+        error: (err) => {
+          console.error("Error adding city", err);
+        }
+      });
+    }
   }
 
-  // ✅ EDIT CITY
   editCity(c: any) {
     this.city = { ...c };
     this.editingId = c.id;
+    this.showForm = true;
   }
 
-  // ✅ UPDATE CITY
-  updateCity() {
-
-    if (!this.editingId) return;
-
-    this.cityService.updateCity(this.editingId, this.city).subscribe({
-      next: () => {
-        alert("City updated successfully ✏️");
-        this.getCities();
-        this.resetForm();
-      },
-      error: (err) => {
-        console.error("Error updating city", err);
-      }
-    });
-  }
-
-  // ✅ DELETE CITY
   deleteCity(id: number) {
-
-    if (!confirm("Are you sure you want to delete?")) return;
-
-    this.cityService.deleteCity(id).subscribe({
-      next: () => {
-        alert("City deleted ❌");
-        this.getCities();
-      },
-      error: (err) => {
-        console.error("Error deleting city", err);
-      }
-    });
+    const isConfirmed = confirm("Are you sure you want to delete this city? 🗑️");
+    if (isConfirmed) {
+      this.cityService.deleteCity(id).subscribe({
+        next: () => {
+          this.getCities();
+        },
+        error: (err) => {
+          console.error("Error deleting city", err);
+        }
+      });
+    }
   }
 
-  // ✅ RESET FORM
   resetForm() {
     this.city = {
       cityName: '',

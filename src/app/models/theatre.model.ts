@@ -3,7 +3,7 @@ export interface Theatre {
     name: string;
     address: string;
     cityId: number;
-    theatreId?: string;
+    // theatreId: string;
     status: string;
     ownerId: number;
 }

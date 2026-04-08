@@ -26,12 +26,6 @@
                         required>
                 </div>
 
-                <!-- <div class="form-group">
-                    <label>Register ID (Owner)</label>
-                    <input type="number" placeholder="Enter Registration ID" [(ngModel)]="theater.registerId"
-                        name="registerId">
-                </div> -->
-
                 <div class="form-group">
                     <label>Owner ID</label>
                     <input type="number" placeholder="Enter Owner ID" [(ngModel)]="theater.ownerId" name="ownerId"
@@ -61,7 +55,7 @@
         </form>
     </div>
 
-    <div class="table-container">
+    <div class="table-container" *ngIf="theaters().length > 0">
         <table class="vibe-table">
             <thead>
                 <tr>
@@ -69,31 +63,45 @@
                     <th>Theater Name</th>
                     <th>Address</th>
                     <th>City ID</th>
-                    <th>Register ID</th>
                     <th>Status</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let t of theaters(); let i=index" class="table-row">
-                    <td>{{ i + 1 }}</td>
+                <tr *ngFor="let t of paginatedTheaters; let i=index" class="table-row">
+                    <td>{{ (currentPage() - 1) * pageSize() + i + 1 }}</td>
                     <td class="primary-text">{{ t.name }}</td>
                     <td class="address-cell">{{ t.address }}</td>
                     <td><span class="id-badge">{{ t.cityId }}</span></td>
-                    <td><span class="id-badge">{{ t.theatreId }}</span></td>
                     <td>
                         <span class="status-badge" [class.active]="t.status === 'ACTIVE'">
                             {{ t.status }}
                         </span>
                     </td>
                     <td class="text-center">
-                        <button class="edit-icon-btn" (click)="editTheatre(t)"><i
-                                class="bi bi-pencil-square"></i>Update</button>
-                        <button class="delete-icon-btn" (click)="deleteTheatre(t.id)"><i
-                                class="bi bi-trash3"></i>Delete</button>
+                        <button class="edit-icon-btn" (click)="editTheatre(t)"><i class="bi bi-pencil-square"></i>Update</button>
+                        <button class="delete-icon-btn" (click)="deleteTheatre(t.id)"><i class="bi bi-trash3"></i>Delete</button>
                     </td>
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls" *ngIf="totalPages > 1">
+        <button class="page-btn" [disabled]="currentPage() === 1" (click)="prevPage()">
+            <i class="bi bi-chevron-left"></i> Previous
+        </button>
+        <div class="page-info">
+            <span>Page {{ currentPage() }} of {{ totalPages }}</span>
+        </div>
+        <button class="page-btn" [disabled]="currentPage() === totalPages" (click)="nextPage()">
+            Next <i class="bi bi-chevron-right"></i>
+        </button>
+    </div>
+
+    <div *ngIf="theaters().length === 0" class="empty-state">
+        <i class="bi bi-buildings"></i>
+        <p>No theaters registered yet.</p>
     </div>
 </div>

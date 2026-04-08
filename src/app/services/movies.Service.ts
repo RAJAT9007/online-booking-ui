@@ -58,6 +58,13 @@ export class MoviesService {
             { headers: this.getHeaders() }
         );
     }
+
+    searchByTitle(title: string): Observable<Movie[]> {
+        return this.http.get<Movie[]>(
+            `${this.apiUrl}/search?title=${title}`,
+            { headers: this.getHeaders() }
+        );
+    }
 }
 
 // environment variables - frontend and backend
