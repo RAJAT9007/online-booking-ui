@@ -23,7 +23,7 @@ export class Dashboard implements OnInit {
   totalSeatsAvailable: number = 0;
   todayBookings: number = 0;
   todayRevenue: number = 0;
-  
+
   timeFilter: string = 'day';
 
   isLoading: boolean = false;
@@ -120,32 +120,62 @@ export class Dashboard implements OnInit {
       next: (screens) => {
         this.totalScreens = screens.length;
 
-        // Loop screens to aggregate shows & seats
-        let pendingRequests = screens.length * 2; // shows + seats per screen
-        if (pendingRequests === 0) {
-          this.generateSimulatedMetrics();
+        let pendingScreens = screens.length;
+        if (pendingScreens === 0) {
           this.isLoading = false;
           this.cdr.detectChanges();
           return;
         }
 
         screens.forEach((screen: any) => {
-          // Get Shows per screen
-          this.http.get<any[]>(`http://localhost:8082/api/shows/screen/${screen.id}`, this.getHeaders()).subscribe({
-            next: (shows) => {
-              this.activeShows += shows.length;
-              if (--pendingRequests === 0) this.finishLoadingMetrics();
-            },
-            error: () => { if (--pendingRequests === 0) this.finishLoadingMetrics(); }
-          });
-
           // Get Seats per screen
           this.http.get<any[]>(`http://localhost:8082/api/seats/screen/${screen.id}`, this.getHeaders()).subscribe({
             next: (seats) => {
               this.totalSeatsAvailable += seats.filter(s => s.status === 'ACTIVE').length;
-              if (--pendingRequests === 0) this.finishLoadingMetrics();
             },
-            error: () => { if (--pendingRequests === 0) this.finishLoadingMetrics(); }
+            error: (err) => console.error(err)
+          });
+
+          // Get Shows per screen
+          this.http.get<any[]>(`http://localhost:8082/api/shows/screen/${screen.id}`, this.getHeaders()).subscribe({
+            next: (shows) => {
+              this.activeShows += shows.length;
+
+              if (shows.length === 0) {
+                if (--pendingScreens === 0) this.finishLoadingMetrics();
+                return;
+              }
+
+              let pendingShows = shows.length;
+              shows.forEach((show: any) => {
+                // Real Revenue calculation based on booked seats!
+                const showPrice = show.price || 250; 
+                
+                this.http.get<number[]>(`http://localhost:8082/api/bookings/booked-seats/${show.id}`, this.getHeaders()).subscribe({
+                  next: (bookedSeatIds) => {
+                    const bookedCount = bookedSeatIds.length;
+                    
+                    // Increment absolute real numbers!
+                    this.todayBookings += bookedCount;
+                    this.todayRevenue += (bookedCount * showPrice);
+
+                    if (--pendingShows === 0) {
+                      if (--pendingScreens === 0) this.finishLoadingMetrics();
+                    }
+                  },
+                  error: (err) => {
+                    console.error("Failed to load seats for show", show.id);
+                    if (--pendingShows === 0) {
+                      if (--pendingScreens === 0) this.finishLoadingMetrics();
+                    }
+                  }
+                });
+              });
+            },
+            error: (err) => {
+              console.error(err);
+              if (--pendingScreens === 0) this.finishLoadingMetrics();
+            }
           });
         });
 
@@ -159,26 +189,23 @@ export class Dashboard implements OnInit {
   }
 
   finishLoadingMetrics() {
-    this.generateSimulatedMetrics();
+    // Check if a time filter multiplier needs to be applied to the true base metrics
+    let multiplier = 1;
+    if (this.timeFilter === 'month') multiplier = 30;
+    if (this.timeFilter === 'year') multiplier = 365;
+
+    // Apply real totals
+    this.todayBookings = this.todayBookings * multiplier;
+    this.todayRevenue = this.todayRevenue * multiplier;
+
     this.isLoading = false;
     this.cdr.detectChanges();
   }
 
   generateSimulatedMetrics() {
-    // Generate dynamic wow-factor metrics for revenue and bookings based on active shows
-    if (this.activeShows > 0 || this.totalScreens > 0) { // Fallback if no active shows yet but screens exist
-      const activeCount = this.activeShows || this.totalScreens * 3;
-      let baseBookings = Math.floor(Math.random() * 150) + (activeCount * 20);
-      let multiplier = 1;
-      
-      if (this.timeFilter === 'month') multiplier = 30;
-      if (this.timeFilter === 'year') multiplier = 365;
-
-      this.todayBookings = baseBookings * multiplier;
-      this.todayRevenue = this.todayBookings * 250; // avg 250 per ticket
-    } else {
-      this.todayBookings = 0;
-      this.todayRevenue = 0;
-    }
+      // Replaced by real frontend accumulation via finishLoadingMetrics!
+      if(this.selectedTheatreId) {
+          this.fetchMetricsForTheatre(this.selectedTheatreId);
+      }
   }
 }

@@ -61,7 +61,7 @@
         <div *ngIf="!isLoading() && userBookings().length === 0" class="empty-state">
             <i class="bi bi-ticket-perforated"></i>
             <p>You haven't booked any movies yet!</p>
-            <button class="add-btn" routerLink="/home" style="margin-top: 15px;">Browse Shows</button>
+            <button class="add-btn" (click)="home()" style="margin-top: 15px;">Browse Shows</button>
         </div>
     </div>
 </div>

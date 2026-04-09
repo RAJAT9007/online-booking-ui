@@ -59,6 +59,10 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
+  home() {
+    this.router.navigate(['/home']);
+  }
+
   logout() {
     localStorage.clear();
     this.router.navigate(['/']);
