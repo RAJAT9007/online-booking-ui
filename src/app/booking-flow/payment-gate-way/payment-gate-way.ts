@@ -18,6 +18,8 @@ export class PaymentGateway implements OnInit {
   displayTime: string = '05:00';
   timerInterval: any;
 
+  theatreId: number = 0;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -31,6 +33,7 @@ export class PaymentGateway implements OnInit {
     // Get query params passed from Payment Page
     this.showId = Number(this.route.snapshot.queryParamMap.get('showId'));
     this.finalAmount = Number(this.route.snapshot.queryParamMap.get('totalAmount'));
+    this.theatreId = Number(this.route.snapshot.queryParamMap.get('theatreId') || 0);
 
     this.startTimer();
   }
@@ -80,7 +83,7 @@ export class PaymentGateway implements OnInit {
     }
 
     // Step 2: Payment (Booking is ALREADY PENDING). Go straight to checkout session!
-    this.paymentService.createCheckoutSession(this.bookingId, this.finalAmount, this.showId).subscribe({
+    this.paymentService.createCheckoutSession(this.bookingId, this.finalAmount, this.showId, this.theatreId).subscribe({
       next: (response) => {
         window.location.href = response.checkoutUrl;
         alert('Seats are booked');

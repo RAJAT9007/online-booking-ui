@@ -32,7 +32,6 @@ export class LoginComponent {
       this.toastr.warning('Please enter email & password');
       return;
     }
-    // console.log("Sending Data:", this.loginData);
 
     this.authService.login(this.loginData).subscribe({
       next: (res: any) => {

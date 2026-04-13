@@ -22,7 +22,7 @@ export class AuthService {
         return null;
     }
 
-    private baseUrl = 'http://localhost:8082/api/auth'; // your backend URL
+    private baseUrl = 'http://localhost:8082/api/auth';
 
     constructor(private http: HttpClient) { }
 

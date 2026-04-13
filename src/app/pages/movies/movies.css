@@ -1,6 +1,3 @@
-/* =========================================
-   PREMIUM GLASSMORPHISM THEME 
-   ========================================= */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 .admin-card {
@@ -40,8 +37,13 @@
 }
 
 @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
 }
 
 .subtitle {
@@ -72,7 +74,8 @@
     font-size: 1.1rem;
 }
 
-.search-input, .genre-select {
+.search-input,
+.genre-select {
     padding: 12px 16px 12px 42px;
     border-radius: 12px;
     background: rgba(15, 23, 42, 0.5);
@@ -91,7 +94,8 @@
     cursor: pointer;
 }
 
-.search-input:focus, .genre-select:focus {
+.search-input:focus,
+.genre-select:focus {
     border-color: #3b82f6;
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
     background: rgba(15, 23, 42, 0.7);
@@ -141,8 +145,15 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-15px) scale(0.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .form-title {
@@ -294,7 +305,8 @@
     border-bottom: none;
 }
 
-.movie-name, .primary-text {
+.movie-name,
+.primary-text {
     font-weight: 600;
     color: #fff;
     font-size: 16px;
@@ -337,9 +349,12 @@
 }
 
 /* Action Buttons */
-.text-center { text-align: center !important; }
+.text-center {
+    text-align: center !important;
+}
 
-.edit-icon-btn, .delete-icon-btn {
+.edit-icon-btn,
+.delete-icon-btn {
     padding: 8px 16px;
     border-radius: 10px;
     cursor: pointer;
@@ -389,7 +404,8 @@
     margin-top: 30px;
 }
 
-.empty-state i, .empty-state i.bi {
+.empty-state i,
+.empty-state i.bi {
     font-size: 3.5rem;
     color: rgba(255, 255, 255, 0.1);
     margin-bottom: 20px;
@@ -453,11 +469,37 @@
 
 /* Responsiveness */
 @media (max-width: 768px) {
-    .header { flex-direction: column; align-items: flex-start; }
-    .action-bar { width: 100%; flex-direction: column; align-items: stretch; }
-    .search-input, .genre-select { width: 100%; }
-    .add-btn { width: 100%; justify-content: center; }
-    .form-grid { grid-template-columns: 1fr; }
-    .form-actions { flex-direction: column; }
-    .save-btn, .cancel-btn { width: 100%; }
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .action-bar {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-input,
+    .genre-select {
+        width: 100%;
+    }
+
+    .add-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .save-btn,
+    .cancel-btn {
+        width: 100%;
+    }
 }

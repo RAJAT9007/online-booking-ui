@@ -1,0 +1,74 @@
+<div class="admin-card">
+  <div class="header">
+    <div class="title-group">
+      <h2 class="text-gradient">🎟️ Bookings Management</h2>
+      <p class="subtitle">Monitor and manage recent ticket purchases</p>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading()" class="loader-container">
+    <div class="spinner"></div>
+    <p>Loading bookings...</p>
+  </div>
+
+  <div *ngIf="!isLoading() && bookings().length === 0" class="empty-state">
+    <i class="bi bi-ticket-perforated"></i>
+    <p>There are currently no bookings available to display.</p>
+  </div>
+
+  <div class="table-container" *ngIf="!isLoading() && bookings().length > 0">
+    <table class="vibe-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>User Info</th>
+          <th>Allocated Show</th>
+          <th>Date & Time</th>
+          <th>Assigned Seats</th>
+          <th>Net Amount</th>
+          <th>Status</th>
+          <th class="text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of paginatedBookings; let i = index">
+          <td>{{ (currentPage() - 1) * pageSize() + i + 1 }}</td>
+          <td><span class="id-badge">👤 User #{{ b.userId }}</span></td>
+          <td><span class="primary-text">Show #{{ b.showId }}</span></td>
+          <td>{{ b.bookingTime | date:'medium' }}</td>
+          <td>
+            <div class="seat-list">
+              <span class="seat-pill" *ngFor="let s of b.seatIds">S{{ s }}</span>
+            </div>
+          </td>
+          <td><span class="primary-text">₹{{ b.totalAmount }}</span></td>
+          <td>
+            <span class="status-badge" [ngClass]="b.status?.toLowerCase()">
+              {{ b.status }}
+            </span>
+          </td>
+          <td class="text-center">
+            <button class="delete-icon-btn" *ngIf="b.status === 'CONFIRMED' || b.status === 'PENDING'"
+              (click)="cancelBooking(b.bookingId)">
+              <i class="bi bi-x-circle"></i> Cancel
+            </button>
+            <span *ngIf="b.status === 'CANCELLED'" class="subtitle">No Action</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination Controls -->
+  <div class="pagination-controls" *ngIf="totalPages > 1">
+    <button class="page-btn" [disabled]="currentPage() === 1" (click)="prevPage()">
+      <i class="bi bi-chevron-left"></i> Previous
+    </button>
+    <div class="page-info">
+      <span>Page {{ currentPage() }} of {{ totalPages }}</span>
+    </div>
+    <button class="page-btn" [disabled]="currentPage() === totalPages" (click)="nextPage()">
+      Next <i class="bi bi-chevron-right"></i>
+    </button>
+  </div>
+</div>

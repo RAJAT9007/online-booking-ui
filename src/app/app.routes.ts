@@ -1,11 +1,9 @@
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login';
-import { RegisterComponent } from './pages/register/register';
 import { HomeComponent } from './pages/home/home';
 import { Admin } from './pages/admin/admin';
 import { MoviesComponent } from './pages/movies/movies';
 import { TheatersComponent } from './pages/theaters/theaters';
-import { ShowsComponent } from './pages/shows/shows';
 import { MoviesDetails } from './booking-flow/movies-details/movies-details';
 import { Schedule } from './booking-flow/schedule/schedule';
 import { SeatBooking } from './booking-flow/seat-booking/seat-booking';
@@ -21,13 +19,14 @@ import { OwnerTheatreComponent } from './theatre/owner-theatres/owner-theatres';
 import { Dashboard } from './theatre/dashboard/dashboard';
 import { OwnerProfileComponent } from './theatre/owner-profile/owner-profile';
 import { PaymentGateway } from './booking-flow/payment-gate-way/payment-gate-way';
+import { Bookings } from './theatre/bookings/bookings';
 
 export const routes: Routes = [
     { path: '', component: LandingComponent },
     { path: 'home', component: HomeComponent },
-    { path: 'movie-details/:id', component: MoviesDetails },// Movies Details 
+    { path: 'movie-details/:id', component: MoviesDetails },
     { path: 'schedule', component: Schedule },
-    { path: 'schedule/:movieId', component: Schedule }, // शेड्यूल के लिए पाथ
+    { path: 'schedule/:movieId', component: Schedule },
     { path: 'seat-booking', component: SeatBooking },
     { path: 'only-movies', component: OnlyMovies },
     { path: 'payment', component: Payment },
@@ -51,6 +50,10 @@ export const routes: Routes = [
                 component: OwnerTheatreComponent
             },
             {
+                path: 'bookings',
+                component: Bookings
+            },
+            {
                 path: '',
                 redirectTo: 'dashboard',
                 pathMatch: 'full'
@@ -66,10 +69,18 @@ export const routes: Routes = [
         path: 'owner',
         component: OwnerPage,
         children: [
-            { path: 'dashboard', component: OwnerPage }, // simple for now
+            { path: 'dashboard', component: OwnerPage },
             { path: 'screens', component: ManageTheatre },
             { path: 'movie', component: MoviesComponent },
-            { path: 'profile', component: OwnerProfileComponent }
+            { path: 'profile', component: OwnerProfileComponent },
+            { path: 'bookings', component: Bookings },
+            // Example inside your app.routes.ts
+            {
+                path: 'owner/bookings',
+                component: Bookings,
+                canActivate: [AuthGuard],
+                data: { role: 'OWNER' }
+            }
         ]
     },
     {
@@ -82,7 +93,8 @@ export const routes: Routes = [
             { path: 'theaters', component: TheatersComponent },
             { path: 'city', component: City },
             { path: 'movies', component: MoviesComponent },
-            { path: 'login', component: LoginComponent }
+            { path: 'login', component: LoginComponent },
+            { path: 'bookings', component: Bookings }
         ]
     },
     {

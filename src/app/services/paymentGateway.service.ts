@@ -18,10 +18,7 @@ export class PaymentGatewayService {
         };
     }
 
-    /**
-     * Decodes the JWT payload and extracts the userId.
-     * Assumes backend JWT contains a 'userId' or 'sub' claim.
-     */
+
     private getUserIdFromToken(): number {
         const token = localStorage.getItem('jwtToken');
         if (!token) return 0;
@@ -36,7 +33,7 @@ export class PaymentGatewayService {
         }
     }
 
-    completeBooking(showId: number, seatIds: number[], totalAmount: number, paymentMode: string) {
+    completeBooking(showId: number, seatIds: number[], totalAmount: number, paymentMode: string, theatreId: number) {
         const userId = this.getUserIdFromToken();
 
         return this.http.post<any>(
@@ -46,6 +43,7 @@ export class PaymentGatewayService {
                 showId: showId,
                 seatIds: seatIds,
                 totalAmount: totalAmount,
+                theatreId: theatreId,
                 idempotencyKey: crypto.randomUUID(),
             },
             this.headers()
@@ -64,10 +62,10 @@ export class PaymentGatewayService {
         );
     }
 
-    createCheckoutSession(bookingId: number, amount: number, showId: number) {
+    createCheckoutSession(bookingId: number, amount: number, showId: number, theatreId: number) {
         return this.http.post<any>(
             `http://localhost:8082/api/payments/create-checkout-session`,
-            { bookingId, amount, showId },
+            { bookingId, amount, showId, theatreId },
             this.headers()
         );
     }

@@ -3,7 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 
 export const AuthGuard: CanActivateFn = () => {
     const router = inject(Router);
-    const token = localStorage.getItem('jwtToken'); // ✅ Matches SeatService key
+    const token = localStorage.getItem('jwtToken');
     if (token) {
         return true;
     } else {

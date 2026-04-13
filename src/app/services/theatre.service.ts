@@ -12,7 +12,6 @@ export class TheatreService {
 
     constructor(private http: HttpClient) { }
 
-    // Centralized helper method for headers
     private getAuthHeaders() {
         const token = localStorage.getItem("jwtToken");
         return {
