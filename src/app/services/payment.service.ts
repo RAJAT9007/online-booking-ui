@@ -8,6 +8,7 @@ export interface BookingPayload {
     seatIds: number[];
     totalAmount: number;
     idempotencyKey: string;
+    theatreId: number;
 }
 
 @Injectable({

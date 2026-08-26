@@ -16,7 +16,7 @@
 
             <div class="summary-card">
 
-                <div class="summary-row" *ngFor="let seat of selectedSeats">
+                <div class="summary-row" *ngFor="let seat of selectedSeats()">
                     <span class="label">
                         <i class="bi bi-ticket-perforated"></i> Seat {{ seat.seatNumber }}
                     </span>
@@ -52,7 +52,7 @@
             <div class="seats-info">
                 <h4><i class="bi bi-geo-alt"></i> Selected Seats</h4>
                 <div class="seat-tags">
-                    <span class="seat-tag" *ngFor="let seat of selectedSeats">
+                    <span class="seat-tag" *ngFor="let seat of selectedSeats()">
                         {{ seat.seatNumber }}
                     </span>
                 </div>

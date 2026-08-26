@@ -29,10 +29,31 @@ export class BookingService {
     }
 
     getUserBookingHistory(userId: number) {
-        return this.http.get(
+        return this.http.get<any>(
             `${this.api}/users/${userId}`,
             this.headers()
         );
     }
 
+    getAllBookings() {
+        return this.http.get<any>(
+            `${this.api}?size=100`,
+            this.headers()
+        );
+    }
+
+    cancelBooking(bookingId: number) {
+        return this.http.patch<any>(
+            `${this.api}/${bookingId}/cancel`,
+            {},
+            this.headers()
+        );
+    }
+
+    getOwnerBookingHistory() {
+        return this.http.get<any[]>(
+            `${this.api}/owner-view`,
+            this.headers() // This sends the JWT token
+        );
+    }
 }

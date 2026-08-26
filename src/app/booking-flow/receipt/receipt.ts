@@ -19,7 +19,7 @@ export class Receipt implements OnInit {
   bookingData: any = null;
   isLoading = signal(true);
   today = new Date();
-
+  theatreId: number = 0;
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient
@@ -28,6 +28,7 @@ export class Receipt implements OnInit {
   ngOnInit(): void {
     this.bookingId = this.route.snapshot.paramMap.get('id');
     const sessionId = this.route.snapshot.queryParamMap.get('session_id');
+    this.theatreId = Number(this.route.snapshot.queryParamMap.get('theatreId')) || 0;
 
     if (this.bookingId) {
       if (sessionId) {

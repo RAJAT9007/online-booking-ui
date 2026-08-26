@@ -14,7 +14,6 @@ import { Movie } from '../../models/movie.model';
 })
 export class OnlyMovies implements OnInit, OnDestroy {
 
-  /* 🗺️ Manual Poster Map (Matches Spring Boot Title to public/posters folder) */
   posterMap: { [key: string]: string } = {
     'Avengers: Endgame': 'avengers.jpg',
     'Pushpa 2': 'iron-man.png',
@@ -27,21 +26,17 @@ export class OnlyMovies implements OnInit, OnDestroy {
     'Dhurandhar': 'https://i.pinimg.com/736x/b9/e6/f9/b9e6f97209a0f550b634e85970fa5000.jpg'
   };
 
-  /* 🔎 Search & Filter */
   searchTerm: string = '';
   selectedGenre: string = '';
   genres: string[] = ['Action', 'Comedy', 'Drama', 'Sci-Fi'];
 
-  /* 🎬 Movie Lists */
+
   movies: Movie[] = [];
   filteredMovies: Movie[] = [];
   nowShowing: Movie[] = [];
   upcoming: Movie[] = [];
 
-  /* 🎬 Slider Content */
-  // poster = [
-  //   { id: 19, image: 'posters/war-2.jpg' } // Added posters/ prefix
-  // ];
+
   currentIndex: number = 0;
   slideInterval: any;
 
@@ -52,7 +47,6 @@ export class OnlyMovies implements OnInit, OnDestroy {
     this.autoSlide();
   }
 
-  // Cleanup interval when leaving the page to prevent memory leaks
   ngOnDestroy(): void {
     if (this.slideInterval) {
       clearInterval(this.slideInterval);
@@ -65,20 +59,20 @@ export class OnlyMovies implements OnInit, OnDestroy {
 
     return `assets/posters/${movie.poster_Url}`;
   }
-  /* 🎬 Load Movies from Spring Boot */
+  /* Load Movies from Spring Boot */
   loadMovies(): void {
     this.moviesService.showAll().subscribe({
       next: (data) => {
-        // Map backend data to include local poster paths
+
         this.movies = data.map(movie => ({
           ...movie,
-          // If title matches map, use it; otherwise use placeholder
+
           poster_Url: this.posterMap[movie.title] ? this.posterMap[movie.title] : movie.poster_Url || 'placeholder.jpg'
         }));
 
-        this.applyFilters(); // Setup initial view
+        this.applyFilters();
 
-        // Categorize for UI sections
+
         this.nowShowing = this.movies.filter(m => m.status === 'ACTIVE');
         this.upcoming = this.movies.filter(m => m.status === 'PENDING');
 
@@ -91,16 +85,16 @@ export class OnlyMovies implements OnInit, OnDestroy {
     });
   }
 
-  /* 🔎 Apply Filters */
+
   applyFilters() {
-    const term = this.searchTerm.toLowerCase().trim();
-    this.filteredMovies = this.movies.filter(m =>
-      (m.title.toLowerCase().includes(term) || m.genre.toLowerCase().includes(term)) &&
-      (this.selectedGenre === '' || m.genre === this.selectedGenre)
-    );
+
+    if (!this.searchTerm && !this.selectedGenre) {
+      this.filteredMovies = [...this.movies];
+      return;
+    }
   }
 
-  /* 🔥 Slider Controls */
+
   nextSlide() {
     // this.currentIndex = (this.currentIndex + 1) % this.poster.length;
   }
@@ -115,22 +109,19 @@ export class OnlyMovies implements OnInit, OnDestroy {
     }, 4000);
   }
 
-  /* 🚪 Auth */
   logout() {
     localStorage.removeItem('jwtToken');
     this.router.navigate(['/login']);
   }
 
-  /* 🎟️ Navigation */
   bookMovie(id: number) {
     this.router.navigate(['/booking', id]);
   }
 
-  /* 🖼️ Update Logic */
   updateMoviePoster(movieId: number, newImageName: string) {
     const movie = this.movies.find(m => m.id === movieId);
     if (movie) {
-      // Logic for public/posters folder
+
       movie.poster_Url = newImageName.startsWith('posters/') ? newImageName : `posters/${newImageName}`;
       this.applyFilters();
     }

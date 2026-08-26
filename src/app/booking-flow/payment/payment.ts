@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -14,7 +14,7 @@ import { PaymentService } from '../../services/payment.service';
 export class Payment implements OnInit {
 
   showId: number = 0;
-  selectedSeats: any[] = [];
+  selectedSeats = signal<any[]>([]);
 
   seatTotal = 0;
   convenienceFee = 0;
@@ -22,6 +22,8 @@ export class Payment implements OnInit {
   finalAmount = 0;
 
   isLoading = false;
+
+  theatreId: number = 0;
 
 
   // ✅ Holding the numeric user ID
@@ -56,11 +58,14 @@ export class Payment implements OnInit {
       // eslint-disable-next-line no-console
       console.log("🔍 Decoded JWT Payload:", payload);
 
-      // 4. Extract the userId. 
-      // Note: Spring Boot MUST inject this into the token using .claim("userId", user.getId())
-      const extractedId = payload.userId;
+      // 4. Extract the userId. Try payload.userId, payload.sub, payload.id, or localstorage directly.
+      const extractedId = payload.userId || payload.id || payload.sub;
+      let finalId = extractedId ? Number(extractedId) : 0;
 
-      return extractedId ? Number(extractedId) : 0;
+      if (!finalId) {
+        finalId = Number(localStorage.getItem('userId')) || Number(localStorage.getItem('ownerId')) || 0;
+      }
+      return finalId;
 
     } catch (e) {
       console.error("❌ Invalid token formatting", e);
@@ -74,6 +79,7 @@ export class Payment implements OnInit {
     const idFromUrl = q.get('showId');
     const seatsFromUrl = q.get('seatIds');
     const totalFromUrl = q.get('amount');
+    this.theatreId = Number(q.get('theatreId') || 0);
 
     // ✅ Set Show ID
     if (idFromUrl) {
@@ -120,7 +126,8 @@ export class Payment implements OnInit {
         queryParams: {
           bookingId: this.pendingBookingId,
           showId: this.showId,
-          totalAmount: this.finalAmount
+          totalAmount: this.finalAmount,
+          theatreId: this.theatreId
         }
       });
       return;
@@ -152,6 +159,7 @@ export class Payment implements OnInit {
       showId: this.showId,
       seatIds: seatIds,
       totalAmount: this.seatTotal,
+      theatreId: this.theatreId,
       // Safe fallback for idempotency key if crypto is blocked
       idempotencyKey: (window.crypto && window.crypto.randomUUID)
         ? window.crypto.randomUUID()
@@ -174,13 +182,22 @@ export class Payment implements OnInit {
           queryParams: {
             bookingId: bookingId,
             showId: this.showId,
-            totalAmount: this.finalAmount
+            totalAmount: this.finalAmount,
+            theatreId: this.theatreId
           }
         });
       },
       error: (err: any) => {
         console.error('❌ Booking failed:', err);
-        alert('Booking failed, try again');
+        const serverMsg = err.error?.message || err.message || JSON.stringify(err);
+
+        // Dynamically capture the field-level violations from Spring Boot map
+        let violationDetails = '';
+        if (err.error?.errors) {
+          violationDetails = '\n\nDetails: \n' + JSON.stringify(err.error.errors, null, 2);
+        }
+
+        alert('Booking failed! Server Says: ' + serverMsg + violationDetails);
         this.isLoading = false;
       }
     });

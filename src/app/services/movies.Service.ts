@@ -12,13 +12,13 @@ export class MoviesService {
 
     constructor(private http: HttpClient) { }
 
-    // ✅ Helper method — no need to repeat token code everywhere!
+
     private getHeaders(): HttpHeaders {
         const token = localStorage.getItem('jwtToken');
         return new HttpHeaders().set('Authorization', 'Bearer ' + token);
     }
 
-    // ✅ Show all movies
+
     showAll(): Observable<Movie[]> {
         return this.http.get<Movie[]>(
             `${this.apiUrl}/all`,
@@ -26,14 +26,13 @@ export class MoviesService {
         );
     }
 
-    // ✅ Get movie by ID
     getById(id: number): Observable<Movie> {
         return this.http.get<Movie>(
             `${this.apiUrl}/${id}`,  // ← try without /find/
             { headers: this.getHeaders() }
         );
     }
-    // ✅ Add movie
+
     addMovies(movie: Movie): Observable<Movie> {
         return this.http.post<Movie>(
             `${this.apiUrl}/add`,
@@ -42,7 +41,6 @@ export class MoviesService {
         );
     }
 
-    // ✅ Update movie
     updateMovie(id: number, movie: Movie): Observable<Movie> {
         return this.http.put<Movie>(
             `${this.apiUrl}/update/${id}`,

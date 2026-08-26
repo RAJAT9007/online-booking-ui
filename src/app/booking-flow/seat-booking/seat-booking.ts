@@ -23,7 +23,7 @@ export class SeatBooking implements OnInit {
   // ── Route Params ──────────────────────────────────────────────────────────
   showId!: number;
   screenId!: number;
-  theatreId!: number;
+  theatreId: number = 0;
   showDate: string = '';
   showTime: string = '';
 
@@ -50,7 +50,7 @@ export class SeatBooking implements OnInit {
     const q = this.route.snapshot.queryParamMap;
     this.showId = Number(q.get('showId'));
     this.screenId = Number(q.get('screenId'));
-    this.theatreId = Number(q.get('theatreId'));
+    this.theatreId = Number(q.get('theatreId')) || 0;
     this.showDate = q.get('showDate') || '';
     this.showTime = q.get('showTime') || '';
     this.movietitle = q.get('movietitle') || '';
@@ -127,7 +127,7 @@ export class SeatBooking implements OnInit {
     const seatIds = this.selectedSeats.map(s => s.id).join(',');
 
     this.router.navigate(['/payment'], {
-      queryParams: { showId: this.showId, seatIds, amount: this.totalAmount }
+      queryParams: { showId: this.showId, seatIds, amount: this.totalAmount, theatreId: this.theatreId }
     }).then(ok => { if (!ok) this.isProcessing = false; })
       .catch(() => { this.isProcessing = false; });
   }

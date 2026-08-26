@@ -6,8 +6,8 @@ import { Router } from "@angular/router";
 export interface SeatResponse {
     id: number;
     rowName: string;
-    seatNumber: string;   // "A1", "A2" ...
-    seatType: string;     // "PREMIUM" | "GOLD" | "SILVER"
+    seatNumber: string;
+    seatType: string;
     price: number;
     isActive: boolean;
     screenId: number;
@@ -29,7 +29,6 @@ export class SeatService {
         private router: Router
     ) { }
 
-    // ── Auth Headers ──────────────────────────────────────────────────────
 
     private getHeaders(): HttpHeaders {
         const token = localStorage.getItem("jwtToken");
@@ -45,13 +44,11 @@ export class SeatService {
         });
     }
 
-    // ── Error Handler ─────────────────────────────────────────────────────
 
     private handleError(err: HttpErrorResponse): Observable<never> {
         let message = 'An unexpected error occurred.';
 
         if (err.status === 0) {
-            // Network error / CORS / backend not running
             message = 'Cannot reach the server. Is the backend running on port 8082?';
         } else if (err.status === 401) {
             message = 'Session expired. Please log in again.';
@@ -69,10 +66,7 @@ export class SeatService {
         return throwError(() => new Error(message));
     }
 
-    // ── Backend API Calls ─────────────────────────────────────────────────
 
-    /** Fetch all seats for a screen */
-    // BEFORE:
     getSeats(screenId: number): Observable<SeatResponse[]> {
         return this.http.get<SeatResponse[]>(
             `${this.seatApi}/screen/${screenId}`,
@@ -80,7 +74,6 @@ export class SeatService {
         ).pipe(catchError(err => this.handleError(err)));
     }
 
-    /** Fetch seat IDs already booked for this show */
     getBookedSeats(showId: number): Observable<number[]> {
         return this.http.get<number[]>(
             `${this.bookingApi}/booked-seats/${showId}`,
@@ -88,7 +81,6 @@ export class SeatService {
         ).pipe(catchError(err => this.handleError(err)));
     }
 
-    /** Trigger seat generation for a screen */
     generateSeats(screenId: number): Observable<string> {
         return this.http.post(
             `${this.seatApi}/generate/${screenId}`,
@@ -97,7 +89,6 @@ export class SeatService {
         ).pipe(catchError(err => this.handleError(err)));
     }
 
-    /** Bulk update price for all seats of a given type on a screen */
     bulkUpdatePrice(screenId: number, seatType: string, price: number): Observable<string> {
         return this.http.put(
             `${this.seatApi}/screen/${screenId}/bulk-price`,
@@ -106,7 +97,6 @@ export class SeatService {
         ).pipe(catchError(err => this.handleError(err)));
     }
 
-    /** Update individual seat */
     updateSeat(seatId: number, payload: { price?: number; isActive?: boolean }): Observable<SeatResponse> {
         return this.http.put<SeatResponse>(
             `${this.seatApi}/update/${seatId}`,
@@ -115,7 +105,6 @@ export class SeatService {
         ).pipe(catchError(err => this.handleError(err)));
     }
 
-    /** Disable a seat */
     disableSeat(seatId: number): Observable<SeatResponse> {
         return this.http.put<SeatResponse>(
             `${this.seatApi}/disable/${seatId}`,
@@ -124,7 +113,6 @@ export class SeatService {
         ).pipe(catchError(err => this.handleError(err)));
     }
 
-    /** Enable a seat */
     enableSeat(seatId: number): Observable<SeatResponse> {
         return this.http.put<SeatResponse>(
             `${this.seatApi}/enable/${seatId}`,
@@ -133,12 +121,7 @@ export class SeatService {
         ).pipe(catchError(err => this.handleError(err)));
     }
 
-    // ── Local Utilities ───────────────────────────────────────────────────
 
-    /**
-     * Groups a flat list of seats into rows for grid rendering.
-     * Returns rows sorted alphabetically (A, B, C ...)
-     */
     groupByRow(seats: SeatResponse[]): SeatRow[] {
         const rowMap = new Map<string, SeatResponse[]>();
 

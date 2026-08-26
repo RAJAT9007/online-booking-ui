@@ -11,14 +11,12 @@ export class ShowService {
 
     constructor(private http: HttpClient) { }
 
-    // ✅ Helper — adds token to every request
     private getHeaders(): HttpHeaders {
         const token = localStorage.getItem('jwtToken');
         return new HttpHeaders()
             .set('Authorization', 'Bearer ' + token);
     }
 
-    // ✅ Get all shows for a movie
     getShowsByMovie(movieId: number): Observable<any[]> {
         return this.http.get<any[]>(
             `${this.apiUrl}/movie/${movieId}`,
@@ -26,7 +24,6 @@ export class ShowService {
         );
     }
 
-    // ✅ Get show by ID
     getShowById(showId: number): Observable<any> {
         return this.http.get<any>(
             `${this.apiUrl}/${showId}`,
@@ -34,7 +31,6 @@ export class ShowService {
         );
     }
 
-    // ✅ Create show (admin only)
     createShow(show: any): Observable<any> {
         return this.http.post<any>(
             `${this.apiUrl}/create`,
@@ -43,7 +39,6 @@ export class ShowService {
         );
     }
 
-    // ✅ Delete show (admin only)
     deleteShow(showId: number): Observable<void> {
         return this.http.delete<void>(
             `${this.apiUrl}/delete/${showId}`,

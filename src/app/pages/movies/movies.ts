@@ -114,13 +114,13 @@ export class MoviesComponent {
   saveMovie() {
     if (this.isEdit) {
       this.moviesService.updateMovie(this.movie.id, this.movie).subscribe(() => {
-        this.loadMovies();   // ✅ re-fetch full list from DB
+        this.loadMovies();
         this.showForm = false;
         this.resetForm();
       });
     } else {
       this.moviesService.addMovies(this.movie).subscribe(() => {
-        this.loadMovies();   // ✅ re-fetch full list from DB
+        this.loadMovies();
         this.showForm = false;
         this.resetForm();
       });

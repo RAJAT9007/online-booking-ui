@@ -1,13 +1,9 @@
-/**
- * @deprecated Use SeatResponse from seat.service.ts instead.
- * Kept for backward compatibility.
- */
 export interface Seat {
-    id: string;         // rowLetter + colNumber e.g. "A1"
-    row: string;        // "A"
-    number: number;     // 1
-    type: string;       // "PREMIUM" | "GOLD" | "SILVER"
+    id: string;
+    row: string;
+    number: number;
+    type: string;
     price: number;
     booked: boolean;
-    realDbId: number;   // actual DB seat.id
+    realDbId: number;
 }
