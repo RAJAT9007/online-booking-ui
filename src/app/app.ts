@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HealthService } from './services/health.service';
 
 
 @Component({
@@ -12,4 +13,6 @@ import { FormsModule } from '@angular/forms';
 })
 export class AppComponent {
   protected readonly title = signal('online-booking');
+  private healthService = inject(HealthService);
 }
+
