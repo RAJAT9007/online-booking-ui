@@ -3,12 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Theatre } from '../models/theatre.model';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
     providedIn: 'root'
 })
 export class TheatreService {
 
-    private apiUrl = "http://localhost:8082/api/theatre";
+    private apiUrl = `${environment.apiUrl}/api/theatre`;
 
     constructor(private http: HttpClient) { }
 

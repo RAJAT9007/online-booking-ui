@@ -5,6 +5,8 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { MoviesService } from '../../services/movies.Service';
 import { Movie } from '../../models/movie.model';
 
+import { environment } from '../../../environments/environment';
+
 @Component({
   selector: 'app-movies',
   standalone: true,
@@ -56,7 +58,7 @@ export class MoviesComponent {
   loadTheatres() {
     const token = localStorage.getItem("jwtToken");
     const headers = { 'Authorization': 'Bearer ' + token };
-    this.http.get<any[]>('http://localhost:8082/api/theatre/all', { headers }).subscribe(res => {
+    this.http.get<any[]>(`${environment.apiUrl}/api/theatre/all`, { headers }).subscribe(res => {
       this.theatres = res;
     });
   }

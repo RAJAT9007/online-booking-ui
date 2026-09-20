@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
     providedIn: 'root'
 })
 export class PaymentGatewayService {
-    private api = 'http://localhost:8082/api/bookings';
+    private api = `${environment.apiUrl}/api/bookings`;
 
     constructor(private http: HttpClient) { }
 
@@ -64,7 +66,7 @@ export class PaymentGatewayService {
 
     createCheckoutSession(bookingId: number, amount: number, showId: number, theatreId: number) {
         return this.http.post<any>(
-            `http://localhost:8082/api/payments/create-checkout-session`,
+            `${environment.apiUrl}/api/payments/create-checkout-session`,
             { bookingId, amount, showId, theatreId },
             this.headers()
         );
@@ -72,7 +74,7 @@ export class PaymentGatewayService {
 
     verifySession(sessionId: string, bookingId: number) {
         return this.http.post<any>(
-            `http://localhost:8082/api/payments/verify-session?sessionId=${sessionId}&bookingId=${bookingId}`,
+            `${environment.apiUrl}/api/payments/verify-session?sessionId=${sessionId}&bookingId=${bookingId}`,
             {},
             this.headers()
         );

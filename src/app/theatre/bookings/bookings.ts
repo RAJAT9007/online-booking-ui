@@ -2,6 +2,8 @@ import { Component, OnInit, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule, DatePipe } from '@angular/common';
 
+import { environment } from '../../../environments/environment';
+
 @Component({
   selector: 'app-bookings',
   standalone: true,
@@ -50,7 +52,7 @@ export class Bookings implements OnInit {
 
   fetchBookings() {
     this.isLoading.set(true);
-    this.http.get<any>('http://localhost:8082/api/bookings?size=100', this.getHeaders()).subscribe({
+    this.http.get<any>(`${environment.apiUrl}/api/bookings?size=100`, this.getHeaders()).subscribe({
       next: (res) => {
         this.bookings.set(res.content || res);
         this.currentPage.set(1);
@@ -66,7 +68,7 @@ export class Bookings implements OnInit {
   cancelBooking(bookingId: number) {
     if (!confirm('Are you sure you want to cancel this booking? This action cannot be undone.')) return;
 
-    this.http.patch(`http://localhost:8082/api/bookings/${bookingId}/cancel`, {}, this.getHeaders()).subscribe({
+    this.http.patch(`${environment.apiUrl}/api/bookings/${bookingId}/cancel`, {}, this.getHeaders()).subscribe({
       next: () => {
         alert('Booking cancelled successfully!');
         this.fetchBookings();

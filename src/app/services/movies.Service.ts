@@ -3,12 +3,14 @@ import { Injectable } from "@angular/core";
 import { Movie } from '../models/movie.model';
 import { Observable } from "rxjs";
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
     providedIn: 'root'
 })
 export class MoviesService {
 
-    private apiUrl = "http://localhost:8082/api/movies";
+    private apiUrl = `${environment.apiUrl}/api/movies`;
 
     constructor(private http: HttpClient) { }
 

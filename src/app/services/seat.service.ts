@@ -18,11 +18,13 @@ export interface SeatRow {
     seats: SeatResponse[];
 }
 
+import { environment } from '../../environments/environment';
+
 @Injectable({ providedIn: 'root' })
 export class SeatService {
 
-    private seatApi = "http://localhost:8082/api/seats";
-    private bookingApi = "http://localhost:8082/api/bookings";
+    private seatApi = `${environment.apiUrl}/api/seats`;
+    private bookingApi = `${environment.apiUrl}/api/bookings`;
 
     constructor(
         private http: HttpClient,

@@ -11,12 +11,14 @@ export interface BookingPayload {
     theatreId: number;
 }
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
     providedIn: 'root'
 })
 export class PaymentService {
 
-    private apiUrl = 'http://localhost:8082/api/bookings';
+    private apiUrl = `${environment.apiUrl}/api/bookings`;
 
     constructor(private http: HttpClient) { }
 

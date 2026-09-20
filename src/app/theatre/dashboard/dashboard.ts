@@ -5,6 +5,8 @@ import { TheatreService } from '../../services/theatre.service';
 import { ScreenService } from '../../services/screen.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+import { environment } from '../../../environments/environment';
+
 @Component({
   selector: 'app-dashboard',
   imports: [CommonModule, FormsModule],
@@ -129,7 +131,7 @@ export class Dashboard implements OnInit {
 
         screens.forEach((screen: any) => {
           // Get Seats per screen
-          this.http.get<any[]>(`http://localhost:8082/api/seats/screen/${screen.id}`, this.getHeaders()).subscribe({
+          this.http.get<any[]>(`${environment.apiUrl}/api/seats/screen/${screen.id}`, this.getHeaders()).subscribe({
             next: (seats) => {
               this.totalSeatsAvailable += seats.filter(s => s.status === 'ACTIVE').length;
             },
@@ -137,7 +139,7 @@ export class Dashboard implements OnInit {
           });
 
           // Get Shows per screen
-          this.http.get<any[]>(`http://localhost:8082/api/shows/screen/${screen.id}`, this.getHeaders()).subscribe({
+          this.http.get<any[]>(`${environment.apiUrl}/api/shows/screen/${screen.id}`, this.getHeaders()).subscribe({
             next: (shows) => {
               this.activeShows += shows.length;
 
@@ -151,7 +153,7 @@ export class Dashboard implements OnInit {
                 // Real Revenue calculation based on booked seats!
                 const showPrice = show.price || 250; 
                 
-                this.http.get<number[]>(`http://localhost:8082/api/bookings/booked-seats/${show.id}`, this.getHeaders()).subscribe({
+                this.http.get<number[]>(`${environment.apiUrl}/api/bookings/booked-seats/${show.id}`, this.getHeaders()).subscribe({
                   next: (bookedSeatIds) => {
                     const bookedCount = bookedSeatIds.length;
                     

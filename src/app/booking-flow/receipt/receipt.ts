@@ -5,6 +5,8 @@ import { CommonModule, DatePipe } from '@angular/common';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
+import { environment } from '../../../environments/environment';
+
 @Component({
   selector: 'app-receipt',
   standalone: true,
@@ -44,7 +46,7 @@ export class Receipt implements OnInit {
 
   verifySession(sessionId: string, bookingId: string) {
     this.isLoading.set(true);
-    this.http.post<any>(`http://localhost:8082/api/payments/verify-session?sessionId=${sessionId}&bookingId=${bookingId}`, {}, this.getAuthHeaders())
+    this.http.post<any>(`${environment.apiUrl}/api/payments/verify-session?sessionId=${sessionId}&bookingId=${bookingId}`, {}, this.getAuthHeaders())
       .subscribe({
         next: () => {
           this.fetchBookingDetails(bookingId);
@@ -68,7 +70,7 @@ export class Receipt implements OnInit {
 
   fetchBookingDetails(id: string) {
     this.isLoading.set(true);
-    this.http.get<any>(`http://localhost:8082/api/bookings/${id}`, this.getAuthHeaders())
+    this.http.get<any>(`${environment.apiUrl}/api/bookings/${id}`, this.getAuthHeaders())
       .subscribe({
         next: (data) => {
           this.bookingData = data;

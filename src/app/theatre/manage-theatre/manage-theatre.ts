@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+import { environment } from '../../../environments/environment';
+
 @Component({
   selector: 'app-manage-theatre',
   imports: [CommonModule, FormsModule],
@@ -185,7 +187,7 @@ export class ManageTheatre implements OnInit {
 
   fetchSeats(screenId: number) {
     this.isLoadingLayout = true;
-    this.http.get<any[]>(`http://localhost:8082/api/seats/screen/${screenId}`, this.getHeaders()).subscribe({
+    this.http.get<any[]>(`${environment.apiUrl}/api/seats/screen/${screenId}`, this.getHeaders()).subscribe({
       next: (data) => {
         if (data.length === 0) {
           this.generateSeats(screenId);
@@ -201,7 +203,7 @@ export class ManageTheatre implements OnInit {
   }
 
   generateSeats(screenId: number) {
-    this.http.post(`http://localhost:8082/api/seats/generate/${screenId}`, {}, { responseType: 'text', ...this.getHeaders() }).subscribe({
+    this.http.post(`${environment.apiUrl}/api/seats/generate/${screenId}`, {}, { responseType: 'text', ...this.getHeaders() }).subscribe({
       next: () => this.fetchSeats(screenId),
       error: (err) => { console.error('Error generating seats', err); this.isLoadingLayout = false; }
     });
@@ -239,7 +241,7 @@ export class ManageTheatre implements OnInit {
 
   saveSeatChanges() {
     if (!this.selectedSeat) return;
-    this.http.put(`http://localhost:8082/api/seats/update/${this.selectedSeat.id}`, this.selectedSeat, this.getHeaders()).subscribe({
+    this.http.put(`${environment.apiUrl}/api/seats/update/${this.selectedSeat.id}`, this.selectedSeat, this.getHeaders()).subscribe({
       next: () => {
         if (this.viewingSeatLayoutForScreen) this.fetchSeats(this.viewingSeatLayoutForScreen);
         this.closeEditPanel();
@@ -258,7 +260,7 @@ export class ManageTheatre implements OnInit {
     const price = this.bulkPrices[type];
     if (this.viewingSeatLayoutForScreen) {
       this.http.put(
-        `http://localhost:8082/api/seats/screen/${this.viewingSeatLayoutForScreen}/bulk-price`,
+        `${environment.apiUrl}/api/seats/screen/${this.viewingSeatLayoutForScreen}/bulk-price`,
         { seatType: type, price },
         this.getHeaders()
       ).subscribe({
@@ -289,7 +291,7 @@ export class ManageTheatre implements OnInit {
   }
 
   fetchMovies() {
-    this.http.get<any[]>('http://localhost:8082/api/movies/all', this.getHeaders()).subscribe({
+    this.http.get<any[]>(`${environment.apiUrl}/api/movies/all`, this.getHeaders()).subscribe({
       next: (res) => {
         this.availableMovies = res;
         this.cdr.detectChanges();
@@ -299,7 +301,7 @@ export class ManageTheatre implements OnInit {
   }
 
   fetchShows(screenId: number) {
-    this.http.get<any[]>(`http://localhost:8082/api/shows/screen/${screenId}`, this.getHeaders()).subscribe({
+    this.http.get<any[]>(`${environment.apiUrl}/api/shows/screen/${screenId}`, this.getHeaders()).subscribe({
       next: (res) => {
         console.log('🎬 Shows fetched:', res);
         this.shows = res;

@@ -1,11 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class HealthService implements OnDestroy {
-  private apiUrl = 'http://localhost:8082/api/health';
+  private apiUrl = `${environment.apiUrl}/api/health`;
   private timerId: any = null;
 
   constructor(private http: HttpClient) {
